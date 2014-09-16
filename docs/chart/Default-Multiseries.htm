@@ -1,0 +1,234 @@
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="Default.aspx.cs" Inherits="lossmitigation_Collections_Default" %>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>Foreclosures: Claims.</title>
+    <link href="../../assets/css/bootstrapLM.css" rel="stylesheet"/>
+    <style type="text/css">
+      .chart {
+        font: 15px sans-serif;
+        color: #121401;
+      }
+      .axis path,
+      .axis line {
+        fill: none;
+        stroke: #121401;
+        stroke-width: 2px;
+        shape-rendering: crispEdges;
+      }
+    </style>
+    <script src="../../assets/js/d3.js" type="text/javascript" language="javascript"></script>
+    <script src="../../assets/js/jquery_d3.js" type="text/javascript" language="javascript"></script>
+    <script src="../../assets/js/bootstrap_d3.js" type="text/javascript" language="javascript"></script>
+</head>
+<body>
+    <form id="form1" runat="server">
+    <div>
+    <div class="container-print">
+    <div class="hero-unit">
+        <img src="../../assets/img/logo.png" class="img-rounded" alt="RMMC Logo" />
+        <h1>Claims</h1>
+        <p>Claims Summary.</p>
+    </div>
+    <%= com.sp.rmmc.foreclosures.views.Navigations.sub_main_nav %>
+    <!-- Example row of columns -->
+    <div class="row">
+        <div class="span3">
+        <h2>Claims By Month.</h2><br />
+        <table class="table table-striped">
+            <tr><th>Month</th><th>Number of Claims</th></tr>
+            <% foreach (ClaimsByMonth claims_by_month in claims_by_month_list) { %>
+             <tr><td><%= claims_by_month.month.ToString("MMMM, yyyy") %></td><td><%= claims_by_month.claims.Count %></td></tr>
+            <% } %>
+        </table>
+        </div>
+        <div class="span9">
+            <h3><br /><br />Monthly Claims by Year.</h3>
+            <div id="chart" class="chart">
+            </div>
+        </div>
+        <script type="text/javascript" language="javascript">
+            var margin = { top: 20, right: 55, bottom: 30, left: 40 },
+          width = 900 - margin.left - margin.right,
+          height = 500 - margin.top - margin.bottom;
+
+            var x = d3.scale.ordinal()
+          .rangeRoundBands([0, width], .1);
+
+            var y = d3.scale.linear()
+          .rangeRound([height, 0]);
+
+            var xAxis = d3.svg.axis()
+          .scale(x)
+          .orient("bottom");
+
+            var yAxis = d3.svg.axis()
+          .scale(y)
+          .orient("left");
+
+            var line = d3.svg.line()
+          .interpolate("cardinal")
+          .x(function (d) { return x(d.label) + x.rangeBand() / 2; })
+          .y(function (d) { return y(d.value); });
+
+            var color = d3.scale.ordinal()
+          .range(["#001c9c", "#101b4d", "#475003", "#9c8305", "#d3c47c"]);
+
+            var svg = d3.select(".chart").append("svg")
+          .attr("width", width + margin.left + margin.right)
+          .attr("height", height + margin.top + margin.bottom)
+        .append("g")
+          .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+            data = [{ month: "Jan", "2012": 0, "2013": 2, "2014": 3 }, { month: "Feb", "2012": 2, "2013": 3, "2014": 3 }, { month: "Mar", "2012": 3, "2013": 3, "2014": 6 }, { month: "Apr", "2012": 2, "2013": 2, "2014": 2 }, { month: "May", "2012": 0, "2013": 3, "2014": 4 }, { month: "Jun", "2012": 2, "2013": 2, "2014": 0 }, { month: "Jul", "2012": 0, "2013": 6, "2014": 0 }, { month: "Aug", "2012": 2, "2013": 0, "2014": 0 }, { month: "Sep", "2012": 2, "2013": 8, "2014": 0 }, { month: "Oct", "2012": 0, "2013": 3, "2014": 0 }, { month: "Nov", "2012": 1, "2013": 4, "2014": 0 }, { month: "Dec", "2012": 2, "2013": 6, "2014": 0}] 
+
+            var labelVar = 'month';
+            var varNames = d3.keys(data[0]).filter(function (key) { return key !== labelVar; });
+            color.domain(varNames);
+
+            var seriesData = varNames.map(function (name) {
+                return {
+                    name: name,
+                    values: data.map(function (d) {
+                        return { name: name, label: d[labelVar], value: +d[name] };
+                    })
+                };
+            });
+
+            x.domain(data.map(function (d) { return d.month; }));
+            y.domain([
+          d3.min(seriesData, function (c) {
+              return 0;
+          }),
+          d3.max(seriesData, function (c) {
+              return d3.max(c.values, function (d) { return d.value; });
+          })
+        ]);
+
+            svg.append("g")
+            .attr("class", "x axis")
+            .attr("transform", "translate(0," + height + ")")
+            .call(xAxis);
+
+            svg.append("g")
+            .attr("class", "y axis")
+            .call(yAxis)
+          .append("text")
+            .attr("transform", "rotate(-90)")
+            .attr("y", 6)
+            .attr("dy", ".71em")
+            .style("text-anchor", "end")
+            .text("Number of Claims");
+
+            var series = svg.selectAll(".series")
+            .data(seriesData)
+          .enter().append("g")
+            .attr("class", "series");
+
+            series.append("path")
+          .attr("class", "line")
+          .attr("d", function (d) { return line(d.values); })
+          .style("stroke", function (d) { return color(d.name); })
+          .style("stroke-width", "4px")
+          .style("fill", "none")
+
+            series.selectAll(".point")
+          .data(function (d) { return d.values; })
+          .enter().append("circle")
+           .attr("class", "point")
+           .attr("cx", function (d) { return x(d.label) + x.rangeBand() / 2; })
+           .attr("cy", function (d) { return y(d.value); })
+           .attr("r", "5px")
+           .style("fill", function (d) { return color(d.name); })
+           .style("stroke", "grey")
+           .style("stroke-width", "2px")
+           .on("mouseover", function (d) { showPopover.call(this, d); })
+           .on("mouseout", function (d) { removePopovers(); })
+
+            var legend = svg.selectAll(".legend")
+            .data(varNames.slice().reverse())
+          .enter().append("g")
+            .attr("class", "legend")
+            .attr("transform", function (d, i) { return "translate(55," + i * 20 + ")"; });
+
+            legend.append("rect")
+            .attr("x", width - 10)
+            .attr("width", 10)
+            .attr("height", 10)
+            .style("fill", color)
+            .style("stroke", "grey");
+
+            legend.append("text")
+            .attr("x", width - 12)
+            .attr("y", 6)
+            .attr("dy", ".35em")
+            .style("text-anchor", "end")
+            .text(function (d) { return d; });
+
+            function removePopovers() {
+                $('.popover').each(function () {
+                    $(this).remove();
+                });
+            }
+
+            function showPopover(d) {
+                $(this).popover({
+                    title: d.name,
+                    placement: 'auto top',
+                    container: 'body',
+                    trigger: 'manual',
+                    html: true,
+                    content: function () {
+                        return "Quarter: " + d.label +
+                     "<br/>Rounds: " + d3.format(",")(d.value ? d.value : d.y1 - d.y0);
+                    }
+                });
+                $(this).popover('show')
+            }
+    </script>
+    </div>
+    </div>
+    </div>
+    data = [
+    <% 
+        int current_year = DateTime.Now.Year;
+        for( int month = 1; month <= 12 ; month++){
+            DateTime claims_month = new DateTime(current_year, month, 1);
+            %>
+            <%= "{month: \"" + claims_month.ToString("MMM") + "\"" %>    
+            <%
+            for (int year = 2012; year <= current_year; year++)
+            {
+                ClaimsByMonth selected_claims_by_month = new ClaimsByMonth(claims_month);
+                foreach (ClaimsByMonth claims_by_month in claims_by_month_list)
+                {
+                    if (claims_by_month.month.Month == month && claims_by_month.month.Year == year)
+                    {
+                        selected_claims_by_month = claims_by_month;
+                        break;
+                    }
+                }
+                if (year == current_year)
+                {
+                    string array_comma  = ",";
+                    if( month == 12) array_comma = "";
+                %>
+                <%=", \"" + year + "\": " + selected_claims_by_month.claims.Count + "}" + array_comma%>
+                <%
+                }
+                else
+                {
+                %>
+                <%=", \"" + year + "\": " + selected_claims_by_month.claims.Count%>
+                <%
+                }
+            }
+        }
+          %>
+          ]
+    </form>
+</body>
+</html>
