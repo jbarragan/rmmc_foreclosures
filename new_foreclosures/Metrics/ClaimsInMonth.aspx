@@ -30,8 +30,9 @@
                 <th>Paid Off</th>
                 <th>Not Paid Off</th>
                 <th>Foreclosure Date</th>
-                <th>PartA Received</th>
-                <th>PartA Amount</th>
+                <th>Main Claim Type</th>
+                <th>Main Claim Received</th>
+                <th>Main Claim Amount</th>
                 <th>PartB Received</th>
                 <th>PartB Amount</th>
                 <th>Loss Received</th>
@@ -50,6 +51,7 @@
                  <td><%= claim.loan_paid_off.ToString("C") %></td>
                  <td><%= claim.loan_current_balance.ToString("C") %></td>
                  <td><%= claim.foreclosure_date.ToShortDateString() %></td>
+                 <td><%= claim.claim_type %></td>
                  <td><%= claim.part_a_filed_recvd_date.ToShortDateString() %></td>
                  <td><%= claim.part_a_filed_amt.ToString("C") %></td>
                  <td><%= claim.part_b_filed_recvd_date.ToShortDateString() %></td>
@@ -70,6 +72,7 @@
                  <td></td>
                  <td><%= claims_total.loan_paid_off.ToString("C")%></td>
                  <td><%= claims_total.loan_current_balance.ToString("C")%></td>
+                 <td></td>
                  <td></td>
                  <td><%= claims_total.part_a_filed_recvd_date.ToShortDateString()%></td>
                  <td><%= claims_total.part_a_filed_amt.ToString("C")%></td>
