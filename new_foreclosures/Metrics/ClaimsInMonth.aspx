@@ -30,8 +30,13 @@
                 <th>Paid Off</th>
                 <th>Not Paid Off</th>
                 <th>Foreclosure Date</th>
-                <th>PartA Received</th>
-                <th>PartA Amount</th>
+                <th>Main Claim Type</th>
+                <th>Main Claim Received</th>
+                <th>Main Claim Amount</th>
+                <th>PartB Received</th>
+                <th>PartB Amount</th>
+                <th>Loss Received</th>
+                <th>Loss Amount</th>
                 <th>Debenture Rate</th>
                 <th>Debenture Interest Paid</th>
                 <th>Interest Rate</th>
@@ -46,8 +51,13 @@
                  <td><%= claim.loan_paid_off.ToString("C") %></td>
                  <td><%= claim.loan_current_balance.ToString("C") %></td>
                  <td><%= claim.foreclosure_date.ToShortDateString() %></td>
+                 <td><%= claim.claim_type %></td>
                  <td><%= claim.part_a_filed_recvd_date.ToShortDateString() %></td>
                  <td><%= claim.part_a_filed_amt.ToString("C") %></td>
+                 <td><%= claim.part_b_filed_recvd_date.ToShortDateString() %></td>
+                 <td><%= claim.part_b_filed_amt.ToString("C") %></td>
+                 <td><%= claim.loss_filed_recvd_date.ToShortDateString() %></td>
+                 <td><%= claim.loss_filed_amt.ToString("C") %></td>
                  <td><%= String.Format("{0:P3}.", claim.debenture_rate/100M) %></td>
                  <td><%= claim.debenture_interest_paid.ToString("C") %></td>
                  <td><%= String.Format("{0:P3}.", claim.loan.int_rate/100M) %></td>
@@ -63,8 +73,13 @@
                  <td><%= claims_total.loan_paid_off.ToString("C")%></td>
                  <td><%= claims_total.loan_current_balance.ToString("C")%></td>
                  <td></td>
+                 <td></td>
                  <td><%= claims_total.part_a_filed_recvd_date.ToShortDateString()%></td>
                  <td><%= claims_total.part_a_filed_amt.ToString("C")%></td>
+                 <td></td>
+                 <td><%= claims_total.part_b_filed_amt.ToString("C")%></td>
+                 <td></td>
+                 <td><%= claims_total.loss_filed_amt.ToString("C")%></td>
                  <td><%= String.Format("{0:P3}.", claims_total.debenture_rate / 100M) %></td>
                  <td><%= claims_total.debenture_interest_paid.ToString("C")%></td>
                  <td><%= String.Format("{0:P3}.", claims_total.loan.int_rate / 100M)%></td>
