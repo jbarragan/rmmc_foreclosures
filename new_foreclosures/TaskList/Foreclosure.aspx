@@ -36,7 +36,7 @@
     </div>
     <div class="row">
         <div class="span12">
-        <h2>Active Foreclosures (<%= recent_foreclosure_activated_all.Count%>)
+        <h2>Active (<%= recent_foreclosure_activated_all.Count%>)
         <a class="btn btn-primary" onclick="var e = document.getElementById('recent_foreclosure_activated_table'); e.style.display = e.style.display == 'block' ? 'none' : 'block';"><i class="icon-th-list icon-white"></i> Data</a>
         <a class="btn btn-inverse" onclick="var e = document.getElementById('recent_foreclosure_activated_conditions'); e.style.display = e.style.display == 'block' ? 'none' : 'block';"><i class="icon-info-sign icon-white"></i> Conditions</a></h2>
         <span id="recent_foreclosure_activated_conditions" style="display:none"><%=com.sp.rmmc.foreclosures.models.Foreclosure.recent_foreclosure_activated_conditions()%></span>
@@ -146,6 +146,122 @@
                 <td><%= foreclosure.posting_date.ToShortDateString()%></td>
                 <td><%= foreclosure.foreclosure_officers%></td>
                 <td><a href="PreforeclosureEvents.aspx?loan_id=<%=foreclosure.loan_id.ToString() %>">Checklist</a></td>
+             </tr>
+            <%
+                }
+            %>
+        </table>
+        </div>
+        </div>
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        <div class="span12">
+        <h2>Completed by Sale Date (<%= completed_by_sale_date_all.Count%>)
+        <a class="btn btn-primary" onclick="var e = document.getElementById('completed_by_sale_date_table'); e.style.display = e.style.display == 'block' ? 'none' : 'block';"><i class="icon-th-list icon-white"></i> Data</a>
+        <a class="btn btn-inverse" onclick="var e = document.getElementById('completed_by_sale_date_conditions'); e.style.display = e.style.display == 'block' ? 'none' : 'block';"><i class="icon-info-sign icon-white"></i> Conditions</a></h2>
+        <span id="completed_by_sale_date_conditions" style="display:none"><%=com.sp.rmmc.foreclosures.models.Foreclosure.foreclosure_completed_by_sale_date_completed_conditions()%></span>
+        <div id="completed_by_sale_date_table" style="display:none">
+        <h3>FHA (<%= completed_by_sale_date_fha.Count%>)<a class="btn btn-primary" onclick="var e = document.getElementById('completed_by_sale_date_fha'); e.style.display = e.style.display == 'block' ? 'none' : 'block';"><i class="icon-th-list icon-white"></i> Data</a></h3>
+        <div id="completed_by_sale_date_fha" style="display:none">
+        <table class="table table-striped">
+            <tr>
+                <th>Loan#</th>
+                <th>Loan Type</th>
+                <th>Loan Name</th>
+                <th>UPB</th>
+                <th>Interest Rate</th>
+                <th>Next Payment Due Date</th>
+                <th>Demand Letter Date</th>
+                <th>Papers To Attorney Date</th>
+                <th>Posting Date</th>
+                <th>Officer(s)</th>
+            </tr>
+            <% foreach (com.sp.rmmc.foreclosures.models.Foreclosure foreclosure in completed_by_sale_date_fha)
+               {   
+            %>
+            <tr>
+                <td><a href="../ForeclosureLog/Default.aspx?loan_id=<%= foreclosure.loan_id.ToString()%>"><%= foreclosure.loan_id.ToString()%></a></td>
+                <td><%= foreclosure.loan.loan_type%></td>
+                <td><%= foreclosure.loan.loan_name%></td>
+                <td><%= foreclosure.loan.prin_bal.ToString("C")%></td>
+                <td><%= foreclosure.loan.int_rate.ToString("0.000")%></td>
+                <td><%= foreclosure.loan.due_date_next_payment.ToShortDateString()%></td>
+                <td><%= foreclosure.demand_letter_due_date.ToShortDateString()%></td>
+                <td><%= foreclosure.papers_to_attorney_date.ToShortDateString()%></td>
+                <td><%= foreclosure.posting_date.ToShortDateString()%></td>
+                <td><%= foreclosure.foreclosure_officers%></td>
+             </tr>
+            <%
+                }
+            %>
+        </table>
+        </div>
+        <h3>VA (<%= completed_by_sale_date_va.Count%>)<a class="btn btn-primary" onclick="var e = document.getElementById('completed_by_sale_date_va'); e.style.display = e.style.display == 'block' ? 'none' : 'block';"><i class="icon-th-list icon-white"></i> Data</a></h3>
+        <div id="completed_by_sale_date_va" style="display:none">
+        <table class="table table-striped">
+            <tr>
+                <th>Loan#</th>
+                <th>Loan Type</th>
+                <th>Loan Name</th>
+                <th>UPB</th>
+                <th>Interest Rate</th>
+                <th>Next Payment Due Date</th>
+                <th>Demand Letter Date</th>
+                <th>Papers To Attorney Date</th>
+                <th>Posting Date</th>
+                <th>Officer(s)</th>
+            </tr>
+            <% foreach (com.sp.rmmc.foreclosures.models.Foreclosure foreclosure in completed_by_sale_date_va)
+               {   
+            %>
+            <tr>
+                <td><a href="../ForeclosureLog/Default.aspx?loan_id=<%= foreclosure.loan_id.ToString()%>"><%= foreclosure.loan_id.ToString()%></a></td>
+                <td><%= foreclosure.loan.loan_type%></td>
+                <td><%= foreclosure.loan.loan_name%></td>
+                <td><%= foreclosure.loan.prin_bal.ToString("C")%></td>
+                <td><%= foreclosure.loan.int_rate.ToString("0.000")%></td>
+                <td><%= foreclosure.loan.due_date_next_payment.ToShortDateString()%></td>
+                <td><%= foreclosure.demand_letter_due_date.ToShortDateString()%></td>
+                <td><%= foreclosure.papers_to_attorney_date.ToShortDateString()%></td>
+                <td><%= foreclosure.posting_date.ToShortDateString()%></td>
+                <td><%= foreclosure.foreclosure_officers%></td>
+             </tr>
+            <%
+                }
+            %>
+        </table>
+        </div>
+        <h3>CONV (<%= completed_by_sale_date_conv.Count%>)<a class="btn btn-primary" onclick="var e = document.getElementById('completed_by_sale_date_conv'); e.style.display = e.style.display == 'block' ? 'none' : 'block';"><i class="icon-th-list icon-white"></i> Data</a></h3>
+        <div id="completed_by_sale_date_conv" style="display:none">
+        <table class="table table-striped">
+            <tr>
+                <th>Loan#</th>
+                <th>Loan Type</th>
+                <th>Loan Name</th>
+                <th>UPB</th>
+                <th>Interest Rate</th>
+                <th>Next Payment Due Date</th>
+                <th>Demand Letter Date</th>
+                <th>Papers To Attorney Date</th>
+                <th>Posting Date</th>
+                <th>Officer(s)</th>
+            </tr>
+            <% foreach (com.sp.rmmc.foreclosures.models.Foreclosure foreclosure in completed_by_sale_date_conv)
+               {   
+            %>
+            <tr>
+                <td><a href="../ForeclosureLog/Default.aspx?loan_id=<%= foreclosure.loan_id.ToString()%>"><%= foreclosure.loan_id.ToString()%></a></td>
+                <td><%= foreclosure.loan.loan_type%></td>
+                <td><%= foreclosure.loan.loan_name%></td>
+                <td><%= foreclosure.loan.prin_bal.ToString("C")%></td>
+                <td><%= foreclosure.loan.int_rate.ToString("0.000")%></td>
+                <td><%= foreclosure.loan.due_date_next_payment.ToShortDateString()%></td>
+                <td><%= foreclosure.demand_letter_due_date.ToShortDateString()%></td>
+                <td><%= foreclosure.papers_to_attorney_date.ToShortDateString()%></td>
+                <td><%= foreclosure.posting_date.ToShortDateString()%></td>
+                <td><%= foreclosure.foreclosure_officers%></td>
              </tr>
             <%
                 }

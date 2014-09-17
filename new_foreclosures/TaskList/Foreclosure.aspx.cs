@@ -14,7 +14,11 @@ public partial class lossmitigation_Collections_Default : System.Web.UI.Page
     protected List<Foreclosure> recent_foreclosure_activated_fha = new List<Foreclosure>();
     protected List<Foreclosure> recent_foreclosure_activated_va = new List<Foreclosure>();
     protected List<Foreclosure> recent_foreclosure_activated_conv = new List<Foreclosure>();
-    protected List<Foreclosure> foreclosure_completed_by_sale_date_completed = new List<Foreclosure>();
+    protected List<Foreclosure> completed_by_sale_date = new List<Foreclosure>();
+    protected List<Foreclosure> completed_by_sale_date_all = new List<Foreclosure>();
+    protected List<Foreclosure> completed_by_sale_date_fha = new List<Foreclosure>();
+    protected List<Foreclosure> completed_by_sale_date_va = new List<Foreclosure>();
+    protected List<Foreclosure> completed_by_sale_date_conv = new List<Foreclosure>();
     protected decimal[] array_completed_checklists_loan_ids;
 
     protected void Page_Load(object sender, EventArgs e)
@@ -33,7 +37,17 @@ public partial class lossmitigation_Collections_Default : System.Web.UI.Page
             if (f.loan.loan_type == "FHA") recent_foreclosure_activated_fha.Add(f);
             if (f.loan.loan_type == "VA") recent_foreclosure_activated_va.Add(f);
             if (f.loan.loan_type == "CNV") recent_foreclosure_activated_conv.Add(f);
+        }
 
+        completed_by_sale_date = Foreclosure.foreclosure_completed_by_sale_date_completed();
+        foreach (Foreclosure f in completed_by_sale_date)
+        {
+            if (selected_loan_officer != "ALL" && f.foreclosure_officers.ToUpper() != selected_loan_officer) continue;
+            //if (f.is_preforeclosure_complete() == false) continue;
+            completed_by_sale_date_all.Add(f);
+            if (f.loan.loan_type == "FHA") completed_by_sale_date_fha.Add(f);
+            if (f.loan.loan_type == "VA") completed_by_sale_date_va.Add(f);
+            if (f.loan.loan_type == "CNV") completed_by_sale_date_conv.Add(f);
         }
     }
 
