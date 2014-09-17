@@ -59,7 +59,7 @@
                 <th>UPB</th>
                 <th>Interest Rate</th>
                 <th>Demand Letter Due Date</th>
-                <th>Days Demand after Delinquent</th>
+                <th>Months Demand after Delinquent</th>
                 <th>Officer(s)</th>
                 <th style="display: none;">Last Reason Code Change </th>
                 <th>Reason Code</th>
@@ -81,7 +81,7 @@
                 <td><%= demand_letter.loan.prin_bal.ToString("C")%></td>
                 <td><%= demand_letter.loan.int_rate.ToString("0.000")%></td>
                 <td><%= demand_letter.demand_letter_due_date.ToShortDateString()%></td>
-                <td><%= demand_letter.days_demand_date_after_delinquent()%></td>
+                <td><span class="<%= demand_letter.months_demand_date_after_delinquent_color() %>"><%= demand_letter.months_demand_date_after_delinquent() %></span></td>
                 <td><%= demand_letter.foreclosure_officers%></td>
                 <td style="display: none;"><%= demand_letter.last_default_reason_code_change_date.ToShortDateString()%></td>
                 <td><a onclick="$('#expired_fha_table tr *:nth-child(12)').css('display') == 'block' ? $('#expired_fha_table tr *:nth-child(12)').css('display', 'none') : $('#expired_fha_table tr *:nth-child(12)').css('display', 'block');
@@ -113,7 +113,7 @@
                 <th>UPB</th>
                 <th>Interest Rate</th>
                 <th>Demand Letter Due Date</th>
-                <th>Days Demand after Delinquent</th>
+                <th>Months Demand after Delinquent</th>
                 <th>Officer(s)</th>
                 <th style="display: none;">Last Reason Code Change </th>
                 <th>Reason Code</th>
@@ -135,7 +135,7 @@
                 <td><%= demand_letter.loan.prin_bal.ToString("C")%></td>
                 <td><%= demand_letter.loan.int_rate.ToString("0.000")%></td>
                 <td><%= demand_letter.demand_letter_due_date.ToShortDateString()%></td>
-                <td><%= demand_letter.days_demand_date_after_delinquent() %></td>
+                <td><span class="<%= demand_letter.months_demand_date_after_delinquent_color() %>"><%= demand_letter.months_demand_date_after_delinquent() %></span></td>
                 <td><%= demand_letter.foreclosure_officers%></td>
                 <td style="display: none;"><%= demand_letter.last_default_reason_code_change_date.ToShortDateString()%></td>
                 <td><a onclick="$('#expired_va_table tr *:nth-child(12)').css('display') == 'block' ? $('#expired_va_table tr *:nth-child(12)').css('display', 'none') : $('#expired_va_table tr *:nth-child(12)').css('display', 'block');
@@ -167,7 +167,7 @@
                 <th>UPB</th>
                 <th>Interest Rate</th>
                 <th>Demand Letter Due Date</th>
-                <th>Days Demand after Delinquent</th>
+                <th>Months Demand after Delinquent</th>
                 <th>Officer(s)</th>
                 <th style="display: none;">Last Reason Code Change </th>
                 <th>Reason Code</th>
@@ -189,7 +189,7 @@
                 <td><%= demand_letter.loan.prin_bal.ToString("C")%></td>
                 <td><%= demand_letter.loan.int_rate.ToString("0.000")%></td>
                 <td><%= demand_letter.demand_letter_due_date.ToShortDateString()%></td>
-                <td><%= demand_letter.days_demand_date_after_delinquent() %></td>
+                <td><span class="<%= demand_letter.months_demand_date_after_delinquent_color() %>"><%= demand_letter.months_demand_date_after_delinquent() %></span></td>
                 <td><%= demand_letter.foreclosure_officers%></td>
                 <td style="display: none;"><%= demand_letter.last_default_reason_code_change_date.ToShortDateString()%></td>
                 <td><a onclick="$('#expired_conv_table tr *:nth-child(12)').css('display') == 'block' ? $('#expired_conv_table tr *:nth-child(12)').css('display', 'none') : $('#expired_conv_table tr *:nth-child(12)').css('display', 'block');
@@ -231,7 +231,7 @@
                 <th>UPB</th>
                 <th>Interest Rate</th>
                 <th>Demand Letter Due Date</th>
-                <th>Days Demand after Delinquent</th>
+                <th>Months Demand after Delinquent</th>
                 <th>Officer(s)</th>
                 <th style="display: none;">Last Reason Code Change </th>
                 <th>Reason Code</th>
@@ -253,7 +253,7 @@
                 <td><%= demand_letter.loan.prin_bal.ToString("C")%></td>
                 <td><%= demand_letter.loan.int_rate.ToString("0.000")%></td>
                 <td><%= demand_letter.demand_letter_due_date.ToShortDateString()%></td>
-                <td><%= demand_letter.days_demand_date_after_delinquent() %></td>
+                <td><span class="<%= demand_letter.months_demand_date_after_delinquent_color() %>"><%= demand_letter.months_demand_date_after_delinquent() %></span></td>
                 <td><%= demand_letter.foreclosure_officers%></td>
                 <td style="display: none;"><%= demand_letter.last_default_reason_code_change_date.ToShortDateString()%></td>
                 <td><a onclick="$('#active_fha_table tr *:nth-child(12)').css('display') == 'block' ? $('#active_fha_table tr *:nth-child(12)').css('display', 'none') : $('#active_fha_table tr *:nth-child(12)').css('display', 'block');
@@ -285,7 +285,7 @@
                 <th>UPB</th>
                 <th>Interest Rate</th>
                 <th>Demand Letter Due Date</th>
-                <th>Days Demand after Delinquent</th>
+                <th>Months Demand after Delinquent</th>
                 <th>Officer(s)</th>
                 <th style="display: none;">Last Reason Code Change </th>
                 <th>Reason Code</th>
@@ -307,7 +307,7 @@
                 <td><%= demand_letter.loan.prin_bal.ToString("C")%></td>
                 <td><%= demand_letter.loan.int_rate.ToString("0.000")%></td>
                 <td><%= demand_letter.demand_letter_due_date.ToShortDateString()%></td>
-                <td><%= demand_letter.days_demand_date_after_delinquent() %></td>
+                <td><span class="<%= demand_letter.months_demand_date_after_delinquent_color() %>"><%= demand_letter.months_demand_date_after_delinquent() %></span></td>
                 <td><%= demand_letter.foreclosure_officers%></td>
                 <td style="display: none;"><%= demand_letter.last_default_reason_code_change_date.ToShortDateString()%></td>
                 <td><a onclick="$('#active_va_table tr *:nth-child(12)').css('display') == 'block' ? $('#active_va_table tr *:nth-child(12)').css('display', 'none') : $('#active_va_table tr *:nth-child(12)').css('display', 'block');
@@ -339,7 +339,7 @@
                 <th>UPB</th>
                 <th>Interest Rate</th>
                 <th>Demand Letter Due Date</th>
-                <th>Days Demand after Delinquent</th>
+                <th>Months Demand after Delinquent</th>
                 <th>Officer(s)</th>
                 <th style="display: none;">Last Reason Code Change </th>
                 <th>Reason Code</th>
@@ -361,7 +361,7 @@
                 <td><%= demand_letter.loan.prin_bal.ToString("C")%></td>
                 <td><%= demand_letter.loan.int_rate.ToString("0.000")%></td>
                 <td><%= demand_letter.demand_letter_due_date.ToShortDateString()%></td>
-                <td><%= demand_letter.days_demand_date_after_delinquent() %></td>
+                <td><span class="<%= demand_letter.months_demand_date_after_delinquent_color() %>"><%= demand_letter.months_demand_date_after_delinquent() %></span></td>
                 <td><%= demand_letter.foreclosure_officers%></td>
                 <td style="display: none;"><%= demand_letter.last_default_reason_code_change_date.ToShortDateString()%></td>
                 <td><a onclick="$('#active_conv_table tr *:nth-child(12)').css('display') == 'block' ? $('#active_conv_table tr *:nth-child(12)').css('display', 'none') : $('#active_conv_table tr *:nth-child(12)').css('display', 'block');
