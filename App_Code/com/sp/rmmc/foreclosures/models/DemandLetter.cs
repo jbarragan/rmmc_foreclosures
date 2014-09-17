@@ -294,14 +294,29 @@ ReviewChecklist.columns("base.loan_id") +
             }
         }
 
-        public string days_demand_date_after_delinquent()
+        public string months_demand_date_after_delinquent()
         {
             if( this.loan.due_date_next_payment.isNull || this.demand_letter_due_date.isNull )
                 return "NA";
             else
             {
                 TimeSpan timespan = (this.demand_letter_due_date.date - this.loan.due_date_next_payment.date);
-                return timespan.Days.ToString();
+                return timespan.Months.ToString();
+            }
+        }
+
+
+        public string months_demand_date_after_delinquent_color()
+        {
+            if( this.loan.due_date_next_payment.isNull || this.demand_letter_due_date.isNull )
+                return "text-error";
+            else
+            {
+                TimeSpan timespan = (this.demand_letter_due_date.date - this.loan.due_date_next_payment.date);
+                int max_month_wait = 3;
+                if( this.loan.loan_type == "CONV" ) max_month_wait = 2;
+                if( timespan.Months > max_month_wait ) return "text-error";
+                else return "text-success";
             }
         }
 
