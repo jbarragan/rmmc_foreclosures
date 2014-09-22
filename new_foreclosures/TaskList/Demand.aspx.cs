@@ -128,7 +128,7 @@ public partial class lossmitigation_Collections_Default : System.Web.UI.Page
             if (dl.loan.loan_type == "VA") remove_from_demand_letter_by_bankruptcy_va.Add(dl);
         }
         
-        foreach (DemandLetter dl in DemandLetter.fannie_mae_notification_conditions())
+        foreach (DemandLetter dl in DemandLetter.fannie_mae_notification_mode())
         {
             if (selected_loan_officer != "ALL" && dl.foreclosure_officers.ToUpper() != selected_loan_officer) continue;
             if (dl.loan.loan_type == "CNV" ) this.require_fannie_mae_call.Add(dl);

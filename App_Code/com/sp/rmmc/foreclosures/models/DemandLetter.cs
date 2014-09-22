@@ -229,7 +229,7 @@ ReviewChecklist.columns("base.loan_id") +
                            " and ( last_reg_paid_dt < dateadd(dd, -38, demand_letter_due_date) or last_reg_paid_dt is null or last_payments_balance <= 0 ) " +
                            " and ( ms_loan_prin_bal > 0 ) " +
                            " and ( loan_type = 'CONV' or loan_type = 'CNV') " +
-                           " and ( getdate() > last_bc_promised_to_pay_date ) ";
+                           " and ( getdate() > last_bc_promised_to_pay_date  or last_bc_promised_to_pay_date is null ) ";
             return query;
         }
 
