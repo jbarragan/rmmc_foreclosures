@@ -30,7 +30,10 @@ namespace com.sp.rmmc.foreclosures.models
         public DateTimeObject fc_foreclosure_referral_date = new DateTimeObject();
         public DateTimeObject fc_payoff_date = new DateTimeObject();
         public DateTimeObject appraisal_ordered_date = new DateTimeObject();
+        public DateTimeObject foreclosure_date = new DateTimeObject();
         
+        public String main_default_reason_code = "";
+        public String occupancy_code = "";
 
 
         public String foreclosure_officers = "";
@@ -65,6 +68,9 @@ namespace com.sp.rmmc.foreclosures.models
 "(select top 1 memo.memo_create_dt from ms_loan_memo memo where memo.loan_id = base.loan_id and memo.memo_type_id = 139 order by memo_id desc) as fc_foreclosure_referral_date, " +
 "(select top 1 memo.memo_create_dt from ms_loan_memo memo where memo.loan_id = base.loan_id and memo.memo_type_id = 148 order by memo_id desc) as fc_payoff_date, " +
 "(select top 1 ms_fcl.fcl_item_date from ms_fcl_item_amts_1 ms_fcl where ms_fcl.item_id = 1100 and ms_fcl.loan_id = base.loan_id order by ms_fcl.fcl_item_date )  as appraisal_ordered_date, " +
+"(select top 1 ms_credit_information.default_reason_code from ms_credit_information where ms_credit_information.loan_id = base.loan_id order by ms_credit_information.default_reason_code ) as main_default_reason_code, " +
+"(select top 1 ms_occupancy_types.occ_description from ms_loan_occupancy, ms_occupancy_types where ms_occupancy_types.fha_occ_code = ms_loan_occupancy.fha_occ_code and ms_loan_occupancy.loan_id = base.loan_id order by ms_loan_occupancy.fha_occ_code ) as occupancy_code, " +
+"(select top 1 ms_fcl.fcl_item_recvd_expd from ms_fcl_item_amts_1 ms_fcl where ms_fcl.item_id = 1200 and ms_fcl.loan_id = base.loan_id order by ms_fcl.fcl_item_recvd_expd ) as foreclosure_date, " +
 MsLoan.columns("base.loan_id") +
 "from  ms_fcl_info as base " +
 "where base.fcl_type = 'A' ";
@@ -127,7 +133,7 @@ MsLoan.columns("base.loan_id") +
         public static List<Foreclosure> remove_from_recent_foreclosure_activated_by_payment_dt()
         {
             string query = base_query + remove_from_recent_foreclosure_activated_by_payment_dt_conditions();
-            query = query + " order by loan_type, demand_letter_due_date asc";
+            query = query + " order by loan_type, foreclosure_date asc";
             return get_list(query);
         }
 
@@ -172,7 +178,7 @@ MsLoan.columns("base.loan_id") +
         public static List<Foreclosure> foreclosure_completed_by_sale_date_completed()
         {
             string query = base_query + foreclosure_completed_by_sale_date_completed_conditions();
-            query = query + " order by loan_type, demand_letter_due_date asc";
+            query = query + " order by loan_type, foreclosure_date asc";
             return get_list(query);
         }
 
@@ -243,6 +249,9 @@ MsLoan.columns("base.loan_id") +
             foreclosure.fc_foreclosure_referral_date = readDBDateObject(reader, pos++, DateTime.Now);
             foreclosure.fc_payoff_date = readDBDateObject(reader, pos++, DateTime.Now);
             foreclosure.appraisal_ordered_date = readDBDateObject(reader, pos++, DateTime.Now);
+            foreclosure.main_default_reason_code = readDBString(reader, pos++);
+            foreclosure.occupancy_code = readDBString(reader, pos++);
+            foreclosure.foreclosure_date = readDBDateObject(reader, pos++, DateTime.Now);
 
             if (foreclosure.loan_id > 0)
             {
