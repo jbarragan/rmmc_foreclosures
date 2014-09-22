@@ -834,12 +834,12 @@
             </div>
         <div class="row">
             <div class="span12">
-            <h2>Fannie Mae Calls (<%= no_call_after_3_days.Count%>)
+            <h2>Fannie Mae Calls (<%= require_fannie_mae_call.Count%>)
             <a class="btn btn-primary" onclick="var e = document.getElementById('fannie_mae_calls_table'); e.style.display = e.style.display == 'block' ? 'none' : 'block';"><i class="icon-th-list icon-white"></i> Data</a>
             <a class="btn btn-inverse" onclick="var e = document.getElementById('fannie_mae_calls_conditions'); e.style.display = e.style.display == 'block' ? 'none' : 'block';"><i class="icon-info-sign icon-white"></i>Conditions</a></h2>
-            <span id="fannie_mae_calls_conditions" style="display:none">Last "BC-" excecp "BC-First Right Party Contact" more than 3 days old.</span>
+            <span id="fannie_mae_calls_conditions" style="display:none">Last "BC-" memo removing 'BC-Promised to Pay'.</span>
             <div id="fannie_mae_calls_table" style="display:none">
-            <h3>CONV (<%= no_call_after_3_days.Count%>)<a class="btn btn-primary" onclick="var e = document.getElementById('fannie_mae_calls_conv'); e.style.display = e.style.display == 'block' ? 'none' : 'block';"><i class="icon-th-list icon-white"></i> Data</a></h3>
+            <h3>CONV (<%= require_fannie_mae_call.Count%>)<a class="btn btn-primary" onclick="var e = document.getElementById('fannie_mae_calls_conv'); e.style.display = e.style.display == 'block' ? 'none' : 'block';"><i class="icon-th-list icon-white"></i> Data</a></h3>
             <div id="fannie_mae_calls_conv" style="display:none">
             <table class="table table-striped">
                 <tr>
@@ -850,7 +850,7 @@
                     <th>Officer(s)</th>
                     <th>Last Call Memo Date</th>
                 </tr>
-                <% foreach (com.sp.rmmc.foreclosures.models.DemandLetter demand_letter in no_call_after_3_days)
+                <% foreach (com.sp.rmmc.foreclosures.models.DemandLetter demand_letter in require_fannie_mae_call)
                    {   
                 %>
                 <tr>
