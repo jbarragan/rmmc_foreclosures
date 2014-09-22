@@ -39,6 +39,7 @@ namespace com.sp.rmmc.foreclosures.models
         public DateTimeObject correspondence_on_nl_demand_memo_date = new DateTimeObject();
         public String correspondence_on_nl_demand_memo_subject = "";
         public DateTimeObject last_bc_call_memo_date = new DateTimeObject();
+        public DateTimeObject last_bc_promised_to_pay_date = new DateTimeObject();
 
         public String foreclosure_officers = "";
         public String loan_type = "";
@@ -83,7 +84,8 @@ namespace com.sp.rmmc.foreclosures.models
 "(select top 1 memo.memo_create_dt from ms_loan_memo memo, ms_memo_types where memo.loan_id = base.loan_id and memo.memo_type_id = ms_memo_types.memo_type_id and (ms_memo_types.memo_type_desc like 'NL-Demand') order by memo_create_dt desc ) as last_nl_demand_memo_date, " +
 "(select top 1 memo.memo_create_dt from ms_loan_memo memo, ms_memo_types where memo.loan_id = base.loan_id and memo.memo_subject like '%Demand%' and memo.memo_type_id = ms_memo_types.memo_type_id and ms_memo_types.memo_type_desc like 'Correspondence' and date(memo.memo_create_dt) = date(last_nl_demand_memo_date) order by memo_create_dt desc ) as correspondence_on_nl_demand_memo_date, " +
 "(select top 1 memo.memo_subject from ms_loan_memo memo, ms_memo_types where memo.loan_id = base.loan_id and memo.memo_subject like '%Demand%' and memo.memo_type_id = ms_memo_types.memo_type_id and ms_memo_types.memo_type_desc like 'Correspondence' and date(memo.memo_create_dt) = date(last_nl_demand_memo_date) order by memo_create_dt desc ) as correspondence_on_nl_demand_memo_subject, " +
-"(select top 1 memo.memo_create_dt from ms_loan_memo memo, ms_memo_types where memo.loan_id = base.loan_id and memo.memo_type_id = ms_memo_types.memo_type_id and ms_memo_types.memo_type_desc like 'BC%' and ms_memo_types.memo_type_desc not like 'BC-First Right%'   order by memo_id desc ) as last_bc_call_memo_date, " +
+"(select top 1 memo.memo_create_dt from ms_loan_memo memo, ms_memo_types where memo.loan_id = base.loan_id and memo.memo_type_id = ms_memo_types.memo_type_id and ms_memo_types.memo_type_desc like 'BC%' order by memo_id desc ) as last_bc_call_memo_date, " +
+"(select top 1 memo.memo_notify_dt from ms_loan_memo memo, ms_memo_types where memo.loan_id = base.loan_id and memo.memo_type_id = ms_memo_types.memo_type_id and ms_memo_types.memo_type_desc = 'BC-Promised to Pay' order by memo_notify_dt desc ) as last_bc_promised_to_pay_date, " +
 
 
 MsLoan.columns("base.loan_id") +  ", " +
@@ -220,6 +222,24 @@ ReviewChecklist.columns("base.loan_id") +
             return remove_lm(get_list(query));
         }
 
+        public static string fannie_mae_notification_conditions()
+        {
+            string query = " and ( fcl_type <> 'A' or fcl_type is null ) " +
+                           " and ( bankruptcy_filed_date is null or bankruptcy_discharge_date is not null or bankruptcy_case_dismissed_date is not null or bankruptcy_closed_date is not null ) " +
+                           " and ( last_reg_paid_dt < dateadd(dd, -38, demand_letter_due_date) or last_reg_paid_dt is null or last_payments_balance <= 0 ) " +
+                           " and ( ms_loan_prin_bal > 0 ) " +
+                           " and ( loan_type = 'CONV' or loan_type = 'CNV') " +
+                           " and ( getdate() > last_bc_promised_to_pay_date  or last_bc_promised_to_pay_date is null ) ";
+            return query;
+        }
+
+        public static List<DemandLetter> fannie_mae_notification_mode()
+        {
+            string query = base_query + fannie_mae_notification_conditions();
+            query = query + " order by last_bc_call_memo_date asc";
+            return remove_lm(get_list(query));
+        }
+
         public static string remove_demand_letter_by_last_reg_payment_conditions()
         {
             string query =  " and ( demand_letter_due_date > getdate() ) " +
@@ -280,17 +300,6 @@ ReviewChecklist.columns("base.loan_id") +
             {
                 TimeSpan timespan = (DateTime.Now - this.last_inspection_memo_date.date);
                 return timespan.Days.ToString();
-            }
-        }
-
-        public bool no_fannie_mae_call_after_3_days()
-        {
-            if (this.last_bc_call_memo_date.isNull)
-                return true;
-            else
-            {
-                TimeSpan timespan = (DateTime.Now - this.last_bc_call_memo_date.date);
-                return timespan.Days > 3;
             }
         }
 
@@ -400,6 +409,7 @@ ReviewChecklist.columns("base.loan_id") +
             demand_letter.correspondence_on_nl_demand_memo_date = readDBDateObject(reader, pos++, DateTime.Now);
             demand_letter.correspondence_on_nl_demand_memo_subject = readDBString(reader, pos++);
             demand_letter.last_bc_call_memo_date = readDBDateObject(reader, pos++, DateTime.Now);
+            demand_letter.last_bc_promised_to_pay_date = readDBDateObject(reader, pos++, DateTime.Now);
 
             if (demand_letter.loan_id > 0)
             {

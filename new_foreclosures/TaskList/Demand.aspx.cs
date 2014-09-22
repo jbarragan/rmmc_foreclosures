@@ -47,7 +47,7 @@ public partial class lossmitigation_Collections_Default : System.Web.UI.Page
     protected List<DemandLetter> inspection_expired_va = new List<DemandLetter>();
     protected List<DemandLetter> inspection_expired_conv = new List<DemandLetter>();
 
-    protected List<DemandLetter> no_call_after_3_days = new List<DemandLetter>();
+    protected List<DemandLetter> require_fannie_mae_call = new List<DemandLetter>();
     
     protected void Page_Load(object sender, EventArgs e)
     {
@@ -127,17 +127,11 @@ public partial class lossmitigation_Collections_Default : System.Web.UI.Page
             if (dl.loan.loan_type == "CNV") remove_from_demand_letter_by_bankruptcy_conv.Add(dl);
             if (dl.loan.loan_type == "VA") remove_from_demand_letter_by_bankruptcy_va.Add(dl);
         }
-
-        foreach (DemandLetter dl in all_in_demand_letter_expired_mode)
-        {
-            if (selected_loan_officer != "ALL" && dl.foreclosure_officers.ToUpper() != selected_loan_officer) continue;
-            if (dl.loan.loan_type == "CNV" && dl.no_fannie_mae_call_after_3_days()) this.no_call_after_3_days.Add(dl);
-        }
         
-        foreach (DemandLetter dl in all_active_demands)
+        foreach (DemandLetter dl in DemandLetter.fannie_mae_notification_mode())
         {
             if (selected_loan_officer != "ALL" && dl.foreclosure_officers.ToUpper() != selected_loan_officer) continue;
-            if (dl.loan.loan_type == "CNV" && dl.no_fannie_mae_call_after_3_days()) this.no_call_after_3_days.Add(dl);
+            if (dl.loan.loan_type == "CNV" ) this.require_fannie_mae_call.Add(dl);
         }
     
     }
