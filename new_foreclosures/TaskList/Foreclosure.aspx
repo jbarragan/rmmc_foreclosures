@@ -348,7 +348,7 @@
                 <td><%= foreclosure.foreclosure_officers%></td>
                 <td><%= foreclosure.main_default_reason_code %></td>
                 <td><%= foreclosure.occupancy_code %></td>
-                <td><%= foreclosure.ytd_prin_paid_amt %></td>
+                <td><%= foreclosure.ytd_prin_paid_amt.ToString("C")%></td>
              </tr>
             <%
                 }
@@ -389,7 +389,7 @@
                 <td><%= foreclosure.foreclosure_officers%></td>
                 <td><%= foreclosure.main_default_reason_code %></td>
                 <td><%= foreclosure.occupancy_code %></td>
-                <td><%= foreclosure.ytd_prin_paid_amt %></td>
+                <td><%= foreclosure.ytd_prin_paid_amt.ToString("C")%></td>
              </tr>
             <%
                 }
@@ -430,7 +430,7 @@
                 <td><%= foreclosure.foreclosure_officers%></td>
                 <td><%= foreclosure.main_default_reason_code %></td>
                 <td><%= foreclosure.occupancy_code %></td>
-                <td><%= foreclosure.ytd_prin_paid_amt %></td>
+                <td><%= foreclosure.ytd_prin_paid_amt.ToString("C")%></td>
              </tr>
             <%
                 }
