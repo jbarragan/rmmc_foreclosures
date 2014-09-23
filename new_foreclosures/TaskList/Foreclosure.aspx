@@ -307,7 +307,6 @@
             </div>
             </div>
         </div>
-    </div>
     <div class="row">
         <div class="span12">
         <h2>Completed by Sale Date (<%= completed_by_sale_date_all.Count%>)
@@ -325,10 +324,13 @@
                 <th>UPB</th>
                 <th>Interest Rate</th>
                 <th>Next Payment Due Date</th>
-                <th>Demand Letter Date</th>
+                <th>Sale Date Completed</th>
                 <th>Papers To Attorney Date</th>
                 <th>Posting Date</th>
                 <th>Officer(s)</th>
+                <th>Reason Code</th>
+                <th>Occupancy Code</th>
+                <th>Principal Paid</th>
             </tr>
             <% foreach (com.sp.rmmc.foreclosures.models.Foreclosure foreclosure in completed_by_sale_date_fha)
                {   
@@ -340,10 +342,13 @@
                 <td><%= foreclosure.loan.prin_bal.ToString("C")%></td>
                 <td><%= foreclosure.loan.int_rate.ToString("0.000")%></td>
                 <td><%= foreclosure.loan.due_date_next_payment.ToShortDateString()%></td>
-                <td><%= foreclosure.demand_letter_due_date.ToShortDateString()%></td>
+                <td><%= foreclosure.sale_date_completed.ToShortDateString()%></td>
                 <td><%= foreclosure.papers_to_attorney_date.ToShortDateString()%></td>
                 <td><%= foreclosure.posting_date.ToShortDateString()%></td>
                 <td><%= foreclosure.foreclosure_officers%></td>
+                <td><%= foreclosure.main_default_reason_code %></td>
+                <td><%= foreclosure.occupancy_code %></td>
+                <td><%= foreclosure.ytd_prin_paid_amt %></td>
              </tr>
             <%
                 }
@@ -364,6 +369,9 @@
                 <th>Papers To Attorney Date</th>
                 <th>Posting Date</th>
                 <th>Officer(s)</th>
+                <th>Reason Code</th>
+                <th>Occupancy Code</th>
+                <th>Principal Paid</th>
             </tr>
             <% foreach (com.sp.rmmc.foreclosures.models.Foreclosure foreclosure in completed_by_sale_date_va)
                {   
@@ -379,6 +387,9 @@
                 <td><%= foreclosure.papers_to_attorney_date.ToShortDateString()%></td>
                 <td><%= foreclosure.posting_date.ToShortDateString()%></td>
                 <td><%= foreclosure.foreclosure_officers%></td>
+                <td><%= foreclosure.main_default_reason_code %></td>
+                <td><%= foreclosure.occupancy_code %></td>
+                <td><%= foreclosure.ytd_prin_paid_amt %></td>
              </tr>
             <%
                 }
@@ -399,6 +410,9 @@
                 <th>Papers To Attorney Date</th>
                 <th>Posting Date</th>
                 <th>Officer(s)</th>
+                <th>Reason Code</th>
+                <th>Occupancy Code</th>
+                <th>Principal Paid</th>
             </tr>
             <% foreach (com.sp.rmmc.foreclosures.models.Foreclosure foreclosure in completed_by_sale_date_conv)
                {   
@@ -414,6 +428,9 @@
                 <td><%= foreclosure.papers_to_attorney_date.ToShortDateString()%></td>
                 <td><%= foreclosure.posting_date.ToShortDateString()%></td>
                 <td><%= foreclosure.foreclosure_officers%></td>
+                <td><%= foreclosure.main_default_reason_code %></td>
+                <td><%= foreclosure.occupancy_code %></td>
+                <td><%= foreclosure.ytd_prin_paid_amt %></td>
              </tr>
             <%
                 }

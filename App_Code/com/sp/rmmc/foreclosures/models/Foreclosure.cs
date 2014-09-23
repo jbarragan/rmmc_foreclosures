@@ -42,6 +42,8 @@ namespace com.sp.rmmc.foreclosures.models
         public DateTimeObject last_bc_call_memo_date = new DateTimeObject();
         public DateTimeObject last_bc_promised_to_pay_date = new DateTimeObject();
 
+        public decimal ytd_prin_paid_amt = 0M;
+
         public String foreclosure_officers = "";
         public String loan_type = "";
         public MsLoan loan = new MsLoan();
@@ -82,6 +84,7 @@ namespace com.sp.rmmc.foreclosures.models
 "(select top 1 memo.memo_create_dt from ms_loan_memo memo where memo.loan_id = base.loan_id and lower(memo.memo_subject) like '%property inspection report%' order by memo_id desc ) as memo_with_inspection_report_delinquent_date, " +
 "(select top 1 memo.memo_create_dt from ms_loan_memo memo, ms_memo_types where memo.loan_id = base.loan_id and memo.memo_type_id = ms_memo_types.memo_type_id and ms_memo_types.memo_type_desc like 'BC%' order by memo_id desc ) as last_bc_call_memo_date, " +
 "(select top 1 memo.memo_notify_dt from ms_loan_memo memo, ms_memo_types where memo.loan_id = base.loan_id and memo.memo_type_id = ms_memo_types.memo_type_id and ms_memo_types.memo_type_desc = 'BC-Promised to Pay' order by memo_notify_dt desc ) as last_bc_promised_to_pay_date, " +
+"(select top 1 ms_loan_balances.ytd_prin_paid_amt from ms_loan_balances where ms_loan_balances.loan_id = base.loan_id order by ms_loan_balances.ytd_prin_paid_amt) as ytd_prin_paid_amt, " +
 MsLoan.columns("base.loan_id") +
 "from  ms_fcl_info as base " +
 "where base.fcl_type = 'A' ";
@@ -237,7 +240,7 @@ MsLoan.columns("base.loan_id") +
         public static List<Foreclosure> foreclosure_completed_by_sale_date_completed()
         {
             string query = base_query + foreclosure_completed_by_sale_date_completed_conditions();
-            query = query + " order by loan_type, foreclosure_date asc";
+            query = query + " order by loan_type, sale_date_completed asc";
             return get_list(query);
         }
 
@@ -316,6 +319,7 @@ MsLoan.columns("base.loan_id") +
             foreclosure.memo_with_inspection_report_delinquent_date = readDBDateObject(reader, pos++, DateTime.Now);
             foreclosure.last_bc_call_memo_date = readDBDateObject(reader, pos++, DateTime.Now);
             foreclosure.last_bc_promised_to_pay_date = readDBDateObject(reader, pos++, DateTime.Now);
+            foreclosure.ytd_prin_paid_amt = readDBDecimal(reader, pos++);
 
             if (foreclosure.loan_id > 0)
             {
