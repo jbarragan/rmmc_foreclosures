@@ -116,7 +116,12 @@ MsLoan.columns("base.loan_id") +
 
         public static string inspections_expired_conditions()
         {
-            string query = " and ( fcl_type = 'A' ) " +
+            string query = " and ( last_reg_paid_dt is null or demand_letter_due_date is null or last_reg_paid_dt < dateadd(dd, -30, demand_letter_due_date) or last_payments_balance <= 0   ) " +
+                            " and ( bankruptcy_filed_date is null or bankruptcy_discharge_date is not null or bankruptcy_case_dismissed_date is not null or bankruptcy_closed_date is not null ) " +
+                            " and ( (sale_date is null) or (demand_letter_due_date > sale_date) ) " +
+                            " and ( (sale_date_completed is null) or (demand_letter_due_date > sale_date_completed) ) " +
+                            " and ( deed_in_lieu = 'N' or deed_in_lieu is NULL ) " +
+                            " and ( fcl_type = 'A' ) " +
                            " and ( memo_with_inspection_report_delinquent_date is null or memo_with_inspection_report_delinquent_date < last_inspection_memo_date ) " +
                            " and (  ( last_inspection_memo_description in ('PI-Initial Vacant Inspection', 'PI-Ongoing Int./Ext. Vacant Inspection', 'PI-No Inspection Ordered')  and  last_inspection_memo_date < dateadd(dd, -25, getdate()) ) " +
                            "     or ( last_inspection_memo_date is null ) " +
@@ -133,7 +138,12 @@ MsLoan.columns("base.loan_id") +
 
         public static string fannie_mae_notification_conditions()
         {
-            string query = " and ( fcl_type = 'A' ) " +
+            string query = " and ( last_reg_paid_dt is null or demand_letter_due_date is null or last_reg_paid_dt < dateadd(dd, -30, demand_letter_due_date) or last_payments_balance <= 0   ) " +
+                            " and ( bankruptcy_filed_date is null or bankruptcy_discharge_date is not null or bankruptcy_case_dismissed_date is not null or bankruptcy_closed_date is not null ) " +
+                            " and ( (sale_date is null) or (demand_letter_due_date > sale_date) ) " +
+                            " and ( (sale_date_completed is null) or (demand_letter_due_date > sale_date_completed) ) " +
+                            " and ( deed_in_lieu = 'N' or deed_in_lieu is NULL ) " +
+                            " and ( fcl_type = 'A' ) " +
                            " and ( loan_type = 'CONV' or loan_type = 'CNV') " +
                            " and ( getdate() > last_bc_promised_to_pay_date  or last_bc_promised_to_pay_date is null ) ";
             return query;
