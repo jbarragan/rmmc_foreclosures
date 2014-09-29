@@ -385,5 +385,10 @@ MsLoan.columns("base.loan_id") +
             }
             return true;
         }
+
+        public decimal non_zero_balance(){
+            if( this.ytd_prin_paid_amt > 0M ) return this.ytd_prin_paid_amt;
+            else return this.loan.prin_bal;
+        }
     }
 }
