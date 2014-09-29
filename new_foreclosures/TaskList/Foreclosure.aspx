@@ -324,9 +324,9 @@
                 <th>UPB</th>
                 <th>Interest Rate</th>
                 <th>Next Payment Due Date</th>
-                <th>Sale Date Completed</th>
                 <th>Papers To Attorney Date</th>
                 <th>Posting Date</th>
+                <th>Sale Date Completed</th>
                 <th>Officer(s)</th>
                 <th>Reason Code</th>
                 <th>Occupancy Code</th>
@@ -342,9 +342,9 @@
                 <td><%= foreclosure.loan.prin_bal.ToString("C")%></td>
                 <td><%= foreclosure.loan.int_rate.ToString("0.000")%></td>
                 <td><%= foreclosure.loan.due_date_next_payment.ToShortDateString()%></td>
-                <td><%= foreclosure.sale_date_completed.ToShortDateString()%></td>
                 <td><%= foreclosure.papers_to_attorney_date.ToShortDateString()%></td>
                 <td><%= foreclosure.posting_date.ToShortDateString()%></td>
+                <td><span class="text-error"><%= foreclosure.sale_date_completed.ToShortDateString()%></span></td>
                 <td><%= foreclosure.foreclosure_officers%></td>
                 <td><%= foreclosure.main_default_reason_code %></td>
                 <td><%= foreclosure.occupancy_code %></td>
@@ -365,9 +365,9 @@
                 <th>UPB</th>
                 <th>Interest Rate</th>
                 <th>Next Payment Due Date</th>
-                <th>Demand Letter Date</th>
                 <th>Papers To Attorney Date</th>
                 <th>Posting Date</th>
+                <th>Sale Date Completed</th>
                 <th>Officer(s)</th>
                 <th>Reason Code</th>
                 <th>Occupancy Code</th>
@@ -382,10 +382,10 @@
                 <td><%= foreclosure.loan.loan_name%></td>
                 <td><%= foreclosure.loan.prin_bal.ToString("C")%></td>
                 <td><%= foreclosure.loan.int_rate.ToString("0.000")%></td>
-                <td><%= foreclosure.loan.due_date_next_payment.ToShortDateString()%></td>
                 <td><%= foreclosure.demand_letter_due_date.ToShortDateString()%></td>
                 <td><%= foreclosure.papers_to_attorney_date.ToShortDateString()%></td>
                 <td><%= foreclosure.posting_date.ToShortDateString()%></td>
+                <td><span class="text-error"><%= foreclosure.sale_date_completed.ToShortDateString()%></span></td>
                 <td><%= foreclosure.foreclosure_officers%></td>
                 <td><%= foreclosure.main_default_reason_code %></td>
                 <td><%= foreclosure.occupancy_code %></td>
@@ -406,9 +406,9 @@
                 <th>UPB</th>
                 <th>Interest Rate</th>
                 <th>Next Payment Due Date</th>
-                <th>Demand Letter Date</th>
                 <th>Papers To Attorney Date</th>
                 <th>Posting Date</th>
+                <th>Sale Date Completed</th>
                 <th>Officer(s)</th>
                 <th>Reason Code</th>
                 <th>Occupancy Code</th>
@@ -423,10 +423,10 @@
                 <td><%= foreclosure.loan.loan_name%></td>
                 <td><%= foreclosure.loan.prin_bal.ToString("C")%></td>
                 <td><%= foreclosure.loan.int_rate.ToString("0.000")%></td>
-                <td><%= foreclosure.loan.due_date_next_payment.ToShortDateString()%></td>
                 <td><%= foreclosure.demand_letter_due_date.ToShortDateString()%></td>
                 <td><%= foreclosure.papers_to_attorney_date.ToShortDateString()%></td>
                 <td><%= foreclosure.posting_date.ToShortDateString()%></td>
+                <td><span class="text-error"><%= foreclosure.sale_date_completed.ToShortDateString()%></span></td>
                 <td><%= foreclosure.foreclosure_officers%></td>
                 <td><%= foreclosure.main_default_reason_code %></td>
                 <td><%= foreclosure.occupancy_code %></td>
