@@ -349,6 +349,16 @@ ReviewChecklist.columns("base.loan_id") +
             return "text-success";
         }
 
+        public bool does_require_fannie_mae_call(){
+            TimeSpan ts = DateTime.Today - this.last_bc_call_memo_date.date;
+            if( ts.Days > 3) return true;
+            for( int i = ts.Days ; i >= 1; i--){
+                DateTime date_to_call = this.last_bc_call_memo_date.date.add(ts.Days);
+                if( date_to_call.DayOfWeek != DayOfWeek.Saturday  && date_to_call.DayOfWeek != DayOfWeek.Sunday ) return false
+            }
+            return true;
+        }
+
         private static List<DemandLetter> get_list(String query)
         {
             List<DemandLetter> list = new List<DemandLetter>();
