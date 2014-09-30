@@ -375,5 +375,21 @@ MsLoan.columns("base.loan_id") +
                 return timespan.Days.ToString();
             }
         }
+
+        public bool does_require_fannie_mae_call(){
+            TimeSpan ts = DateTime.Today - this.last_bc_call_memo_date.date;
+            if( ts.Days > 3) return true;
+            if (ts.Days == 0) return false;
+            for( int i = ts.Days ; i >= 1; i--){
+                DateTime date_to_call = this.last_bc_call_memo_date.date.AddDays(ts.Days);
+                if (date_to_call.DayOfWeek != DayOfWeek.Saturday && date_to_call.DayOfWeek != DayOfWeek.Sunday) return false;
+            }
+            return true;
+        }
+
+        public decimal non_zero_balance(){
+            if( this.ytd_prin_paid_amt > 0M ) return this.ytd_prin_paid_amt;
+            else return this.loan.prin_bal;
+        }
     }
 }

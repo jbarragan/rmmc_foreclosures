@@ -71,7 +71,7 @@ public partial class lossmitigation_Collections_Default : System.Web.UI.Page
         foreach (Foreclosure f in Foreclosure.fannie_mae_notification_mode())
         {
             if (selected_loan_officer != "ALL" && f.foreclosure_officers.ToUpper() != selected_loan_officer) continue;
-            if (f.loan.loan_type == "CNV" ) this.require_fannie_mae_call.Add(f);
+            if (f.loan.loan_type == "CNV" && f.does_require_fannie_mae_call()) this.require_fannie_mae_call.Add(f);
         }
     }
 
