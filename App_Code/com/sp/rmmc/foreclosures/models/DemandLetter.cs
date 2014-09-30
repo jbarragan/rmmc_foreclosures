@@ -229,7 +229,7 @@ ReviewChecklist.columns("base.loan_id") +
                            " and ( last_reg_paid_dt < dateadd(dd, -38, demand_letter_due_date) or last_reg_paid_dt is null or last_payments_balance <= 0 ) " +
                            " and ( ms_loan_prin_bal > 0 ) " +
                            " and ( loan_type = 'CONV' or loan_type = 'CNV') " +
-                           " and ( getdate() > last_bc_promised_to_pay_date ) ";
+                           " and ( getdate() > last_bc_promised_to_pay_date  or last_bc_promised_to_pay_date is null ) ";
             return query;
         }
 
@@ -347,6 +347,16 @@ ReviewChecklist.columns("base.loan_id") +
         {
             if (this.last_nl_demand_memo_date.isNull || this.correspondence_on_nl_demand_memo_date.isNull) return "text-error";
             return "text-success";
+        }
+
+        public bool does_require_fannie_mae_call(){
+            TimeSpan ts = DateTime.Today - this.last_bc_call_memo_date.date;
+            if( ts.Days > 3) return true;
+            for( int i = ts.Days ; i >= 1; i--){
+                DateTime date_to_call = this.last_bc_call_memo_date.date.add(ts.Days);
+                if( date_to_call.DayOfWeek != DayOfWeek.Saturday  && date_to_call.DayOfWeek != DayOfWeek.Sunday ) return false
+            }
+            return true;
         }
 
         private static List<DemandLetter> get_list(String query)

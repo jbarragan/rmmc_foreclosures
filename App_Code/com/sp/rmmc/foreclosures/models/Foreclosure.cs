@@ -30,8 +30,19 @@ namespace com.sp.rmmc.foreclosures.models
         public DateTimeObject fc_foreclosure_referral_date = new DateTimeObject();
         public DateTimeObject fc_payoff_date = new DateTimeObject();
         public DateTimeObject appraisal_ordered_date = new DateTimeObject();
+        public DateTimeObject foreclosure_date = new DateTimeObject();
         
+        public String main_default_reason_code = "";
+        public String occupancy_code = "";
 
+        public DateTimeObject last_inspection_memo_date = new DateTimeObject();
+        public String last_inspection_memo_description = "";
+        public DateTimeObject memo_with_inspection_report_delinquent_date = new DateTimeObject();
+
+        public DateTimeObject last_bc_call_memo_date = new DateTimeObject();
+        public DateTimeObject last_bc_promised_to_pay_date = new DateTimeObject();
+
+        public decimal ytd_prin_paid_amt = 0M;
 
         public String foreclosure_officers = "";
         public String loan_type = "";
@@ -65,6 +76,15 @@ namespace com.sp.rmmc.foreclosures.models
 "(select top 1 memo.memo_create_dt from ms_loan_memo memo where memo.loan_id = base.loan_id and memo.memo_type_id = 139 order by memo_id desc) as fc_foreclosure_referral_date, " +
 "(select top 1 memo.memo_create_dt from ms_loan_memo memo where memo.loan_id = base.loan_id and memo.memo_type_id = 148 order by memo_id desc) as fc_payoff_date, " +
 "(select top 1 ms_fcl.fcl_item_date from ms_fcl_item_amts_1 ms_fcl where ms_fcl.item_id = 1100 and ms_fcl.loan_id = base.loan_id order by ms_fcl.fcl_item_date )  as appraisal_ordered_date, " +
+"(select top 1 ms_credit_information.default_reason_code from ms_credit_information where ms_credit_information.loan_id = base.loan_id order by ms_credit_information.default_reason_code ) as main_default_reason_code, " +
+"(select top 1 ms_occupancy_types.occ_description from ms_loan_occupancy, ms_occupancy_types where ms_occupancy_types.fha_occ_code = ms_loan_occupancy.fha_occ_code and ms_loan_occupancy.loan_id = base.loan_id order by ms_loan_occupancy.fha_occ_code ) as occupancy_code, " +
+"(select top 1 ms_fcl.fcl_item_recvd_expd from ms_fcl_item_amts_1 ms_fcl where ms_fcl.item_id = 1200 and ms_fcl.loan_id = base.loan_id order by ms_fcl.fcl_item_recvd_expd ) as foreclosure_date, " +
+"(select top 1 memo.memo_create_dt from ms_loan_memo memo, ms_memo_types where memo.loan_id = base.loan_id and memo.memo_type_id = ms_memo_types.memo_type_id and ms_memo_types.memo_type_desc like 'PI-%' order by memo_id desc ) as last_inspection_memo_date, " +
+"(select top 1 ms_memo_types.memo_type_desc from ms_loan_memo memo, ms_memo_types where memo.loan_id = base.loan_id and memo.memo_type_id = ms_memo_types.memo_type_id and ms_memo_types.memo_type_desc like 'PI-%' order by memo_id desc ) as last_inspection_memo_description, " +
+"(select top 1 memo.memo_create_dt from ms_loan_memo memo where memo.loan_id = base.loan_id and lower(memo.memo_subject) like '%property inspection report%' order by memo_id desc ) as memo_with_inspection_report_delinquent_date, " +
+"(select top 1 memo.memo_create_dt from ms_loan_memo memo, ms_memo_types where memo.loan_id = base.loan_id and memo.memo_type_id = ms_memo_types.memo_type_id and ms_memo_types.memo_type_desc like 'BC%' order by memo_id desc ) as last_bc_call_memo_date, " +
+"(select top 1 memo.memo_notify_dt from ms_loan_memo memo, ms_memo_types where memo.loan_id = base.loan_id and memo.memo_type_id = ms_memo_types.memo_type_id and ms_memo_types.memo_type_desc = 'BC-Promised to Pay' order by memo_notify_dt desc ) as last_bc_promised_to_pay_date, " +
+"(select top 1 ms_loan_balances.ytd_prin_paid_amt from ms_loan_balances where ms_loan_balances.loan_id = base.loan_id order by ms_loan_balances.ytd_prin_paid_amt) as ytd_prin_paid_amt, " +
 MsLoan.columns("base.loan_id") +
 "from  ms_fcl_info as base " +
 "where base.fcl_type = 'A' ";
@@ -92,6 +112,64 @@ MsLoan.columns("base.loan_id") +
             if (foreclosure_activated_list.Count == 0 && remove_foreclosure_by_loss_mitigation_list.Count == 0)
                 assign_foreclosure_and_remove_from_lm();
             return remove_foreclosure_by_loss_mitigation_list;
+        }
+
+        public static string inspections_expired_conditions()
+        {
+            string query = " and ( last_reg_paid_dt is null or demand_letter_due_date is null or last_reg_paid_dt < dateadd(dd, -30, demand_letter_due_date) or last_payments_balance <= 0   ) " +
+                            " and ( bankruptcy_filed_date is null or bankruptcy_discharge_date is not null or bankruptcy_case_dismissed_date is not null or bankruptcy_closed_date is not null ) " +
+                            " and ( (sale_date is null) or (demand_letter_due_date > sale_date) ) " +
+                            " and ( (sale_date_completed is null) or (demand_letter_due_date > sale_date_completed) ) " +
+                            " and ( deed_in_lieu = 'N' or deed_in_lieu is NULL ) " +
+                            " and ( fcl_type = 'A' ) " +
+                           " and ( memo_with_inspection_report_delinquent_date is null or memo_with_inspection_report_delinquent_date < last_inspection_memo_date ) " +
+                           " and (  ( last_inspection_memo_description in ('PI-Initial Vacant Inspection', 'PI-Ongoing Int./Ext. Vacant Inspection', 'PI-No Inspection Ordered')  and  last_inspection_memo_date < dateadd(dd, -25, getdate()) ) " +
+                           "     or ( last_inspection_memo_date is null ) " +
+                           "     or ( last_inspection_memo_description not in ('PI-Initial Vacant Inspection', 'PI-Ongoing Int./Ext. Vacant Inspection', 'PI-No Inspection Ordered')  and  last_inspection_memo_date < dateadd(dd, -20, getdate()) ) ) ";
+            return query;
+        }
+
+        public static List<Foreclosure> inspections_expired_mode()
+        {
+            string query = base_query + inspections_expired_conditions();
+            query = query + " order by loan_type, foreclosure_date asc";
+            return remove_lm(get_list(query));
+        }
+
+        public static string fannie_mae_notification_conditions()
+        {
+            string query = " and ( last_reg_paid_dt is null or demand_letter_due_date is null or last_reg_paid_dt < dateadd(dd, -30, demand_letter_due_date) or last_payments_balance <= 0   ) " +
+                            " and ( bankruptcy_filed_date is null or bankruptcy_discharge_date is not null or bankruptcy_case_dismissed_date is not null or bankruptcy_closed_date is not null ) " +
+                            " and ( (sale_date is null) or (demand_letter_due_date > sale_date) ) " +
+                            " and ( (sale_date_completed is null) or (demand_letter_due_date > sale_date_completed) ) " +
+                            " and ( deed_in_lieu = 'N' or deed_in_lieu is NULL ) " +
+                            " and ( fcl_type = 'A' ) " +
+                           " and ( loan_type = 'CONV' or loan_type = 'CNV') " +
+                           " and ( getdate() > last_bc_promised_to_pay_date  or last_bc_promised_to_pay_date is null ) ";
+            return query;
+        }
+
+        public static List<Foreclosure> fannie_mae_notification_mode()
+        {
+            string query = base_query + fannie_mae_notification_conditions();
+            query = query + " order by last_bc_call_memo_date asc";
+            return remove_lm(get_list(query));
+        }
+
+        public static List<Foreclosure> remove_lm(List<Foreclosure> list)
+        {
+            List<Foreclosure> result_list = new List<Foreclosure>();
+            List<LMReception> demand_letters_lm_receptions = LMReception.get_foreclosure_lm_receptions(list);
+            List<decimal> list_lm_reception_loan_ids = new List<decimal>();
+            decimal[] array_lm_reception_loan_ids;
+            foreach (LMReception lm_reception in demand_letters_lm_receptions)
+                list_lm_reception_loan_ids.Add(lm_reception.loan_id);
+            array_lm_reception_loan_ids = list_lm_reception_loan_ids.ToArray();
+            foreach (Foreclosure foreclosure in list)
+                if (Array.IndexOf(array_lm_reception_loan_ids, foreclosure.loan_id) < 0)
+                    result_list.Add(foreclosure);
+
+            return result_list;
         }
 
         public static void assign_foreclosure_and_remove_from_lm()
@@ -127,7 +205,7 @@ MsLoan.columns("base.loan_id") +
         public static List<Foreclosure> remove_from_recent_foreclosure_activated_by_payment_dt()
         {
             string query = base_query + remove_from_recent_foreclosure_activated_by_payment_dt_conditions();
-            query = query + " order by loan_type, demand_letter_due_date asc";
+            query = query + " order by loan_type, foreclosure_date asc";
             return get_list(query);
         }
 
@@ -172,7 +250,7 @@ MsLoan.columns("base.loan_id") +
         public static List<Foreclosure> foreclosure_completed_by_sale_date_completed()
         {
             string query = base_query + foreclosure_completed_by_sale_date_completed_conditions();
-            query = query + " order by loan_type, demand_letter_due_date asc";
+            query = query + " order by loan_type, sale_date_completed asc";
             return get_list(query);
         }
 
@@ -243,6 +321,15 @@ MsLoan.columns("base.loan_id") +
             foreclosure.fc_foreclosure_referral_date = readDBDateObject(reader, pos++, DateTime.Now);
             foreclosure.fc_payoff_date = readDBDateObject(reader, pos++, DateTime.Now);
             foreclosure.appraisal_ordered_date = readDBDateObject(reader, pos++, DateTime.Now);
+            foreclosure.main_default_reason_code = readDBString(reader, pos++);
+            foreclosure.occupancy_code = readDBString(reader, pos++);
+            foreclosure.foreclosure_date = readDBDateObject(reader, pos++, DateTime.Now);
+            foreclosure.last_inspection_memo_date = readDBDateObject(reader, pos++, DateTime.Now);
+            foreclosure.last_inspection_memo_description = readDBString(reader, pos++);
+            foreclosure.memo_with_inspection_report_delinquent_date = readDBDateObject(reader, pos++, DateTime.Now);
+            foreclosure.last_bc_call_memo_date = readDBDateObject(reader, pos++, DateTime.Now);
+            foreclosure.last_bc_promised_to_pay_date = readDBDateObject(reader, pos++, DateTime.Now);
+            foreclosure.ytd_prin_paid_amt = readDBDecimal(reader, pos++);
 
             if (foreclosure.loan_id > 0)
             {
@@ -276,6 +363,32 @@ MsLoan.columns("base.loan_id") +
                     return false;
             }
             return true;
+        }
+
+        public string last_inspection_since()
+        {
+            if (this.last_inspection_memo_date.isNull)
+                return "NA";
+            else
+            {
+                TimeSpan timespan = (DateTime.Now - this.last_inspection_memo_date.date);
+                return timespan.Days.ToString();
+            }
+        }
+
+        public bool does_require_fannie_mae_call(){
+            TimeSpan ts = DateTime.Today - this.last_bc_call_memo_date.date;
+            if( ts.Days > 3) return true;
+            for( int i = ts.Days ; i >= 1; i--){
+                DateTime date_to_call = this.last_bc_call_memo_date.date.add(ts.Days);
+                if( date_to_call.DayOfWeek != DayOfWeek.Saturday  && date_to_call.DayOfWeek != DayOfWeek.Sunday ) return false
+            }
+            return true;
+        }
+
+        public decimal non_zero_balance(){
+            if( this.ytd_prin_paid_amt > 0M ) return this.ytd_prin_paid_amt;
+            else return this.loan.prin_bal;
         }
     }
 }

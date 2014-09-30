@@ -19,6 +19,14 @@ public partial class lossmitigation_Collections_Default : System.Web.UI.Page
     protected List<Foreclosure> completed_by_sale_date_fha = new List<Foreclosure>();
     protected List<Foreclosure> completed_by_sale_date_va = new List<Foreclosure>();
     protected List<Foreclosure> completed_by_sale_date_conv = new List<Foreclosure>();
+
+    protected List<Foreclosure> all_inspection_expired = new List<Foreclosure>();
+    protected List<Foreclosure> inspection_expired = new List<Foreclosure>();
+    protected List<Foreclosure> inspection_expired_fha = new List<Foreclosure>();
+    protected List<Foreclosure> inspection_expired_va = new List<Foreclosure>();
+    protected List<Foreclosure> inspection_expired_conv = new List<Foreclosure>();
+    protected List<Foreclosure> require_fannie_mae_call = new List<Foreclosure>();
+
     protected decimal[] array_completed_checklists_loan_ids;
 
     protected void Page_Load(object sender, EventArgs e)
@@ -48,6 +56,22 @@ public partial class lossmitigation_Collections_Default : System.Web.UI.Page
             if (f.loan.loan_type == "FHA") completed_by_sale_date_fha.Add(f);
             if (f.loan.loan_type == "VA") completed_by_sale_date_va.Add(f);
             if (f.loan.loan_type == "CNV") completed_by_sale_date_conv.Add(f);
+        }
+
+        all_inspection_expired = Foreclosure.inspections_expired_mode();
+        foreach (Foreclosure f in all_inspection_expired)
+        {
+            if (selected_loan_officer != "ALL" && f.foreclosure_officers.ToUpper() != selected_loan_officer) continue;
+            inspection_expired.Add(f);
+            if (f.loan.loan_type == "FHA") inspection_expired_fha.Add(f);
+            if (f.loan.loan_type == "CNV") inspection_expired_conv.Add(f);
+            if (f.loan.loan_type == "VA") inspection_expired_va.Add(f);
+        }
+        
+        foreach (Foreclosure f in Foreclosure.fannie_mae_notification_mode())
+        {
+            if (selected_loan_officer != "ALL" && f.foreclosure_officers.ToUpper() != selected_loan_officer) continue;
+            if (f.loan.loan_type == "CNV" && f.does_require_fannie_mae_call()) this.require_fannie_mae_call.Add(f);
         }
     }
 
