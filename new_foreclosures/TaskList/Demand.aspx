@@ -846,6 +846,7 @@
                     <th>Loan#</th>
                     <th>Loan Type</th>
                     <th>Loan Name</th>
+                    <th>Borrower Phone</th>
                     <th>Demand Letter Due Date</th>
                     <th>Officer(s)</th>
                     <th>Last Call Memo Date</th>
@@ -857,6 +858,7 @@
                     <td><a href="../ForeclosureLog/Default.aspx?loan_id=<%= demand_letter.loan_id.ToString()%>"><%= demand_letter.loan_id.ToString()%></a></td>
                     <td><%= demand_letter.loan.loan_type%></td>
                     <td><%= demand_letter.loan.loan_name%></td>
+                    <td><%= demand_letter.loan.borrower_phone%></td>
                     <td><%= demand_letter.demand_letter_due_date.ToShortDateString() %></td>
                     <td><%= demand_letter.foreclosure_officers %></td>
                     <td><%= demand_letter.last_bc_call_memo_date.ToShortDateString() %></td>
