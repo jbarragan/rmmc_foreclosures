@@ -284,6 +284,7 @@
                     <th>Loan#</th>
                     <th>Loan Type</th>
                     <th>Loan Name</th>
+                    <th>Borrower Phone</th>
                     <th>Foreclosure Date</th>
                     <th>Officer(s)</th>
                     <th>Last Call Memo Date</th>
@@ -295,6 +296,7 @@
                     <td><a href="../ForeclosureLog/Default.aspx?loan_id=<%= foreclosure.loan_id.ToString()%>"><%= foreclosure.loan_id.ToString()%></a></td>
                     <td><%= foreclosure.loan.loan_type%></td>
                     <td><%= foreclosure.loan.loan_name%></td>
+                    <td><%= foreclosure.loan.borrower_phone %></td>
                     <td><%= foreclosure.foreclosure_date.ToShortDateString() %></td>
                     <td><%= foreclosure.foreclosure_officers %></td>
                     <td><%= foreclosure.last_bc_call_memo_date.ToShortDateString() %></td>
