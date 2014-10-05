@@ -43,7 +43,7 @@
         <div id="recent_foreclosure_activated_table" style="display:none">
         <h3>FHA (<%= recent_foreclosure_activated_fha.Count%>)<a class="btn btn-primary" onclick="var e = document.getElementById('recent_foreclosure_activated_fha'); e.style.display = e.style.display == 'block' ? 'none' : 'block';"><i class="icon-th-list icon-white"></i> Data</a></h3>
         <div id="recent_foreclosure_activated_fha" style="display:none">
-        <table class="table table-striped">
+        <table id="active_fha_table" class="table table-striped">
             <tr>
                 <th>Loan#</th>
                 <th>Loan Type</th>
@@ -55,8 +55,12 @@
                 <th>Papers To Attorney Date</th>
                 <th>Posting Date</th>
                 <th>Officer(s)</th>
+                <th style="display: none;">Last Reason Code Change </th>
                 <th>Reason Code</th>
+                <th style="display: none;">Last BC Memo Date</th>
+                <th style="display: none;">Last Occupancy Code Change</th>
                 <th>Occupancy Code</th>
+                <th style="display: none;">Last PI Memo Date</th>
                 <th>Checklist</th>
             </tr>
             <% foreach (com.sp.rmmc.foreclosures.models.Foreclosure foreclosure in recent_foreclosure_activated_fha)
@@ -73,8 +77,14 @@
                 <td><%= foreclosure.papers_to_attorney_date.ToShortDateString()%></td>
                 <td><%= foreclosure.posting_date.ToShortDateString()%></td>
                 <td><%= foreclosure.foreclosure_officers%></td>
-                <td><%= foreclosure.main_default_reason_code %></td>
-                <td><%= foreclosure.occupancy_code %></td>
+                <td style="display: none;"><%= foreclosure.last_default_reason_code_change_date.ToShortDateString()%></td>
+                <td><a onclick="$('#active_fha_table tr *:nth-child(13)').css('display') == 'block' ? $('#active_fha_table tr *:nth-child(13)').css('display', 'none') : $('#active_fha_table tr *:nth-child(13)').css('display', 'block');
+                                $('#active_fha_table tr *:nth-child(11)').css('display') == 'block' ? $('#active_fha_table tr *:nth-child(11)').css('display', 'none') : $('#active_fha_table tr *:nth-child(11)').css('display', 'block');"><span class="<%= foreclosure.default_reason_code_status_color() %>"><%= foreclosure.main_default_reason_code%></span></a></td>
+                <td style="display: none;"><%= foreclosure.last_bc_memo_date.ToShortDateString()%></td>
+                <td style="display: none;"><%= foreclosure.last_occupancy_code_change_date.ToShortDateString()%></td>
+                <td><a onclick="$('#active_fha_table tr *:nth-child(14)').css('display') == 'block' ? $('#active_fha_table tr *:nth-child(14)').css('display', 'none') : $('#active_fha_table tr *:nth-child(14)').css('display', 'block');
+                                $('#active_fha_table tr *:nth-child(16)').css('display') == 'block' ? $('#active_fha_table tr *:nth-child(16)').css('display', 'none') : $('#active_fha_table tr *:nth-child(16)').css('display', 'block');"><span class="<%= foreclosure.occupancy_code_status_color() %>"><%= foreclosure.occupancy_code %></span></a></td>
+                <td style="display: none;"><%= foreclosure.last_pi_memo_date.ToShortDateString()%></td>
                 <td><a href="PreforeclosureEvents.aspx?loan_id=<%=foreclosure.loan_id.ToString() %>">Checklist</a></td>
              </tr>
             <%
@@ -84,7 +94,7 @@
         </div>
         <h3>VA (<%= recent_foreclosure_activated_va.Count%>)<a class="btn btn-primary" onclick="var e = document.getElementById('recent_foreclosure_activated_va'); e.style.display = e.style.display == 'block' ? 'none' : 'block';"><i class="icon-th-list icon-white"></i> Data</a></h3>
         <div id="recent_foreclosure_activated_va" style="display:none">
-        <table class="table table-striped">
+        <table id="active_va_table" class="table table-striped">
             <tr>
                 <th>Loan#</th>
                 <th>Loan Type</th>
@@ -96,8 +106,12 @@
                 <th>Papers To Attorney Date</th>
                 <th>Posting Date</th>
                 <th>Officer(s)</th>
+                <th style="display: none;">Last Reason Code Change </th>
                 <th>Reason Code</th>
+                <th style="display: none;">Last BC Memo Date</th>
+                <th style="display: none;">Last Occupancy Code Change</th>
                 <th>Occupancy Code</th>
+                <th style="display: none;">Last PI Memo Date</th>
                 <th>Checklist</th>
             </tr>
             <% foreach (com.sp.rmmc.foreclosures.models.Foreclosure foreclosure in recent_foreclosure_activated_va)
@@ -114,8 +128,14 @@
                 <td><%= foreclosure.papers_to_attorney_date.ToShortDateString()%></td>
                 <td><%= foreclosure.posting_date.ToShortDateString()%></td>
                 <td><%= foreclosure.foreclosure_officers%></td>
-                <td><%= foreclosure.main_default_reason_code %></td>
-                <td><%= foreclosure.occupancy_code %></td>
+                <td style="display: none;"><%= foreclosure.last_default_reason_code_change_date.ToShortDateString()%></td>
+                <td><a onclick="$('#active_va_table tr *:nth-child(13)').css('display') == 'block' ? $('#active_va_table tr *:nth-child(13)').css('display', 'none') : $('#active_va_table tr *:nth-child(13)').css('display', 'block');
+                                $('#active_va_table tr *:nth-child(11)').css('display') == 'block' ? $('#active_va_table tr *:nth-child(11)').css('display', 'none') : $('#active_va_table tr *:nth-child(11)').css('display', 'block');"><span class="<%= foreclosure.default_reason_code_status_color() %>"><%= foreclosure.main_default_reason_code%></span></a></td>
+                <td style="display: none;"><%= foreclosure.last_bc_memo_date.ToShortDateString()%></td>
+                <td style="display: none;"><%= foreclosure.last_occupancy_code_change_date.ToShortDateString()%></td>
+                <td><a onclick="$('#active_va_table tr *:nth-child(14)').css('display') == 'block' ? $('#active_va_table tr *:nth-child(14)').css('display', 'none') : $('#active_va_table tr *:nth-child(14)').css('display', 'block');
+                                $('#active_va_table tr *:nth-child(16)').css('display') == 'block' ? $('#active_va_table tr *:nth-child(16)').css('display', 'none') : $('#active_va_table tr *:nth-child(16)').css('display', 'block');"><span class="<%= foreclosure.occupancy_code_status_color() %>"><%= foreclosure.occupancy_code %></span></a></td>
+                <td style="display: none;"><%= foreclosure.last_pi_memo_date.ToShortDateString()%></td>
                 <td><a href="PreforeclosureEvents.aspx?loan_id=<%=foreclosure.loan_id.ToString() %>">Checklist</a></td>
              </tr>
             <%
@@ -125,7 +145,7 @@
         </div>
         <h3>CONV (<%= recent_foreclosure_activated_conv.Count%>)<a class="btn btn-primary" onclick="var e = document.getElementById('recent_foreclosure_activated_conv'); e.style.display = e.style.display == 'block' ? 'none' : 'block';"><i class="icon-th-list icon-white"></i> Data</a></h3>
         <div id="recent_foreclosure_activated_conv" style="display:none">
-        <table class="table table-striped">
+        <table id="active_conv_table" class="table table-striped">
             <tr>
                 <th>Loan#</th>
                 <th>Loan Type</th>
@@ -137,8 +157,12 @@
                 <th>Papers To Attorney Date</th>
                 <th>Posting Date</th>
                 <th>Officer(s)</th>
+                <th style="display: none;">Last Reason Code Change </th>
                 <th>Reason Code</th>
+                <th style="display: none;">Last BC Memo Date</th>
+                <th style="display: none;">Last Occupancy Code Change</th>
                 <th>Occupancy Code</th>
+                <th style="display: none;">Last PI Memo Date</th>
                 <th>Checklist</th>
             </tr>
             <% foreach (com.sp.rmmc.foreclosures.models.Foreclosure foreclosure in recent_foreclosure_activated_conv)
@@ -155,8 +179,14 @@
                 <td><%= foreclosure.papers_to_attorney_date.ToShortDateString()%></td>
                 <td><%= foreclosure.posting_date.ToShortDateString()%></td>
                 <td><%= foreclosure.foreclosure_officers%></td>
-                <td><%= foreclosure.main_default_reason_code %></td>
-                <td><%= foreclosure.occupancy_code %></td>
+                <td style="display: none;"><%= foreclosure.last_default_reason_code_change_date.ToShortDateString()%></td>
+                <td><a onclick="$('#active_conv_table tr *:nth-child(13)').css('display') == 'block' ? $('#active_conv_table tr *:nth-child(13)').css('display', 'none') : $('#active_conv_table tr *:nth-child(13)').css('display', 'block');
+                                $('#active_conv_table tr *:nth-child(11)').css('display') == 'block' ? $('#active_conv_table tr *:nth-child(11)').css('display', 'none') : $('#active_conv_table tr *:nth-child(11)').css('display', 'block');"><span class="<%= foreclosure.default_reason_code_status_color() %>"><%= foreclosure.main_default_reason_code%></span></a></td>
+                <td style="display: none;"><%= foreclosure.last_bc_memo_date.ToShortDateString()%></td>
+                <td style="display: none;"><%= foreclosure.last_occupancy_code_change_date.ToShortDateString()%></td>
+                <td><a onclick="$('#active_conv_table tr *:nth-child(14)').css('display') == 'block' ? $('#active_conv_table tr *:nth-child(14)').css('display', 'none') : $('#active_conv_table tr *:nth-child(14)').css('display', 'block');
+                                $('#active_conv_table tr *:nth-child(16)').css('display') == 'block' ? $('#active_conv_table tr *:nth-child(16)').css('display', 'none') : $('#active_conv_table tr *:nth-child(16)').css('display', 'block');"><span class="<%= foreclosure.occupancy_code_status_color() %>"><%= foreclosure.occupancy_code %></span></a></td>
+                <td style="display: none;"><%= foreclosure.last_pi_memo_date.ToShortDateString()%></td>
                 <td><a href="PreforeclosureEvents.aspx?loan_id=<%=foreclosure.loan_id.ToString() %>">Checklist</a></td>
              </tr>
             <%
