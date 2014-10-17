@@ -51,9 +51,9 @@
                 <th>UPB</th>
                 <th>Interest Rate</th>
                 <th>Next Payment Due Date</th>
-                <th>Foreclosure Date</th>
                 <th>Papers To Attorney Date</th>
                 <th>Posting Date</th>
+                <th>Foreclosure Date</th>
                 <th>Officer(s)</th>
                 <th style="display: none;">Last Reason Code Change </th>
                 <th>Reason Code</th>
@@ -73,9 +73,9 @@
                 <td><%= foreclosure.loan.prin_bal.ToString("C")%></td>
                 <td><%= foreclosure.loan.int_rate.ToString("0.000")%></td>
                 <td><%= foreclosure.loan.due_date_next_payment.ToShortDateString()%></td>
-                <td><%= foreclosure.foreclosure_date.ToShortDateString() %></td>
                 <td><%= foreclosure.papers_to_attorney_date.ToShortDateString()%></td>
                 <td><%= foreclosure.posting_date.ToShortDateString()%></td>
+                <td><span class="text-error"><%= foreclosure.foreclosure_date.ToShortDateString() %></span></td>
                 <td><%= foreclosure.foreclosure_officers%></td>
                 <td style="display: none;"><%= foreclosure.last_default_reason_code_change_date.ToShortDateString()%></td>
                 <td><a onclick="$('#active_fha_table tr *:nth-child(13)').css('display') == 'block' ? $('#active_fha_table tr *:nth-child(13)').css('display', 'none') : $('#active_fha_table tr *:nth-child(13)').css('display', 'block');
@@ -102,9 +102,9 @@
                 <th>UPB</th>
                 <th>Interest Rate</th>
                 <th>Next Payment Due Date</th>
-                <th>Foreclosure Date</th>
                 <th>Papers To Attorney Date</th>
                 <th>Posting Date</th>
+                <th>Foreclosure Date</th>
                 <th>Officer(s)</th>
                 <th style="display: none;">Last Reason Code Change </th>
                 <th>Reason Code</th>
@@ -124,9 +124,9 @@
                 <td><%= foreclosure.loan.prin_bal.ToString("C")%></td>
                 <td><%= foreclosure.loan.int_rate.ToString("0.000")%></td>
                 <td><%= foreclosure.loan.due_date_next_payment.ToShortDateString()%></td>
-                <td><%= foreclosure.foreclosure_date.ToShortDateString() %></td>
                 <td><%= foreclosure.papers_to_attorney_date.ToShortDateString()%></td>
                 <td><%= foreclosure.posting_date.ToShortDateString()%></td>
+                <td><span class="text-error"><%= foreclosure.foreclosure_date.ToShortDateString() %></span></td>
                 <td><%= foreclosure.foreclosure_officers%></td>
                 <td style="display: none;"><%= foreclosure.last_default_reason_code_change_date.ToShortDateString()%></td>
                 <td><a onclick="$('#active_va_table tr *:nth-child(13)').css('display') == 'block' ? $('#active_va_table tr *:nth-child(13)').css('display', 'none') : $('#active_va_table tr *:nth-child(13)').css('display', 'block');
@@ -153,9 +153,9 @@
                 <th>UPB</th>
                 <th>Interest Rate</th>
                 <th>Next Payment Due Date</th>
-                <th>Foreclosure Date</th>
                 <th>Papers To Attorney Date</th>
                 <th>Posting Date</th>
+                <th>Foreclosure Date</th>
                 <th>Officer(s)</th>
                 <th style="display: none;">Last Reason Code Change </th>
                 <th>Reason Code</th>
@@ -175,9 +175,9 @@
                 <td><%= foreclosure.loan.prin_bal.ToString("C")%></td>
                 <td><%= foreclosure.loan.int_rate.ToString("0.000")%></td>
                 <td><%= foreclosure.loan.due_date_next_payment.ToShortDateString()%></td>
-                <td><%= foreclosure.foreclosure_date.ToShortDateString() %></td>
                 <td><%= foreclosure.papers_to_attorney_date.ToShortDateString()%></td>
                 <td><%= foreclosure.posting_date.ToShortDateString()%></td>
+                <td><span class="text-error"><%= foreclosure.foreclosure_date.ToShortDateString() %></span></td>
                 <td><%= foreclosure.foreclosure_officers%></td>
                 <td style="display: none;"><%= foreclosure.last_default_reason_code_change_date.ToShortDateString()%></td>
                 <td><a onclick="$('#active_conv_table tr *:nth-child(13)').css('display') == 'block' ? $('#active_conv_table tr *:nth-child(13)').css('display', 'none') : $('#active_conv_table tr *:nth-child(13)').css('display', 'block');
@@ -343,7 +343,8 @@
         <div class="span12">
         <h2>Completed by Sale Date (<%= completed_by_sale_date_all.Count%>)
         <a class="btn btn-primary" onclick="var e = document.getElementById('completed_by_sale_date_table'); e.style.display = e.style.display == 'block' ? 'none' : 'block';"><i class="icon-th-list icon-white"></i> Data</a>
-        <a class="btn btn-inverse" onclick="var e = document.getElementById('completed_by_sale_date_conditions'); e.style.display = e.style.display == 'block' ? 'none' : 'block';"><i class="icon-info-sign icon-white"></i> Conditions</a></h2>
+        <a class="btn btn-inverse" onclick="var e = document.getElementById('completed_by_sale_date_conditions'); e.style.display = e.style.display == 'block' ? 'none' : 'block';"><i class="icon-info-sign icon-white"></i> Conditions</a>
+        <a class="btn btn-primary" onclick="var e = document.getElementById('completed_by_sale_date_time_table'); e.style.display = e.style.display == 'block' ? 'none' : 'block';"><i class="icon-th-list icon-white"></i> Time Data</a></h2>
         <span id="completed_by_sale_date_conditions" style="display:none"><%=com.sp.rmmc.foreclosures.models.Foreclosure.foreclosure_completed_by_sale_date_completed_conditions()%></span>
         <div id="completed_by_sale_date_table" style="display:none">
         <h3>FHA (<%= completed_by_sale_date_fha.Count%>)<a class="btn btn-primary" onclick="var e = document.getElementById('completed_by_sale_date_fha'); e.style.display = e.style.display == 'block' ? 'none' : 'block';"><i class="icon-th-list icon-white"></i> Data</a></h3>
@@ -469,6 +470,58 @@
             %>
         </table>
         </div>
+        </div>
+        <div id="completed_by_sale_date_time_table" style="display:none">
+        <table class="table table-striped">
+            <tr>
+                <th>Loan#</th>
+                <th>Loan Type</th>
+                <th>Loan Name</th>
+                <th>UPB</th>
+                <th>Interest Rate</th>
+                <th>Next Payment Due Date</th>
+                <th>Papers To Attorney Date</th>
+                <th>Posting Date</th>
+                <th>Sale Date Completed</th>
+                <th>Officer(s)</th>
+                <th>Reason Code</th>
+                <th>Occupancy Code</th>
+                <th>Principal Paid</th>
+            </tr>
+            <% 
+                com.sp.rmmc.foreclosures.models.Foreclosure previous = completed_by_sale_date_all[0];
+            %>  
+                <tr><th colspan="13">Sale Completed on <%= previous.sale_date_completed.date.ToString("MMMM yyyy") %></th></tr> 
+            <%
+                foreach (com.sp.rmmc.foreclosures.models.Foreclosure foreclosure in completed_by_sale_date_all)
+               {
+            %>
+            <% if (foreclosure.sale_date_completed.date.Month != previous.sale_date_completed.date.Month ||
+                   foreclosure.sale_date_completed.date.Year != previous.sale_date_completed.date.Year)
+               {
+                   previous = foreclosure;
+            %>
+            <tr><th colspan="13">Sale Completed on <%= previous.sale_date_completed.date.ToString("MMMM yyyy") %></th></tr> 
+            <% } %>
+            <tr>
+                <td><a href="../ForeclosureLog/Default.aspx?loan_id=<%= foreclosure.loan_id.ToString()%>"><%= foreclosure.loan_id.ToString()%></a></td>
+                <td><%= foreclosure.loan.loan_type%></td>
+                <td><%= foreclosure.loan.loan_name%></td>
+                <td><%= foreclosure.loan.prin_bal.ToString("C")%></td>
+                <td><%= foreclosure.loan.int_rate.ToString("0.000")%></td>
+                <td><%= foreclosure.demand_letter_due_date.ToShortDateString()%></td>
+                <td><%= foreclosure.papers_to_attorney_date.ToShortDateString()%></td>
+                <td><%= foreclosure.posting_date.ToShortDateString()%></td>
+                <td><span class="text-error"><%= foreclosure.sale_date_completed.ToShortDateString()%></span></td>
+                <td><%= foreclosure.foreclosure_officers%></td>
+                <td><%= foreclosure.main_default_reason_code %></td>
+                <td><%= foreclosure.occupancy_code %></td>
+                <td><%= foreclosure.non_zero_balance().ToString("C")%></td>
+             </tr>
+            <%
+                }
+            %>
+        </table>
         </div>
         </div>
     </div>

@@ -16,6 +16,7 @@ public partial class lossmitigation_Collections_Default : System.Web.UI.Page
     protected List<Foreclosure> recent_foreclosure_activated_conv = new List<Foreclosure>();
     protected List<Foreclosure> completed_by_sale_date = new List<Foreclosure>();
     protected List<Foreclosure> completed_by_sale_date_all = new List<Foreclosure>();
+    protected List<Foreclosure> sort_completed_by_sale_date_all = new List<Foreclosure>();
     protected List<Foreclosure> completed_by_sale_date_fha = new List<Foreclosure>();
     protected List<Foreclosure> completed_by_sale_date_va = new List<Foreclosure>();
     protected List<Foreclosure> completed_by_sale_date_conv = new List<Foreclosure>();
