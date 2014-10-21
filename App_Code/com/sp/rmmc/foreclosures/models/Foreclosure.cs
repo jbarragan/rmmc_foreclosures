@@ -264,6 +264,29 @@ MsLoan.columns("base.loan_id") +
             return get_list(query);
         }
 
+        public static string foreclosure_completed_by_sale_date_completed_in_last_2_years_conditions()
+        {
+            string query = " and ( sale_date_completed > demand_letter_due_date )  " +
+                           " and ( sale_date_completed > dateadd(yy, -2, getdate()) )  " +
+                           " and ( fcl_type = 'A' ) ";
+            return query;
+        }
+
+        public static List<Foreclosure> foreclosure_completed_by_sale_date_completed_in_last_2_years()
+        {
+            string query = base_query + foreclosure_completed_by_sale_date_completed_conditions();
+            query = query + " order by sale_date_completed desc, loan_type";
+            return get_list(query);
+        }
+
+        public static List<Foreclosure> foreclosure_completed_by_sale_date_completed_in_month_and_year(int month, int year)
+        {
+            string query = base_query + foreclosure_completed_by_sale_date_completed_conditions() + 
+                          " and MONTH(sale_date_completed) = " + month + " and YEAR(sale_date_completed) = " + year;
+            query = query + " order by sale_date_completed asc, loan_type";
+            return get_list(query);
+        }
+
         public static string remove_from_foreclosure_by_deed_in_lieu_conditions()
         {
             string query = " and (  deed_in_lieu is not null and deed_in_lieu != 'N' )  " +
