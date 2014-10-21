@@ -493,6 +493,7 @@
             %>  
                 <tr><th colspan="13">Sale Completed on <%= previous.sale_date_completed.date.ToString("MMMM yyyy") %></th></tr> 
             <%
+                List<com.sp.rmmc.foreclosures.models.Foreclosure> total_in_month = new List<com.sp.rmmc.foreclosures.models.Foreclosure>();
                 foreach (com.sp.rmmc.foreclosures.models.Foreclosure foreclosure in completed_by_sale_date_all)
                {
             %>
@@ -500,9 +501,15 @@
                    foreclosure.sale_date_completed.date.Year != previous.sale_date_completed.date.Year)
                {
                    previous = foreclosure;
+                   decimal previous_total = com.sp.rmmc.foreclosures.models.Foreclosure.list_total( total_in_month );
+                   decimal previous_count = total_in_month.Count;
+                   total_in_month = new List<com.sp.rmmc.foreclosures.models.Foreclosure>();
             %>
-            <tr><th colspan="13">Sale Completed on <%= previous.sale_date_completed.date.ToString("MMMM yyyy") %></th></tr> 
-            <% } %>
+            <tr class="info"><td colspan="2">Count: <%= previous_count %></td><td colspan="9"></td><td colspan="2">Total: <%= previous_total.ToString("C") %></td></tr>
+            <tr><th colspan="13">Sale Completed on <%= previous.sale_date_completed.date.ToString("MMMM yyyy")%></th></tr> 
+            <% }
+                   total_in_month.Add(foreclosure);
+            %>
             <tr>
                 <td><a href="../ForeclosureLog/Default.aspx?loan_id=<%= foreclosure.loan_id.ToString()%>"><%= foreclosure.loan_id.ToString()%></a></td>
                 <td><%= foreclosure.loan.loan_type%></td>

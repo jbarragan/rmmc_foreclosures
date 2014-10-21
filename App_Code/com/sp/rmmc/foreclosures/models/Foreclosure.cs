@@ -421,5 +421,11 @@ MsLoan.columns("base.loan_id") +
             if (this.loan.prin_bal > 0M) return this.loan.prin_bal;
             else return this.last_principal_balance_amt_change;
         }
+
+        public static decimal list_total(List<Foreclosure> list){
+            decimal total = 0M;
+            foreach (Foreclosure f in list) total += f.non_zero_balance();
+            return total;
+        }
     }
 }
