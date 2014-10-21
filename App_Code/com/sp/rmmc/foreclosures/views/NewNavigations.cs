@@ -118,6 +118,20 @@ namespace com.sp.rmmc.foreclosures.views
             }
             return s + nav_end;
         }
+        public static string metrics_list_nav_select(string active)
+        {
+            string s = nav_start;
+            List<Nav> navs = new List<Nav>();
+            Nav nav = new Nav(); nav.link = "Claims.aspx"; nav.text = "Claims"; navs.Add(nav);
+            nav = new Nav(); nav.link = "Foreclosures.aspx"; nav.text = "Foreclosures By Sale Date Completed"; navs.Add(nav);
+            string active_class = "";
+            foreach (Nav n in navs)
+            {
+                if (active == n.text) active_class = @" class=""active"""; else active_class = "";
+                s += @"<li" + active_class + @"><a href=""" + n.link + @""">" + n.text + "</a></li>";
+            }
+            return s + nav_end;
+        }
 
 
         public static string utilities_nav =

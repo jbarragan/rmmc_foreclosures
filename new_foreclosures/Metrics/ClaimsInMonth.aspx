@@ -5,7 +5,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <title>Foreclosures: Claims.</title>
+    <title>Metrics: Claims.</title>
     <link href="../../assets/css/bootstrapLM.css" rel="stylesheet"/>
 </head>
 <body>
@@ -17,7 +17,9 @@
         <h1>Claims</h1>
         <p>Claims For <%= date.ToString("MMMM yyyy") %>.</p>
     </div>
-    <%= com.sp.rmmc.foreclosures.views.NewNavigations.sub_main_nav %>
+    
+    <%= com.sp.rmmc.foreclosures.views.NewNavigations.sub_main_nav_select("Metrics") %>
+    <%= com.sp.rmmc.foreclosures.views.NewNavigations.metrics_list_nav_select("Claims")%>
     <!-- Example row of columns -->
     <div class="row">
         <div class="span12">
