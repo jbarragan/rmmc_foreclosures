@@ -47,7 +47,7 @@ namespace com.sp.rmmc.foreclosures.models
         public DateTimeObject last_bc_promised_to_pay_date = new DateTimeObject();
 
         public decimal ytd_prin_paid_amt = 0M;
-        public decimal last_principal_balance_amt_change = 0M;
+        public decimal principal_amt_from_history = 0M;
 
         public String foreclosure_officers = "";
         public String loan_type = "";
@@ -94,7 +94,7 @@ namespace com.sp.rmmc.foreclosures.models
 "(select top 1 memo.memo_create_dt from ms_loan_memo memo, ms_memo_types where memo.loan_id = base.loan_id and memo.memo_type_id = ms_memo_types.memo_type_id and ms_memo_types.memo_type_desc like 'BC%' order by memo_id desc ) as last_bc_call_memo_date, " +
 "(select top 1 memo.memo_notify_dt from ms_loan_memo memo, ms_memo_types where memo.loan_id = base.loan_id and memo.memo_type_id = ms_memo_types.memo_type_id and ms_memo_types.memo_type_desc = 'BC-Promised to Pay' order by memo_notify_dt desc ) as last_bc_promised_to_pay_date, " +
 "(select top 1 ms_loan_balances.ytd_prin_paid_amt from ms_loan_balances where ms_loan_balances.loan_id = base.loan_id order by ms_loan_balances.ytd_prin_paid_amt) as ytd_prin_paid_amt, " +
-"(select top 1 cast(audit.uad_audit_data_bf_chg as decimal) from ms_user_audit_history_data audit where audit.loan_id = base.loan_id and audit.uad_audit_field_name = 'prin_bal' and  isnumeric(audit.uad_audit_data_bf_chg)=1 and cast(audit.uad_audit_data_bf_chg as decimal) > 0 order by audit.uad_audit_chg_dt desc) as last_principal_balance_amt_change, " +
+"(select top 1 abs(ms_loan_history.prin_amt) from ms_loan_history where ms_loan_history.loan_id = base.loan_id order by ms_loan_history.prin_amt) as principal_amt_from_history, " +
 MsLoan.columns("base.loan_id") +
 "from  ms_fcl_info as base " +
 "where base.fcl_type = 'A' ";
@@ -344,7 +344,7 @@ MsLoan.columns("base.loan_id") +
             foreclosure.last_bc_call_memo_date = readDBDateObject(reader, pos++, DateTime.Now);
             foreclosure.last_bc_promised_to_pay_date = readDBDateObject(reader, pos++, DateTime.Now);
             foreclosure.ytd_prin_paid_amt = readDBDecimal(reader, pos++);
-            foreclosure.last_principal_balance_amt_change = readDBDecimal(reader, pos++);
+            foreclosure.principal_amt_from_history = readDBDecimal(reader, pos++);
 
             if (foreclosure.loan_id > 0)
             {
@@ -419,7 +419,7 @@ MsLoan.columns("base.loan_id") +
         public decimal non_zero_balance(){
             if( this.ytd_prin_paid_amt > 0M ) return this.ytd_prin_paid_amt;
             if (this.loan.prin_bal > 0M) return this.loan.prin_bal;
-            else return this.last_principal_balance_amt_change;
+            else return this.principal_amt_from_history;
         }
 
         public static decimal list_total(List<Foreclosure> list){
