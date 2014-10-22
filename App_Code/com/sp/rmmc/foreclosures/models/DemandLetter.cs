@@ -27,12 +27,14 @@ namespace com.sp.rmmc.foreclosures.models
         public string mortgage_status = "";
         public DateTimeObject mortgage_status_date = new DateTimeObject();
         public DateTimeObject last_inspection_memo_date = new DateTimeObject();
+        public DateTimeObject last_notify_inspection_memo_date = new DateTimeObject();
         public string last_inspection_memo_description = "";
         public DateTimeObject memo_with_inspection_report_delinquent_date = new DateTimeObject();
         public String default_reason_code = "";
         public DateTimeObject last_default_reason_code_change_date = new DateTimeObject();
         public DateTimeObject last_bc_memo_date = new DateTimeObject();
         public String occupancy_code = "";
+        public String va_occupancy_code = "";
         public DateTimeObject last_occupancy_code_change_date = new DateTimeObject();
         public DateTimeObject last_pi_memo_date = new DateTimeObject();
         public DateTimeObject last_nl_demand_memo_date = new DateTimeObject();
@@ -73,13 +75,17 @@ namespace com.sp.rmmc.foreclosures.models
 "(select top 1 ms_credit_information.mortgage_status from ms_credit_information where ms_credit_information.loan_id = base.loan_id order by ms_credit_information.mortgage_status ) as mortgage_status, " +
 "(select top 1 date(substr(uad_audit_data_af_chg, 7, 4) + '/' + substr(uad_audit_data_af_chg, 1, 2) + '/' + substr(uad_audit_data_af_chg, 4, 2)) as mortgage_status_date from ms_user_audit_history_data ms_audit_history where ms_audit_history.loan_id = base.loan_id and ms_audit_history.uad_audit_field_name = 'mortgage_status_date' and ms_audit_history.uad_audit_field_name is not null and length(uad_audit_data_af_chg) >= 10 and isdate( mortgage_status_date ) = 1 order by 1 desc ) as mortgage_status_date, " +
 "(select top 1 memo.memo_create_dt from ms_loan_memo memo, ms_memo_types where memo.loan_id = base.loan_id and memo.memo_type_id = ms_memo_types.memo_type_id and ms_memo_types.memo_type_desc like 'PI-%' order by memo_id desc ) as last_inspection_memo_date, " +
+"(select top 1 memo.memo_notify_dt from ms_loan_memo memo, ms_memo_types where memo.loan_id = base.loan_id and memo.memo_type_id = ms_memo_types.memo_type_id and ms_memo_types.memo_type_desc like 'PI-%' order by memo.memo_notify_dt desc ) as last_notify_inspection_memo_date, " +
+//"(select top 1 ms_memo_types.memo_type_desc from ms_loan_memo memo, ms_memo_types where memo.loan_id = base.loan_id and memo.memo_type_id = ms_memo_types.memo_type_id and ms_memo_types.memo_type_desc like 'PI-%' order by memo_id desc ) as last_inspection_memo_description, " +
+//"(select top 1 memo.memo_notify_dt from ms_loan_memo memo where memo.loan_id = base.loan_id and lower(memo.memo_subject) like '%property inspection report%' order by memo.memo_notify_dt desc ) as memo_with_inspection_report_delinquent_date, " +
 "(select top 1 ms_memo_types.memo_type_desc from ms_loan_memo memo, ms_memo_types where memo.loan_id = base.loan_id and memo.memo_type_id = ms_memo_types.memo_type_id and ms_memo_types.memo_type_desc like 'PI-%' order by memo_id desc ) as last_inspection_memo_description, " +
 "(select top 1 memo.memo_create_dt from ms_loan_memo memo where memo.loan_id = base.loan_id and lower(memo.memo_subject) like '%property inspection report%' order by memo_id desc ) as memo_with_inspection_report_delinquent_date, " +
 "(select top 1 ms_credit_information.default_reason_code from ms_credit_information where ms_credit_information.loan_id = base.loan_id order by ms_credit_information.default_reason_code ) as main_default_reason_code, " +
 "(select top 1 memo.memo_create_dt from ms_loan_memo memo, ms_memo_categories where memo.loan_id = base.loan_id and memo.memo_category_id = ms_memo_categories.memo_category_id and ms_memo_categories.memo_category_desc like '0%'  order by memo_create_dt desc ) as last_default_reason_code_change_date, " +
 "(select top 1 memo.memo_create_dt from ms_loan_memo memo, ms_memo_types where memo.loan_id = base.loan_id and memo.memo_type_id = ms_memo_types.memo_type_id and ms_memo_types.memo_type_desc like 'BC%' order by memo_id desc ) as last_bc_memo_date, " +
 "(select top 1 ms_occupancy_types.occ_description from ms_loan_occupancy, ms_occupancy_types where ms_occupancy_types.fha_occ_code = ms_loan_occupancy.fha_occ_code and ms_loan_occupancy.loan_id = base.loan_id order by ms_loan_occupancy.fha_occ_code ) as occupancy_code, " +
-"(select top 1 ms_audit_history.uad_audit_chg_dt from ms_user_audit_history_data ms_audit_history where ms_audit_history.loan_id = base.loan_id and ms_audit_history.uad_audit_field_name = 'fha_occ_code' order by ms_audit_history.uad_audit_chg_dt desc) as last_occupancy_code_change_date, " +
+"(select top 1 ms_loan_occupancy.va_occ_cd from ms_loan_occupancy where ms_loan_occupancy.loan_id = base.loan_id order by ms_loan_occupancy.va_occ_cd ) as va_occupancy_code, " +
+"(select top 1 ms_audit_history.uad_audit_chg_dt from ms_user_audit_history_data ms_audit_history where ms_audit_history.loan_id = base.loan_id and (ms_audit_history.uad_audit_field_name = 'fha_occ_code' or  ms_audit_history.uad_audit_field_name = 'va_occ_cd') order by ms_audit_history.uad_audit_chg_dt desc) as last_occupancy_code_change_date, " +
 "(select top 1 memo.memo_notify_dt from ms_loan_memo memo, ms_memo_types where memo.loan_id = base.loan_id and memo.memo_type_id = ms_memo_types.memo_type_id and (ms_memo_types.memo_type_desc like 'PI-%') order by memo_notify_dt desc ) as last_pi_memo_date, " +
 "(select top 1 memo.memo_create_dt from ms_loan_memo memo, ms_memo_types where memo.loan_id = base.loan_id and memo.memo_type_id = ms_memo_types.memo_type_id and (ms_memo_types.memo_type_desc like 'NL-Demand') order by memo_create_dt desc ) as last_nl_demand_memo_date, " +
 "(select top 1 memo.memo_create_dt from ms_loan_memo memo, ms_memo_types where memo.loan_id = base.loan_id and memo.memo_subject like '%Demand%' and memo.memo_type_id = ms_memo_types.memo_type_id and ms_memo_types.memo_type_desc like 'Correspondence' and date(memo.memo_create_dt) = date(last_nl_demand_memo_date) order by memo_create_dt desc ) as correspondence_on_nl_demand_memo_date, " +
@@ -361,6 +367,27 @@ ReviewChecklist.columns("base.loan_id") +
             return true;
         }
 
+        public string all_occupancy_codes_descriptions()
+        {
+            if (this.occupancy_code.Length > 0 && this.va_occupancy_code.Length > 0)
+            {
+                return this.occupancy_code + "/" + this.va_occupancy_code_description();
+            }
+            else if (this.occupancy_code.Length > 0) return this.occupancy_code;
+            else if (this.va_occupancy_code.Length > 0) return this.va_occupancy_code_description();
+            return "";
+        }
+
+        public string va_occupancy_code_description()
+        {
+            if (this.va_occupancy_code == "0") return "Abandonment";
+            else if (this.va_occupancy_code == "1") return "Original Veteran";
+            else if (this.va_occupancy_code == "2") return "Transferree";
+            else if (this.va_occupancy_code == "4") return "Vacant";
+            else if (this.va_occupancy_code == "8") return "Tenant";
+            return "";
+        }
+
         private static List<DemandLetter> get_list(String query)
         {
             List<DemandLetter> list = new List<DemandLetter>();
@@ -409,12 +436,14 @@ ReviewChecklist.columns("base.loan_id") +
             demand_letter.mortgage_status = readDBString(reader, pos++);
             demand_letter.mortgage_status_date = readDBDateObject(reader, pos++, DateTime.Now);
             demand_letter.last_inspection_memo_date = readDBDateObject(reader, pos++, DateTime.Now);
+            demand_letter.last_notify_inspection_memo_date = readDBDateObject(reader, pos++, DateTime.Now);
             demand_letter.last_inspection_memo_description = readDBString(reader, pos++);
             demand_letter.memo_with_inspection_report_delinquent_date = readDBDateObject(reader, pos++, DateTime.Now);
             demand_letter.default_reason_code = readDBString(reader, pos++);
             demand_letter.last_default_reason_code_change_date = readDBDateObject(reader, pos++, DateTime.Now);
             demand_letter.last_bc_memo_date = readDBDateObject(reader, pos++, DateTime.Now);
             demand_letter.occupancy_code = readDBString(reader, pos++);
+            demand_letter.va_occupancy_code = readDBString(reader, pos++);
             demand_letter.last_occupancy_code_change_date = readDBDateObject(reader, pos++, DateTime.Now);
             demand_letter.last_pi_memo_date = readDBDateObject(reader, pos++, DateTime.Now);
             demand_letter.last_nl_demand_memo_date = readDBDateObject(reader, pos++, DateTime.Now);
