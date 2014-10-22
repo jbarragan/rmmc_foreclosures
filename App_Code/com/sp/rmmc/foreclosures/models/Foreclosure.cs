@@ -36,6 +36,7 @@ namespace com.sp.rmmc.foreclosures.models
         public DateTimeObject last_default_reason_code_change_date = new DateTimeObject();
         public DateTimeObject last_bc_memo_date = new DateTimeObject();
         public String occupancy_code = "";
+        public String va_occupancy_code = "";
         public DateTimeObject last_occupancy_code_change_date = new DateTimeObject();
         public DateTimeObject last_pi_memo_date = new DateTimeObject();
 
@@ -85,7 +86,8 @@ namespace com.sp.rmmc.foreclosures.models
 "(select top 1 memo.memo_create_dt from ms_loan_memo memo, ms_memo_categories where memo.loan_id = base.loan_id and memo.memo_category_id = ms_memo_categories.memo_category_id and ms_memo_categories.memo_category_desc like '0%'  order by memo_create_dt desc ) as last_default_reason_code_change_date, " +
 "(select top 1 memo.memo_create_dt from ms_loan_memo memo, ms_memo_types where memo.loan_id = base.loan_id and memo.memo_type_id = ms_memo_types.memo_type_id and ms_memo_types.memo_type_desc like 'BC%' order by memo_id desc ) as last_bc_memo_date, " +
 "(select top 1 ms_occupancy_types.occ_description from ms_loan_occupancy, ms_occupancy_types where ms_occupancy_types.fha_occ_code = ms_loan_occupancy.fha_occ_code and ms_loan_occupancy.loan_id = base.loan_id order by ms_loan_occupancy.fha_occ_code ) as occupancy_code, " +
-"(select top 1 ms_audit_history.uad_audit_chg_dt from ms_user_audit_history_data ms_audit_history where ms_audit_history.loan_id = base.loan_id and ms_audit_history.uad_audit_field_name = 'fha_occ_code' order by ms_audit_history.uad_audit_chg_dt desc) as last_occupancy_code_change_date, " +
+"(select top 1 ms_loan_occupancy.va_occ_cd from ms_loan_occupancy where ms_loan_occupancy.loan_id = base.loan_id order by ms_loan_occupancy.va_occ_cd ) as va_occupancy_code, " +
+"(select top 1 ms_audit_history.uad_audit_chg_dt from ms_user_audit_history_data ms_audit_history where ms_audit_history.loan_id = base.loan_id and (ms_audit_history.uad_audit_field_name = 'fha_occ_code' or  ms_audit_history.uad_audit_field_name = 'va_occ_cd') order by ms_audit_history.uad_audit_chg_dt desc) as last_occupancy_code_change_date, " +
 "(select top 1 memo.memo_notify_dt from ms_loan_memo memo, ms_memo_types where memo.loan_id = base.loan_id and memo.memo_type_id = ms_memo_types.memo_type_id and (ms_memo_types.memo_type_desc like 'PI-%') order by memo_notify_dt desc ) as last_pi_memo_date, " +
 "(select top 1 ms_fcl.fcl_item_recvd_expd from ms_fcl_item_amts_1 ms_fcl where ms_fcl.item_id = 1200 and ms_fcl.loan_id = base.loan_id order by ms_fcl.fcl_item_recvd_expd ) as foreclosure_date, " +
 "(select top 1 memo.memo_create_dt from ms_loan_memo memo, ms_memo_types where memo.loan_id = base.loan_id and memo.memo_type_id = ms_memo_types.memo_type_id and ms_memo_types.memo_type_desc like 'PI-%' order by memo_id desc ) as last_inspection_memo_date, " +
@@ -358,6 +360,7 @@ MsLoan.columns("base.loan_id") +
             foreclosure.last_default_reason_code_change_date = readDBDateObject(reader, pos++, DateTime.Now);
             foreclosure.last_bc_memo_date = readDBDateObject(reader, pos++, DateTime.Now);
             foreclosure.occupancy_code = readDBString(reader, pos++);
+            foreclosure.va_occupancy_code = readDBString(reader, pos++);
             foreclosure.last_occupancy_code_change_date = readDBDateObject(reader, pos++, DateTime.Now);
             foreclosure.last_pi_memo_date = readDBDateObject(reader, pos++, DateTime.Now);
             foreclosure.foreclosure_date = readDBDateObject(reader, pos++, DateTime.Now);
@@ -415,6 +418,27 @@ MsLoan.columns("base.loan_id") +
             TimeSpan ts = this.last_occupancy_code_change_date.date - this.last_pi_memo_date.date;
             if (Math.Abs(ts.Days) > 1 || this.last_occupancy_code_change_date.isNull || this.last_pi_memo_date.isNull) return "text-error";
             return "text-success";
+        }
+
+        public string all_occupancy_codes_descriptions()
+        {
+            if (this.occupancy_code.Length > 0 && this.va_occupancy_code.Length > 0)
+            {
+                return this.occupancy_code + "/" + this.va_occupancy_code_description();
+            }
+            else if (this.occupancy_code.Length > 0) return this.occupancy_code;
+            else if (this.va_occupancy_code.Length > 0) return this.va_occupancy_code_description();
+            return "";
+        }
+
+        public string va_occupancy_code_description()
+        {
+            if (this.va_occupancy_code == "0") return "Abandonment";
+            else if (this.va_occupancy_code == "1") return "Original Veteran";
+            else if (this.va_occupancy_code == "2") return "Transferree";
+            else if (this.va_occupancy_code == "4") return "Vacant";
+            else if (this.va_occupancy_code == "8") return "Tenant";
+            return "";
         }
 
         public string last_inspection_since()

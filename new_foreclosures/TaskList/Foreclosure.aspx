@@ -83,7 +83,7 @@
                 <td style="display: none;"><%= foreclosure.last_bc_memo_date.ToShortDateString()%></td>
                 <td style="display: none;"><%= foreclosure.last_occupancy_code_change_date.ToShortDateString()%></td>
                 <td><a onclick="$('#active_fha_table tr *:nth-child(14)').css('display') == 'block' ? $('#active_fha_table tr *:nth-child(14)').css('display', 'none') : $('#active_fha_table tr *:nth-child(14)').css('display', 'block');
-                                $('#active_fha_table tr *:nth-child(16)').css('display') == 'block' ? $('#active_fha_table tr *:nth-child(16)').css('display', 'none') : $('#active_fha_table tr *:nth-child(16)').css('display', 'block');"><span class="<%= foreclosure.occupancy_code_status_color() %>"><%= foreclosure.occupancy_code %></span></a></td>
+                                $('#active_fha_table tr *:nth-child(16)').css('display') == 'block' ? $('#active_fha_table tr *:nth-child(16)').css('display', 'none') : $('#active_fha_table tr *:nth-child(16)').css('display', 'block');"><span class="<%= foreclosure.occupancy_code_status_color() %>"><%= foreclosure.all_occupancy_codes_descriptions() %></span></a></td>
                 <td style="display: none;"><%= foreclosure.last_pi_memo_date.ToShortDateString()%></td>
                 <td><a href="PreforeclosureEvents.aspx?loan_id=<%=foreclosure.loan_id.ToString() %>">Checklist</a></td>
              </tr>
@@ -134,7 +134,7 @@
                 <td style="display: none;"><%= foreclosure.last_bc_memo_date.ToShortDateString()%></td>
                 <td style="display: none;"><%= foreclosure.last_occupancy_code_change_date.ToShortDateString()%></td>
                 <td><a onclick="$('#active_va_table tr *:nth-child(14)').css('display') == 'block' ? $('#active_va_table tr *:nth-child(14)').css('display', 'none') : $('#active_va_table tr *:nth-child(14)').css('display', 'block');
-                                $('#active_va_table tr *:nth-child(16)').css('display') == 'block' ? $('#active_va_table tr *:nth-child(16)').css('display', 'none') : $('#active_va_table tr *:nth-child(16)').css('display', 'block');"><span class="<%= foreclosure.occupancy_code_status_color() %>"><%= foreclosure.occupancy_code %></span></a></td>
+                                $('#active_va_table tr *:nth-child(16)').css('display') == 'block' ? $('#active_va_table tr *:nth-child(16)').css('display', 'none') : $('#active_va_table tr *:nth-child(16)').css('display', 'block');"><span class="<%= foreclosure.occupancy_code_status_color() %>"><%= foreclosure.all_occupancy_codes_descriptions() %></span></a></td>
                 <td style="display: none;"><%= foreclosure.last_pi_memo_date.ToShortDateString()%></td>
                 <td><a href="PreforeclosureEvents.aspx?loan_id=<%=foreclosure.loan_id.ToString() %>">Checklist</a></td>
              </tr>
@@ -185,7 +185,7 @@
                 <td style="display: none;"><%= foreclosure.last_bc_memo_date.ToShortDateString()%></td>
                 <td style="display: none;"><%= foreclosure.last_occupancy_code_change_date.ToShortDateString()%></td>
                 <td><a onclick="$('#active_conv_table tr *:nth-child(14)').css('display') == 'block' ? $('#active_conv_table tr *:nth-child(14)').css('display', 'none') : $('#active_conv_table tr *:nth-child(14)').css('display', 'block');
-                                $('#active_conv_table tr *:nth-child(16)').css('display') == 'block' ? $('#active_conv_table tr *:nth-child(16)').css('display', 'none') : $('#active_conv_table tr *:nth-child(16)').css('display', 'block');"><span class="<%= foreclosure.occupancy_code_status_color() %>"><%= foreclosure.occupancy_code %></span></a></td>
+                                $('#active_conv_table tr *:nth-child(16)').css('display') == 'block' ? $('#active_conv_table tr *:nth-child(16)').css('display', 'none') : $('#active_conv_table tr *:nth-child(16)').css('display', 'block');"><span class="<%= foreclosure.occupancy_code_status_color() %>"><%= foreclosure.all_occupancy_codes_descriptions() %></span></a></td>
                 <td style="display: none;"><%= foreclosure.last_pi_memo_date.ToShortDateString()%></td>
                 <td><a href="PreforeclosureEvents.aspx?loan_id=<%=foreclosure.loan_id.ToString() %>">Checklist</a></td>
              </tr>
@@ -380,7 +380,7 @@
                 <td><span class="text-error"><%= foreclosure.sale_date_completed.ToShortDateString()%></span></td>
                 <td><%= foreclosure.foreclosure_officers%></td>
                 <td><%= foreclosure.main_default_reason_code %></td>
-                <td><%= foreclosure.occupancy_code %></td>
+                <td><%= foreclosure.all_occupancy_codes_descriptions()%></td>
                 <td><%= foreclosure.non_zero_balance().ToString("C")%></td>
              </tr>
             <%
@@ -421,7 +421,7 @@
                 <td><span class="text-error"><%= foreclosure.sale_date_completed.ToShortDateString()%></span></td>
                 <td><%= foreclosure.foreclosure_officers%></td>
                 <td><%= foreclosure.main_default_reason_code %></td>
-                <td><%= foreclosure.occupancy_code %></td>
+                <td><%= foreclosure.all_occupancy_codes_descriptions() %></td>
                 <td><%= foreclosure.non_zero_balance().ToString("C")%></td>
              </tr>
             <%
@@ -462,7 +462,7 @@
                 <td><span class="text-error"><%= foreclosure.sale_date_completed.ToShortDateString()%></span></td>
                 <td><%= foreclosure.foreclosure_officers%></td>
                 <td><%= foreclosure.main_default_reason_code %></td>
-                <td><%= foreclosure.occupancy_code %></td>
+                <td><%= foreclosure.all_occupancy_codes_descriptions() %></td>
                 <td><%= foreclosure.non_zero_balance().ToString("C")%></td>
              </tr>
             <%
@@ -522,7 +522,7 @@
                 <td><span class="text-error"><%= foreclosure.sale_date_completed.ToShortDateString()%></span></td>
                 <td><%= foreclosure.foreclosure_officers%></td>
                 <td><%= foreclosure.main_default_reason_code %></td>
-                <td><%= foreclosure.occupancy_code %></td>
+                <td><%= foreclosure.all_occupancy_codes_descriptions() %></td>
                 <td><%= foreclosure.non_zero_balance().ToString("C")%></td>
              </tr>
             <%
