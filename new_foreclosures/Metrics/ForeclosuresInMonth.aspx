@@ -46,7 +46,7 @@
             %>  
                 <tr><th colspan="13">Sale Completed on <%= previous.sale_date_completed.date.ToString("MMMM yyyy") %></th></tr> 
             <%
-                List<com.sp.rmmc.foreclosures.models.Foreclosure> total_in_month = new List<com.sp.rmmc.foreclosures.models.Foreclosure>();
+                System.Collections.Generic.List<com.sp.rmmc.foreclosures.models.Foreclosure> total_in_month = new System.Collections.Generic.List<com.sp.rmmc.foreclosures.models.Foreclosure>();
                 decimal previous_total = 0M;
                 int previous_count = 0;
                 foreach (com.sp.rmmc.foreclosures.models.Foreclosure foreclosure in foreclosures)
@@ -58,7 +58,7 @@
                    previous = foreclosure;
                    previous_total = com.sp.rmmc.foreclosures.models.Foreclosure.list_total( total_in_month );
                    previous_count = total_in_month.Count;
-                   total_in_month = new List<com.sp.rmmc.foreclosures.models.Foreclosure>();
+                   total_in_month = new System.Collections.Generic.List<com.sp.rmmc.foreclosures.models.Foreclosure>();
             %>
             <tr class="info"><td colspan="2">Count: <%= previous_count %></td><td colspan="9"></td><td colspan="2">Total: <%= previous_total.ToString("C") %></td></tr>
             <tr><th colspan="13">Sale Completed on <%= previous.sale_date_completed.date.ToString("MMMM yyyy")%></th></tr> 
