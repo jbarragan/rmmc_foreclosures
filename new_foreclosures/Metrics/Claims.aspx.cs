@@ -33,7 +33,7 @@ public partial class lossmitigation_Collections_Default : System.Web.UI.Page
         ClaimsByMonth claims_by_month = new ClaimsByMonth(new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1));
         foreach (Claim claim in all_claims)
         {
-            while (claim.part_a_filed_recvd_date.date < claims_by_month.month)
+            while (claim.received_date.date < claims_by_month.month)
             {
                 claims_by_month_list.Add(claims_by_month);
                 claims_by_month = new ClaimsByMonth(claims_by_month.month.AddMonths(-1));
