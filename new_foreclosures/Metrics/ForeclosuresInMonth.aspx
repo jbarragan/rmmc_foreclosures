@@ -29,7 +29,7 @@
                 <th>Loan#</th>
                 <th>Loan Type</th>
                 <th>Loan Name</th>
-                <th>UPB</th>
+                <th>Principal Paid</th>
                 <th>Interest Rate</th>
                 <th>Next Payment Due Date</th>
                 <th>Papers To Attorney Date</th>
@@ -69,7 +69,7 @@
                 <td><a href="../ForeclosureLog/Default.aspx?loan_id=<%= foreclosure.loan_id.ToString()%>"><%= foreclosure.loan_id.ToString()%></a></td>
                 <td><%= foreclosure.loan.loan_type%></td>
                 <td><%= foreclosure.loan.loan_name%></td>
-                <td><%= foreclosure.loan.prin_bal.ToString("C")%></td>
+                <td><%= foreclosure.non_zero_balance().ToString("C") %></td>
                 <td><%= foreclosure.loan.int_rate.ToString("0.000")%></td>
                 <td><%= foreclosure.demand_letter_due_date.ToShortDateString()%></td>
                 <td><%= foreclosure.papers_to_attorney_date.ToShortDateString()%></td>
