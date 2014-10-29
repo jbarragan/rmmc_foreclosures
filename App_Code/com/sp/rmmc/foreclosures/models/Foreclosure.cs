@@ -96,7 +96,7 @@ namespace com.sp.rmmc.foreclosures.models
 "(select top 1 memo.memo_create_dt from ms_loan_memo memo, ms_memo_types where memo.loan_id = base.loan_id and memo.memo_type_id = ms_memo_types.memo_type_id and ms_memo_types.memo_type_desc like 'BC%' order by memo_id desc ) as last_bc_call_memo_date, " +
 "(select top 1 memo.memo_notify_dt from ms_loan_memo memo, ms_memo_types where memo.loan_id = base.loan_id and memo.memo_type_id = ms_memo_types.memo_type_id and ms_memo_types.memo_type_desc = 'BC-Promised to Pay' order by memo_notify_dt desc ) as last_bc_promised_to_pay_date, " +
 "(select top 1 ms_loan_balances.ytd_prin_paid_amt from ms_loan_balances where ms_loan_balances.loan_id = base.loan_id order by ms_loan_balances.ytd_prin_paid_amt) as ytd_prin_paid_amt, " +
-"(select top 1 abs(ms_loan_history.prin_amt) from ms_loan_history where ms_loan_history.loan_id = base.loan_id order by ms_loan_history.prin_amt) as principal_amt_from_history, " +
+"(select top 1 abs(ms_loan_history.prin_amt) from ms_loan_history where ms_loan_history.loan_id = base.loan_id and ms_loan_history.trans_type_cd = 'PIF'  order by ms_loan_history.paid_dt desc) as principal_amt_from_history, " +
 MsLoan.columns("base.loan_id") +
 "from  ms_fcl_info as base " +
 "where base.fcl_type = 'A' ";
@@ -464,6 +464,7 @@ MsLoan.columns("base.loan_id") +
         }
 
         public decimal non_zero_balance(){
+            if (this.principal_amt_from_history > 0M) return this.principal_amt_from_history;
             if( this.ytd_prin_paid_amt > 0M ) return this.ytd_prin_paid_amt;
             if (this.loan.prin_bal > 0M) return this.loan.prin_bal;
             else return this.principal_amt_from_history;
