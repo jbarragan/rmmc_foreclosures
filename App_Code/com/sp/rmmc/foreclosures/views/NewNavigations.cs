@@ -96,7 +96,7 @@ namespace com.sp.rmmc.foreclosures.views
             Nav nav = new Nav(); nav.link = "../Default.aspx"; nav.text = "Main Home"; navs.Add(nav);
             nav = new Nav(); nav.link = "../TaskList/Demand.aspx"; nav.text = "Task List"; navs.Add(nav);
             nav = new Nav(); nav.link = "../Metrics/Claims.aspx"; nav.text = "Metrics"; navs.Add(nav);
-            nav.ad_departments.Add("mis"); 
+            nav.ad_departments.Add("mis");
             nav.ad_groups.Add("servicing_fc"); nav.ad_groups.Add("foreclosure_metrics");
             nav = new Nav(); nav.link = "../Utilities/PreservationCodes.aspx"; nav.text = "Utilities"; navs.Add(nav);
             nav = new Nav(); nav.link = "../Default.aspx"; nav.text = "Dashboard"; navs.Add(nav);
@@ -114,9 +114,33 @@ namespace com.sp.rmmc.foreclosures.views
             return s + nav_end;
         }
 
-        public static bool sub_main_nav_access(string selected_text, ADUser ad_user)
+        private static List<Nav> main_navs()
         {
-            foreach (Nav n in sub_main_navs())
+            List<Nav> navs = new List<Nav>();
+            Nav nav = new Nav(); nav.link = "Default.aspx"; nav.text = "Main Home"; navs.Add(nav);
+            nav = new Nav(); nav.link = "TaskList/Demand.aspx"; nav.text = "Task List"; navs.Add(nav);
+            nav = new Nav(); nav.link = "Metrics/Claims.aspx"; nav.text = "Metrics"; navs.Add(nav);
+            nav.ad_departments.Add("mis");
+            nav.ad_groups.Add("servicing_fc"); nav.ad_groups.Add("foreclosure_metrics");
+            nav = new Nav(); nav.link = "Utilities/PreservationCodes.aspx"; nav.text = "Utilities"; navs.Add(nav);
+            nav = new Nav(); nav.link = "Default.aspx"; nav.text = "Dashboard"; navs.Add(nav);
+            return navs;
+        }
+
+        public static string main_nav_select(string selected_text, ADUser ad_user)
+        {
+            string s = nav_start;
+
+            foreach (Nav n in main_navs())
+            {
+                s += n.link_html(selected_text, ad_user);
+            }
+            return s + nav_end;
+        }
+
+        public static bool main_nav_access(string selected_text, ADUser ad_user)
+        {
+            foreach (Nav n in main_navs())
             {
                 if (n.text == selected_text) return n.with_access(ad_user);
             }

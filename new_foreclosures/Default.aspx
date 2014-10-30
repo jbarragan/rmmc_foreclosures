@@ -16,12 +16,11 @@
         <h1>Foreclosures</h1>
         <p>Home</p>
     </div>
-    <%= com.sp.rmmc.foreclosures.views.NewNavigations.main_nav %>
+    <%= com.sp.rmmc.foreclosures.views.NewNavigations.main_nav_select("Main Home", new ADUser(HttpContext.Current.User.Identity.Name.ToString()))%>
     <!-- Example row of columns -->
     <div class="row">
         <div class="span12">
             <p><a href="TaskList/Demand.aspx">Task List</a></p>
-            <p><a href="Metrics/Claims.aspx">Metrics</a></p>
             <p><a href="http://localrmmc/devintranet/lossmitigation/Foreclosures/Default.aspx">LM Foreclosures</a></p>
             <p class="text-error"><asp:Label ID="e" runat="server" Text="" ></asp:Label></p>
         </div>
