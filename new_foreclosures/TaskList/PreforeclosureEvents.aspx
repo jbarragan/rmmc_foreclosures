@@ -19,7 +19,7 @@
             <h1>Foreclosures</h1>
         </div>
         <div class="span9">
-            <%= com.sp.rmmc.foreclosures.views.NewNavigations.sub_main_nav_select("Task List") %>
+            <%= com.sp.rmmc.foreclosures.views.NewNavigations.sub_main_nav_select("Task List", new ADUser(HttpContext.Current.User.Identity.Name.ToString()))%>
             <%= com.sp.rmmc.foreclosures.views.NewNavigations.task_list_nav_select("Foreclosure Queue") %>
         </div>
     </div>

@@ -61,28 +61,65 @@ namespace com.sp.rmmc.foreclosures.views
 
         private static string nav_start = @"<div class=""navbar""><div class=""navbar-inner""><ul class=""nav"">";
         private static string nav_end = @"</ul></div></div>";
-        class Nav
+        private class Nav
         {
             public string link = "";
             public string text = "";
+            public List<string> ad_users = new List<string>();
+            public List<string> ad_departments = new List<string>();
+            public List<string> ad_groups = new List<string>();
+
+            public string link_html(string selected_text, ADUser ad_user)
+            {
+                string s = "";
+                if (with_access(ad_user) == false) return s;
+                string active_class = "";
+                if (selected_text == text) active_class = @" class=""active""";
+                s += @"<li" + active_class + @"><a href=""" + link + @""">" + text + "</a></li>";
+                return s;
+            }
+
+            public bool with_access(ADUser ad_user)
+            {
+                if( ad_user == null ) return true;
+                if (this.ad_users.Count == 0 && this.ad_departments.Count == 0 && this.ad_groups.Count == 0) return true;
+                if (ad_user.inAnyUser(this.ad_users)) return true;
+                if (ad_user.inAnyDepartments(this.ad_departments)) return true;
+                if (ad_user.inAnyGroups(this.ad_groups)) return true;
+                return false;
+            }
         }
 
-        public static string sub_main_nav_select(string active)
+        private static List<Nav> sub_main_navs()
         {
-            string s = nav_start;
             List<Nav> navs = new List<Nav>();
             Nav nav = new Nav(); nav.link = "../Default.aspx"; nav.text = "Main Home"; navs.Add(nav);
             nav = new Nav(); nav.link = "../TaskList/Demand.aspx"; nav.text = "Task List"; navs.Add(nav);
-            nav = new Nav(); nav.link ="../Metrics/Claims.aspx"; nav.text = "Metrics"; navs.Add(nav);
+            nav = new Nav(); nav.link = "../Metrics/Claims.aspx"; nav.text = "Metrics"; navs.Add(nav);
+            nav.ad_departments.Add("mis2"); nav.ad_groups.AddRange(new List<string>() { "servicing_fc", "foreclosure_metrics" });
             nav = new Nav(); nav.link = "../Utilities/PreservationCodes.aspx"; nav.text = "Utilities"; navs.Add(nav);
             nav = new Nav(); nav.link = "../Default.aspx"; nav.text = "Dashboard"; navs.Add(nav);
-            string active_class = "";
-            foreach (Nav n in navs)
+            return navs;
+        }
+
+        public static string sub_main_nav_select(string selected_text, ADUser ad_user)
+        {
+            string s = nav_start;
+
+            foreach (Nav n in sub_main_navs())
             {
-                if (active == n.text) active_class = @" class=""active"""; else active_class = "";
-                s += @"<li" + active_class +  @"><a href=""" + n.link + @""">" + n.text +"</a></li>";
+                s += n.link_html(selected_text, ad_user);
             }
             return s + nav_end;
+        }
+
+        public static bool sub_main_nav_access(string selected_text, ADUser ad_user)
+        {
+            foreach (Nav n in sub_main_navs())
+            {
+                if (n.text == selected_text) return n.with_access(ad_user);
+            }
+            return true;
         }
 
         public static string task_list_nav =
