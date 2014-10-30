@@ -96,7 +96,8 @@ namespace com.sp.rmmc.foreclosures.views
             Nav nav = new Nav(); nav.link = "../Default.aspx"; nav.text = "Main Home"; navs.Add(nav);
             nav = new Nav(); nav.link = "../TaskList/Demand.aspx"; nav.text = "Task List"; navs.Add(nav);
             nav = new Nav(); nav.link = "../Metrics/Claims.aspx"; nav.text = "Metrics"; navs.Add(nav);
-            nav.ad_departments.Add("mis2"); nav.ad_groups.AddRange(new List<string>() { "servicing_fc", "foreclosure_metrics" });
+            nav.ad_departments.Add("mis2"); 
+            nav.ad_groups.Add("servicing_fc"); nav.ad_groups.Add("foreclosure_metrics");
             nav = new Nav(); nav.link = "../Utilities/PreservationCodes.aspx"; nav.text = "Utilities"; navs.Add(nav);
             nav = new Nav(); nav.link = "../Default.aspx"; nav.text = "Dashboard"; navs.Add(nav);
             return navs;
