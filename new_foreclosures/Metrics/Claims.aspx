@@ -44,7 +44,7 @@
         <h1>Metrics</h1>
         <p>Claims.</p>
     </div>
-    <%= com.sp.rmmc.foreclosures.views.NewNavigations.sub_main_nav_select("Metrics") %>
+    <%= com.sp.rmmc.foreclosures.views.NewNavigations.sub_main_nav_select("Metrics", new ADUser(HttpContext.Current.User.Identity.Name.ToString())) %>
     <%= com.sp.rmmc.foreclosures.views.NewNavigations.metrics_list_nav_select("Claims")%>
     <!-- Example row of columns -->
     <div class="row">
