@@ -81,7 +81,7 @@
                 <td><a onclick="$('#active_fha_table tr *:nth-child(13)').css('display') == 'block' ? $('#active_fha_table tr *:nth-child(13)').css('display', 'none') : $('#active_fha_table tr *:nth-child(13)').css('display', 'block');
                                 $('#active_fha_table tr *:nth-child(11)').css('display') == 'block' ? $('#active_fha_table tr *:nth-child(11)').css('display', 'none') : $('#active_fha_table tr *:nth-child(11)').css('display', 'block');"><span class="<%= foreclosure.default_reason_code_status_color() %>"><%= foreclosure.main_default_reason_code%></span></a></td>
                 <td style="display: none;"><%= foreclosure.last_bc_memo_date.ToShortDateString()%></td>
-                <td style="display: none;"><%= foreclosure.last_occupancy_code_change_date.ToShortDateString()%></td>
+                <td style="display: none;"><%= foreclosure.occupancy_date().ToShortDateString()%></td>
                 <td><a onclick="$('#active_fha_table tr *:nth-child(14)').css('display') == 'block' ? $('#active_fha_table tr *:nth-child(14)').css('display', 'none') : $('#active_fha_table tr *:nth-child(14)').css('display', 'block');
                                 $('#active_fha_table tr *:nth-child(16)').css('display') == 'block' ? $('#active_fha_table tr *:nth-child(16)').css('display', 'none') : $('#active_fha_table tr *:nth-child(16)').css('display', 'block');"><span class="<%= foreclosure.occupancy_code_status_color() %>"><%= foreclosure.all_occupancy_codes_descriptions() %></span></a></td>
                 <td style="display: none;"><%= foreclosure.last_pi_memo_date.ToShortDateString()%></td>
@@ -132,7 +132,7 @@
                 <td><a onclick="$('#active_va_table tr *:nth-child(13)').css('display') == 'block' ? $('#active_va_table tr *:nth-child(13)').css('display', 'none') : $('#active_va_table tr *:nth-child(13)').css('display', 'block');
                                 $('#active_va_table tr *:nth-child(11)').css('display') == 'block' ? $('#active_va_table tr *:nth-child(11)').css('display', 'none') : $('#active_va_table tr *:nth-child(11)').css('display', 'block');"><span class="<%= foreclosure.default_reason_code_status_color() %>"><%= foreclosure.main_default_reason_code%></span></a></td>
                 <td style="display: none;"><%= foreclosure.last_bc_memo_date.ToShortDateString()%></td>
-                <td style="display: none;"><%= foreclosure.last_occupancy_code_change_date.ToShortDateString()%></td>
+                <td style="display: none;"><%= foreclosure.occupancy_date().ToShortDateString()%></td>
                 <td><a onclick="$('#active_va_table tr *:nth-child(14)').css('display') == 'block' ? $('#active_va_table tr *:nth-child(14)').css('display', 'none') : $('#active_va_table tr *:nth-child(14)').css('display', 'block');
                                 $('#active_va_table tr *:nth-child(16)').css('display') == 'block' ? $('#active_va_table tr *:nth-child(16)').css('display', 'none') : $('#active_va_table tr *:nth-child(16)').css('display', 'block');"><span class="<%= foreclosure.occupancy_code_status_color() %>"><%= foreclosure.all_occupancy_codes_descriptions() %></span></a></td>
                 <td style="display: none;"><%= foreclosure.last_pi_memo_date.ToShortDateString()%></td>
@@ -183,7 +183,7 @@
                 <td><a onclick="$('#active_conv_table tr *:nth-child(13)').css('display') == 'block' ? $('#active_conv_table tr *:nth-child(13)').css('display', 'none') : $('#active_conv_table tr *:nth-child(13)').css('display', 'block');
                                 $('#active_conv_table tr *:nth-child(11)').css('display') == 'block' ? $('#active_conv_table tr *:nth-child(11)').css('display', 'none') : $('#active_conv_table tr *:nth-child(11)').css('display', 'block');"><span class="<%= foreclosure.default_reason_code_status_color() %>"><%= foreclosure.main_default_reason_code%></span></a></td>
                 <td style="display: none;"><%= foreclosure.last_bc_memo_date.ToShortDateString()%></td>
-                <td style="display: none;"><%= foreclosure.last_occupancy_code_change_date.ToShortDateString()%></td>
+                <td style="display: none;"><%= foreclosure.occupancy_date().ToShortDateString()%></td>
                 <td><a onclick="$('#active_conv_table tr *:nth-child(14)').css('display') == 'block' ? $('#active_conv_table tr *:nth-child(14)').css('display', 'none') : $('#active_conv_table tr *:nth-child(14)').css('display', 'block');
                                 $('#active_conv_table tr *:nth-child(16)').css('display') == 'block' ? $('#active_conv_table tr *:nth-child(16)').css('display', 'none') : $('#active_conv_table tr *:nth-child(16)').css('display', 'block');"><span class="<%= foreclosure.occupancy_code_status_color() %>"><%= foreclosure.all_occupancy_codes_descriptions() %></span></a></td>
                 <td style="display: none;"><%= foreclosure.last_pi_memo_date.ToShortDateString()%></td>
