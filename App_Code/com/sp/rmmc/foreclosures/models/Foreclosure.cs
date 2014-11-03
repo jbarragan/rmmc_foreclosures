@@ -42,6 +42,7 @@ namespace com.sp.rmmc.foreclosures.models
         public DateTimeObject last_pi_memo_date = new DateTimeObject();
 
         public DateTimeObject last_inspection_memo_date = new DateTimeObject();
+        public DateTimeObject last_notify_inspection_memo_date = new DateTimeObject();
         public String last_inspection_memo_description = "";
         public DateTimeObject memo_with_inspection_report_delinquent_date = new DateTimeObject();
 
@@ -92,9 +93,12 @@ namespace com.sp.rmmc.foreclosures.models
 "(select top 1 ms_loan_occupancy.prop_insp_date from ms_loan_occupancy where ms_loan_occupancy.loan_id = base.loan_id order by ms_loan_occupancy.prop_insp_date desc) as occupancy_prop_insp_date, " +
 "(select top 1 memo.memo_notify_dt from ms_loan_memo memo, ms_memo_types where memo.loan_id = base.loan_id and memo.memo_type_id = ms_memo_types.memo_type_id and (ms_memo_types.memo_type_desc like 'PI-%') order by memo_notify_dt desc ) as last_pi_memo_date, " +
 "(select top 1 ms_fcl.fcl_item_recvd_expd from ms_fcl_item_amts_1 ms_fcl where ms_fcl.item_id = 1200 and ms_fcl.loan_id = base.loan_id order by ms_fcl.fcl_item_recvd_expd ) as foreclosure_date, " +
-"(select top 1 memo.memo_create_dt from ms_loan_memo memo, ms_memo_types where memo.loan_id = base.loan_id and memo.memo_type_id = ms_memo_types.memo_type_id and ms_memo_types.memo_type_desc like 'PI-%' order by memo_id desc ) as last_inspection_memo_date, " +
-"(select top 1 ms_memo_types.memo_type_desc from ms_loan_memo memo, ms_memo_types where memo.loan_id = base.loan_id and memo.memo_type_id = ms_memo_types.memo_type_id and ms_memo_types.memo_type_desc like 'PI-%' order by memo_id desc ) as last_inspection_memo_description, " +
-"(select top 1 memo.memo_create_dt from ms_loan_memo memo where memo.loan_id = base.loan_id and lower(memo.memo_subject) like '%property inspection report%' order by memo_id desc ) as memo_with_inspection_report_delinquent_date, " +
+"(select top 1 memo.memo_create_dt from ms_loan_memo memo, ms_memo_types where memo.loan_id = base.loan_id and memo.memo_type_id = ms_memo_types.memo_type_id and ms_memo_types.memo_type_desc like 'PI-%' order by memo_id desc ) as last_inspection_memo_date, " + 
+"(select top 1 memo.memo_notify_dt from ms_loan_memo memo, ms_memo_types where memo.loan_id = base.loan_id and memo.memo_type_id = ms_memo_types.memo_type_id and ms_memo_types.memo_type_desc like 'PI-%' order by memo.memo_notify_dt desc ) as last_notify_inspection_memo_date, " +
+"(select top 1 ms_memo_types.memo_type_desc from ms_loan_memo memo, ms_memo_types where memo.loan_id = base.loan_id and memo.memo_type_id = ms_memo_types.memo_type_id and ms_memo_types.memo_type_desc like 'PI-%' order by memo.memo_notify_dt desc ) as last_inspection_memo_description, " +
+"(select top 1 memo.memo_notify_dt from ms_loan_memo memo where memo.loan_id = base.loan_id and lower(memo.memo_subject) like '%property inspection report%' order by memo.memo_notify_dt desc ) as memo_with_inspection_report_delinquent_date, " +
+//"(select top 1 ms_memo_types.memo_type_desc from ms_loan_memo memo, ms_memo_types where memo.loan_id = base.loan_id and memo.memo_type_id = ms_memo_types.memo_type_id and ms_memo_types.memo_type_desc like 'PI-%' order by memo_id desc ) as last_inspection_memo_description, " +
+//"(select top 1 memo.memo_create_dt from ms_loan_memo memo where memo.loan_id = base.loan_id and lower(memo.memo_subject) like '%property inspection report%' order by memo_id desc ) as memo_with_inspection_report_delinquent_date, " +
 "(select top 1 memo.memo_create_dt from ms_loan_memo memo, ms_memo_types where memo.loan_id = base.loan_id and memo.memo_type_id = ms_memo_types.memo_type_id and ms_memo_types.memo_type_desc like 'BC%' order by memo_id desc ) as last_bc_call_memo_date, " +
 "(select top 1 memo.memo_notify_dt from ms_loan_memo memo, ms_memo_types where memo.loan_id = base.loan_id and memo.memo_type_id = ms_memo_types.memo_type_id and ms_memo_types.memo_type_desc = 'BC-Promised to Pay' order by memo_notify_dt desc ) as last_bc_promised_to_pay_date, " +
 "(select top 1 ms_loan_balances.ytd_prin_paid_amt from ms_loan_balances where ms_loan_balances.loan_id = base.loan_id order by ms_loan_balances.ytd_prin_paid_amt) as ytd_prin_paid_amt, " +
@@ -136,10 +140,10 @@ MsLoan.columns("base.loan_id") +
                             " and ( (sale_date_completed is null) or (demand_letter_due_date > sale_date_completed) ) " +
                             " and ( deed_in_lieu = 'N' or deed_in_lieu is NULL ) " +
                             " and ( fcl_type = 'A' ) " +
-                           " and ( memo_with_inspection_report_delinquent_date is null or memo_with_inspection_report_delinquent_date < last_inspection_memo_date ) " +
-                           " and (  ( last_inspection_memo_description in ('PI-Initial Vacant Inspection', 'PI-Ongoing Int./Ext. Vacant Inspection', 'PI-No Inspection Ordered')  and  last_inspection_memo_date < dateadd(dd, -25, getdate()) ) " +
-                           "     or ( last_inspection_memo_date is null ) " +
-                           "     or ( last_inspection_memo_description not in ('PI-Initial Vacant Inspection', 'PI-Ongoing Int./Ext. Vacant Inspection', 'PI-No Inspection Ordered')  and  last_inspection_memo_date < dateadd(dd, -20, getdate()) ) ) ";
+                           " and ( memo_with_inspection_report_delinquent_date is null or memo_with_inspection_report_delinquent_date < last_notify_inspection_memo_date ) " +
+                           " and (  ( last_inspection_memo_description in ('PI-Initial Vacant Inspection', 'PI-Ongoing Int./Ext. Vacant Inspection', 'PI-No Inspection Ordered')  and  last_notify_inspection_memo_date < dateadd(dd, -25, getdate()) ) " +
+                           "     or ( last_notify_inspection_memo_date is null ) " +
+                           "     or ( last_inspection_memo_description not in ('PI-Initial Vacant Inspection', 'PI-Ongoing Int./Ext. Vacant Inspection', 'PI-No Inspection Ordered')  and  last_notify_inspection_memo_date < dateadd(dd, -20, getdate()) ) ) ";
             return query;
         }
 
@@ -368,6 +372,7 @@ MsLoan.columns("base.loan_id") +
             foreclosure.last_pi_memo_date = readDBDateObject(reader, pos++, DateTime.Now);
             foreclosure.foreclosure_date = readDBDateObject(reader, pos++, DateTime.Now);
             foreclosure.last_inspection_memo_date = readDBDateObject(reader, pos++, DateTime.Now);
+            foreclosure.last_notify_inspection_memo_date = readDBDateObject(reader, pos++, DateTime.Now);
             foreclosure.last_inspection_memo_description = readDBString(reader, pos++);
             foreclosure.memo_with_inspection_report_delinquent_date = readDBDateObject(reader, pos++, DateTime.Now);
             foreclosure.last_bc_call_memo_date = readDBDateObject(reader, pos++, DateTime.Now);
@@ -459,11 +464,11 @@ MsLoan.columns("base.loan_id") +
 
         public string last_inspection_since()
         {
-            if (this.last_inspection_memo_date.isNull)
+            if (this.last_notify_inspection_memo_date.isNull)
                 return "NA";
             else
             {
-                TimeSpan timespan = (DateTime.Now - this.last_inspection_memo_date.date);
+                TimeSpan timespan = (DateTime.Now - this.last_notify_inspection_memo_date.date);
                 return timespan.Days.ToString();
             }
         }

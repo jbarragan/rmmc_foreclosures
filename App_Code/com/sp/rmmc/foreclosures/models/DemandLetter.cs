@@ -77,10 +77,10 @@ namespace com.sp.rmmc.foreclosures.models
 "(select top 1 date(substr(uad_audit_data_af_chg, 7, 4) + '/' + substr(uad_audit_data_af_chg, 1, 2) + '/' + substr(uad_audit_data_af_chg, 4, 2)) as mortgage_status_date from ms_user_audit_history_data ms_audit_history where ms_audit_history.loan_id = base.loan_id and ms_audit_history.uad_audit_field_name = 'mortgage_status_date' and ms_audit_history.uad_audit_field_name is not null and length(uad_audit_data_af_chg) >= 10 and isdate( mortgage_status_date ) = 1 order by 1 desc ) as mortgage_status_date, " +
 "(select top 1 memo.memo_create_dt from ms_loan_memo memo, ms_memo_types where memo.loan_id = base.loan_id and memo.memo_type_id = ms_memo_types.memo_type_id and ms_memo_types.memo_type_desc like 'PI-%' order by memo_id desc ) as last_inspection_memo_date, " +
 "(select top 1 memo.memo_notify_dt from ms_loan_memo memo, ms_memo_types where memo.loan_id = base.loan_id and memo.memo_type_id = ms_memo_types.memo_type_id and ms_memo_types.memo_type_desc like 'PI-%' order by memo.memo_notify_dt desc ) as last_notify_inspection_memo_date, " +
+"(select top 1 ms_memo_types.memo_type_desc from ms_loan_memo memo, ms_memo_types where memo.loan_id = base.loan_id and memo.memo_type_id = ms_memo_types.memo_type_id and ms_memo_types.memo_type_desc like 'PI-%' order by memo.memo_notify_dt desc ) as last_inspection_memo_description, " +
+"(select top 1 memo.memo_notify_dt from ms_loan_memo memo where memo.loan_id = base.loan_id and lower(memo.memo_subject) like '%property inspection report%' order by memo.memo_notify_dt desc ) as memo_with_inspection_report_delinquent_date, " +
 //"(select top 1 ms_memo_types.memo_type_desc from ms_loan_memo memo, ms_memo_types where memo.loan_id = base.loan_id and memo.memo_type_id = ms_memo_types.memo_type_id and ms_memo_types.memo_type_desc like 'PI-%' order by memo_id desc ) as last_inspection_memo_description, " +
-//"(select top 1 memo.memo_notify_dt from ms_loan_memo memo where memo.loan_id = base.loan_id and lower(memo.memo_subject) like '%property inspection report%' order by memo.memo_notify_dt desc ) as memo_with_inspection_report_delinquent_date, " +
-"(select top 1 ms_memo_types.memo_type_desc from ms_loan_memo memo, ms_memo_types where memo.loan_id = base.loan_id and memo.memo_type_id = ms_memo_types.memo_type_id and ms_memo_types.memo_type_desc like 'PI-%' order by memo_id desc ) as last_inspection_memo_description, " +
-"(select top 1 memo.memo_create_dt from ms_loan_memo memo where memo.loan_id = base.loan_id and lower(memo.memo_subject) like '%property inspection report%' order by memo_id desc ) as memo_with_inspection_report_delinquent_date, " +
+//"(select top 1 memo.memo_create_dt from ms_loan_memo memo where memo.loan_id = base.loan_id and lower(memo.memo_subject) like '%property inspection report%' order by memo_id desc ) as memo_with_inspection_report_delinquent_date, " +
 "(select top 1 ms_credit_information.default_reason_code from ms_credit_information where ms_credit_information.loan_id = base.loan_id order by ms_credit_information.default_reason_code ) as main_default_reason_code, " +
 "(select top 1 memo.memo_create_dt from ms_loan_memo memo, ms_memo_categories where memo.loan_id = base.loan_id and memo.memo_category_id = ms_memo_categories.memo_category_id and ms_memo_categories.memo_category_desc like '0%'  order by memo_create_dt desc ) as last_default_reason_code_change_date, " +
 "(select top 1 memo.memo_create_dt from ms_loan_memo memo, ms_memo_types where memo.loan_id = base.loan_id and memo.memo_type_id = ms_memo_types.memo_type_id and ms_memo_types.memo_type_desc like 'BC%' order by memo_id desc ) as last_bc_memo_date, " +
@@ -216,10 +216,10 @@ ReviewChecklist.columns("base.loan_id") +
                            " and ( bankruptcy_filed_date is null or bankruptcy_discharge_date is not null or bankruptcy_case_dismissed_date is not null or bankruptcy_closed_date is not null ) " +
                            " and ( last_reg_paid_dt < dateadd(dd, -38, demand_letter_due_date) or last_reg_paid_dt is null or last_payments_balance <= 0 ) " +
                            " and ( ms_loan_prin_bal > 0 ) " +
-                           " and ( memo_with_inspection_report_delinquent_date is null or memo_with_inspection_report_delinquent_date < last_inspection_memo_date ) " +
-                           " and (  ( last_inspection_memo_description in ('PI-Initial Vacant Inspection', 'PI-Ongoing Int./Ext. Vacant Inspection', 'PI-No Inspection Ordered')  and  last_inspection_memo_date < dateadd(dd, -25, getdate()) ) " +
-                           "     or ( last_inspection_memo_date is null ) " +
-                           "     or ( last_inspection_memo_description not in ('PI-Initial Vacant Inspection', 'PI-Ongoing Int./Ext. Vacant Inspection', 'PI-No Inspection Ordered')  and  last_inspection_memo_date < dateadd(dd, -20, getdate()) ) ) ";            
+                           " and ( memo_with_inspection_report_delinquent_date is null or memo_with_inspection_report_delinquent_date < last_notify_inspection_memo_date ) " +
+                           " and (  ( last_inspection_memo_description in ('PI-Initial Vacant Inspection', 'PI-Ongoing Int./Ext. Vacant Inspection', 'PI-No Inspection Ordered')  and  last_notify_inspection_memo_date < dateadd(dd, -25, getdate()) ) " +
+                           "     or ( last_notify_inspection_memo_date is null ) " +
+                           "     or ( last_inspection_memo_description not in ('PI-Initial Vacant Inspection', 'PI-Ongoing Int./Ext. Vacant Inspection', 'PI-No Inspection Ordered')  and  last_notify_inspection_memo_date < dateadd(dd, -20, getdate()) ) ) ";            
             return query;
         }
 
@@ -302,11 +302,11 @@ ReviewChecklist.columns("base.loan_id") +
 
         public string last_inspection_since()
         {
-            if (this.last_inspection_memo_date.isNull)
+            if (this.last_notify_inspection_memo_date.isNull)
                 return "NA";
             else
             {
-                TimeSpan timespan = (DateTime.Now - this.last_inspection_memo_date.date);
+                TimeSpan timespan = (DateTime.Now - this.last_notify_inspection_memo_date.date);
                 return timespan.Days.ToString();
             }
         }

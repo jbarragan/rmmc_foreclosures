@@ -213,6 +213,7 @@
                     <th>Loan Name</th>
                     <th>Foreclosure Date</th>
                     <th>Officer(s)</th>
+                    <th>Last Notify Inspection Date</th>
                     <th>Last Inspection Date</th>
                     <th>Last Inspection Type</th>
                     <th>Last Inspection Days Ago</th>
@@ -226,6 +227,7 @@
                     <td><%= foreclosure.loan.loan_name%></td>
                     <td><%= foreclosure.foreclosure_date.ToShortDateString() %></td>
                     <td><%= foreclosure.foreclosure_officers %></td>
+                    <td><%= foreclosure.last_notify_inspection_memo_date.ToShortDateString() %></td>
                     <td><%= foreclosure.last_inspection_memo_date.ToShortDateString() %></td>
                     <td><%= foreclosure.last_inspection_memo_description %></td>
                     <td><%= foreclosure.last_inspection_since() %></td>
@@ -244,6 +246,7 @@
                     <th>Loan Name</th>
                     <th>Foreclosure Date</th>
                     <th>Officer(s)</th>
+                    <th>Last Notify Inspection Date</th>
                     <th>Last Inspection Date</th>
                     <th>Last Inspection Type</th>
                     <th>Last Inspection Days Ago</th>
@@ -257,6 +260,7 @@
                     <td><%= foreclosure.loan.loan_name%></td>
                     <td><%= foreclosure.foreclosure_date.ToShortDateString() %></td>
                     <td><%= foreclosure.foreclosure_officers %></td>
+                    <td><%= foreclosure.last_notify_inspection_memo_date.ToShortDateString() %></td>
                     <td><%= foreclosure.last_inspection_memo_date.ToShortDateString() %></td>
                     <td><%= foreclosure.last_inspection_memo_description %></td>
                     <td><%= foreclosure.last_inspection_since() %></td>
@@ -275,6 +279,7 @@
                     <th>Loan Name</th>
                     <th>Foreclosure Date</th>
                     <th>Officer(s)</th>
+                    <th>Last Notify Inspection Date</th>
                     <th>Last Inspection Date</th>
                     <th>Last Inspection Type</th>
                     <th>Last Inspection Days Ago</th>
@@ -288,6 +293,7 @@
                     <td><%= foreclosure.loan.loan_name%></td>
                     <td><%= foreclosure.foreclosure_date.ToShortDateString() %></td>
                     <td><%= foreclosure.foreclosure_officers %></td>
+                    <td><%= foreclosure.last_notify_inspection_memo_date.ToShortDateString() %></td>
                     <td><%= foreclosure.last_inspection_memo_date.ToShortDateString() %></td>
                     <td><%= foreclosure.last_inspection_memo_description %></td>
                     <td><%= foreclosure.last_inspection_since() %></td>

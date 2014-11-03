@@ -63,6 +63,7 @@ public partial class lossmitigation_Collections_Default : System.Web.UI.Page
         foreach (Foreclosure f in all_inspection_expired)
         {
             if (selected_loan_officer != "ALL" && f.foreclosure_officers.ToUpper() != selected_loan_officer) continue;
+            if (f.is_preforeclosure_complete() == false) continue;
             inspection_expired.Add(f);
             if (f.loan.loan_type == "FHA") inspection_expired_fha.Add(f);
             if (f.loan.loan_type == "CNV") inspection_expired_conv.Add(f);
