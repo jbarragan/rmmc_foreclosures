@@ -35,7 +35,7 @@ namespace com.sp.rmmc.foreclosures.models
                 {
                     DateTimeObject minimal_completed_date = new DateTimeObject();
                     minimal_completed_date.set_date(demand_letter.demand_letter_due_date.date.AddDays(-30));
-                    query += " (loan_id = " + demand_letter.loan_id + " and received >  " + minimal_completed_date.toDBValue() + ") OR ";
+                    query += loan_in_lm_query(demand_letter.loan_id, minimal_completed_date);
                 }
                 query += " (1 = 2))";
                 return get_lm_receptions(query);
@@ -53,13 +53,20 @@ namespace com.sp.rmmc.foreclosures.models
                 {
                     DateTimeObject minimal_completed_date = new DateTimeObject();
                     minimal_completed_date.set_date(foreclosure.demand_letter_due_date.date.AddDays(-30));
-                    query += " (loan_id = " + foreclosure.loan_id + " and received >  " + minimal_completed_date.toDBValue() + ") OR ";
+                    query += loan_in_lm_query(foreclosure.loan_id, minimal_completed_date);
                 }
                 query += " (1 = 2))";
                 return get_lm_receptions(query);
             }
             else
                 return new List<LMReception>();
+        }
+
+        public static string loan_in_lm_query(decimal loan_id, DateTimeObject completed_date){
+            string query = " (loan_id = " + loan_id + " and received >  " + completed_date.toDBValue() + " AND ";
+            query += "(select top 1 incomplete_denied from status where receptions.loan_id = status.loan_id AND incomplete_denied > receptions.received) is null ";
+            query += ") OR ";
+            return query;
         }
 
         public static List<LMReception> get_lm_receptions(String query)
