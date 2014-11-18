@@ -395,8 +395,7 @@ MsLoan.columns("base.loan_id") +
                 this.fc_payoff_date.isNull ||
                 this.preforeclosure_events.is_copy_demand_letters == false ||
                 this.preforeclosure_events.is_copy_notes == false ||
-                this.preforeclosure_events.is_copy_deed_of_trust_notes == false ||
-                this.preforeclosure_events.is_copy_title_policy == false)
+                this.preforeclosure_events.is_copy_deed_of_trust_notes == false )
             {
                 return false;
             }
