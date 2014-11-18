@@ -331,7 +331,6 @@ ReviewChecklist.columns("base.loan_id") +
             {
                 TimeSpan timespan = (this.demand_letter_due_date.date - this.loan.due_date_next_payment.date);
                 int max_month_wait = 3;
-                if (this.loan.loan_type == "CONV" || this.loan.loan_type == "CNV") max_month_wait = 2;
                 if (((timespan.Days) / 30) > max_month_wait) return "text-error";
                 else return "text-success";
             }
