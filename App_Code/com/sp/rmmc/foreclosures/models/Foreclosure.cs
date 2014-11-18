@@ -483,10 +483,11 @@ MsLoan.columns("base.loan_id") +
             return true;
         }
 
-        public decimal non_zero_balance(){
+        public decimal non_zero_balance()
+        {
+            if (this.loan.prin_bal > 0M) return this.loan.prin_bal;
             if (this.principal_amt_from_history > 0M) return this.principal_amt_from_history;
             if( this.ytd_prin_paid_amt > 0M ) return this.ytd_prin_paid_amt;
-            if (this.loan.prin_bal > 0M) return this.loan.prin_bal;
             else return this.principal_amt_from_history;
         }
 
