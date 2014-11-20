@@ -250,7 +250,7 @@ ReviewChecklist.columns("base.loan_id") +
 
         public static string remove_demand_letter_by_last_reg_payment_conditions()
         {
-            string query =  " and ( demand_letter_due_date > getdate() ) " +
+            string query = " and ( demand_letter_due_date > dateadd(dd, -30, getdate()) ) " +
                             " and ( last_reg_paid_dt >= dateadd(dd, -33, demand_letter_due_date) and last_payments_balance > 0 ) ";
             return query;
         }
