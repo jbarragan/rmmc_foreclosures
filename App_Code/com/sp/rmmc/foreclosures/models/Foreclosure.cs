@@ -32,9 +32,9 @@ namespace com.sp.rmmc.foreclosures.models
         public DateTimeObject appraisal_ordered_date = new DateTimeObject();
         public DateTimeObject foreclosure_date = new DateTimeObject();
 
-        public String main_default_reason_code = ""; 
-        public DateTimeObject last_default_reason_code_change_date = new DateTimeObject();
-        public DateTimeObject last_bc_memo_date = new DateTimeObject();
+        public String main_default_reason_code = "";
+        public DateTimeObject last_memo_default_reason_code_change_date = new DateTimeObject();
+        public String last_memo_default_reason_code = "";
         public String occupancy_code = "";
         public String va_occupancy_code = "";
         public DateTimeObject occupancy_fcl_hud_notice_of_occ_sent_date = new DateTimeObject();
@@ -85,8 +85,8 @@ namespace com.sp.rmmc.foreclosures.models
 "(select top 1 memo.memo_create_dt from ms_loan_memo memo where memo.loan_id = base.loan_id and memo.memo_type_id = 148 order by memo_id desc) as fc_payoff_date, " +
 "(select top 1 ms_fcl.fcl_item_date from ms_fcl_item_amts_1 ms_fcl where ms_fcl.item_id = 1100 and ms_fcl.loan_id = base.loan_id order by ms_fcl.fcl_item_date )  as appraisal_ordered_date, " +
 "(select top 1 ms_credit_information.default_reason_code from ms_credit_information where ms_credit_information.loan_id = base.loan_id order by ms_credit_information.default_reason_code ) as main_default_reason_code, " +
-"(select top 1 memo.memo_create_dt from ms_loan_memo memo, ms_memo_categories where memo.loan_id = base.loan_id and memo.memo_category_id = ms_memo_categories.memo_category_id and ms_memo_categories.memo_category_desc like '0%'  order by memo_create_dt desc ) as last_default_reason_code_change_date, " +
-"(select top 1 memo.memo_create_dt from ms_loan_memo memo, ms_memo_types where memo.loan_id = base.loan_id and memo.memo_type_id = ms_memo_types.memo_type_id and (ms_memo_types.memo_type_desc = 'BC-Promised to Pay' or ms_memo_types.memo_type_desc = 'BC-First Right Party Contact') order by memo_id desc ) as last_bc_memo_date, " +
+"(select top 1 memo.memo_create_dt from ms_loan_memo memo, ms_memo_categories, ms_memo_types where memo.loan_id = base.loan_id and memo.memo_category_id = ms_memo_categories.memo_category_id and memo.memo_type_id = ms_memo_types.memo_type_id and ms_memo_categories.memo_category_desc like '0%' and (ms_memo_types.memo_type_desc = 'BC-Promised to Pay' or ms_memo_types.memo_type_desc = 'BC-First Right Party Contact')  order by memo_create_dt desc ) as last_memo_default_reason_code_change_date, " +
+"(select top 1 ms_memo_categories.memo_category_desc from ms_loan_memo memo, ms_memo_categories, ms_memo_types where memo.loan_id = base.loan_id and memo.memo_category_id = ms_memo_categories.memo_category_id and memo.memo_type_id = ms_memo_types.memo_type_id and ms_memo_categories.memo_category_desc like '0%' and (ms_memo_types.memo_type_desc = 'BC-Promised to Pay' or ms_memo_types.memo_type_desc = 'BC-First Right Party Contact')  order by memo_create_dt desc ) as last_memo_default_reason_code, " +
 "(select top 1 ms_occupancy_types.occ_description from ms_loan_occupancy, ms_occupancy_types where ms_occupancy_types.fha_occ_code = ms_loan_occupancy.fha_occ_code and ms_loan_occupancy.loan_id = base.loan_id order by ms_loan_occupancy.fcl_hud_notice_of_occ_sent desc, ms_loan_occupancy.prop_insp_date desc  ) as occupancy_code, " +
 "(select top 1 ms_loan_occupancy.va_occ_cd from ms_loan_occupancy where ms_loan_occupancy.loan_id = base.loan_id order by ms_loan_occupancy.prop_insp_date desc, ms_loan_occupancy.fcl_hud_notice_of_occ_sent desc) as va_occupancy_code, " +
 "(select top 1 ms_loan_occupancy.fcl_hud_notice_of_occ_sent from ms_loan_occupancy where ms_loan_occupancy.loan_id = base.loan_id order by ms_loan_occupancy.fcl_hud_notice_of_occ_sent desc) as occupancy_fcl_hud_notice_of_occ_sent_date, " +
@@ -363,8 +363,8 @@ MsLoan.columns("base.loan_id") +
             foreclosure.fc_payoff_date = readDBDateObject(reader, pos++, DateTime.Now);
             foreclosure.appraisal_ordered_date = readDBDateObject(reader, pos++, DateTime.Now);
             foreclosure.main_default_reason_code = readDBString(reader, pos++);
-            foreclosure.last_default_reason_code_change_date = readDBDateObject(reader, pos++, DateTime.Now);
-            foreclosure.last_bc_memo_date = readDBDateObject(reader, pos++, DateTime.Now);
+            foreclosure.last_memo_default_reason_code_change_date = readDBDateObject(reader, pos++, DateTime.Now);
+            foreclosure.last_memo_default_reason_code = readDBString(reader, pos++);
             foreclosure.occupancy_code = readDBString(reader, pos++);
             foreclosure.va_occupancy_code = readDBString(reader, pos++);
             foreclosure.occupancy_fcl_hud_notice_of_occ_sent_date = readDBDateObject(reader, pos++, DateTime.Now);
@@ -415,9 +415,8 @@ MsLoan.columns("base.loan_id") +
 
         public string default_reason_code_status_color()
         {
-            TimeSpan ts = this.last_default_reason_code_change_date.date - this.last_bc_memo_date.date;
-            if (Math.Abs(ts.Days) > 1 || this.last_default_reason_code_change_date.isNull || this.last_bc_memo_date.isNull) return "text-error";
-            return "text-success";
+            if (this.last_memo_default_reason_code.StartsWith(this.main_default_reason_code)) return "text-success";
+            return "text-error";
         }
 
         public DateTimeObject occupancy_date()

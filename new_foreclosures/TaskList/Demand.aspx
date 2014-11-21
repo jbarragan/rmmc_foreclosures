@@ -63,7 +63,6 @@
                 <th>Officer(s)</th>
                 <th style="display: none;">Last Reason Code Change </th>
                 <th>Reason Code</th>
-                <th style="display: none;">Last BC Memo Date</th>
                 <th style="display: none;">Last Occupancy Code Change</th>
                 <th>Occupancy Code</th>
                 <th style="display: none;">Last PI Memo Date</th>
@@ -83,13 +82,11 @@
                 <td><%= demand_letter.demand_letter_due_date.ToShortDateString()%></td>
                 <td><span class="<%= demand_letter.months_demand_date_after_delinquent_color() %>"><%= demand_letter.months_demand_date_after_delinquent() %></span></td>
                 <td><%= demand_letter.foreclosure_officers%></td>
-                <td style="display: none;"><%= demand_letter.last_default_reason_code_change_date.ToShortDateString()%></td>
-                <td><a onclick="$('#expired_fha_table tr *:nth-child(12)').css('display') == 'block' ? $('#expired_fha_table tr *:nth-child(12)').css('display', 'none') : $('#expired_fha_table tr *:nth-child(12)').css('display', 'block');
-                                $('#expired_fha_table tr *:nth-child(10)').css('display') == 'block' ? $('#expired_fha_table tr *:nth-child(10)').css('display', 'none') : $('#expired_fha_table tr *:nth-child(10)').css('display', 'block');"><span class="<%= demand_letter.default_reason_code_status_color() %>"><%= demand_letter.default_reason_code %></span></a></td>
-                <td style="display: none;"><%= demand_letter.last_bc_memo_date.ToShortDateString()%></td>
+                <td style="display: none;"><%= demand_letter.last_memo_default_reason_code_change_date.ToShortDateString()%></td>
+                <td><a onclick="$('#expired_fha_table tr *:nth-child(10)').css('display') == 'block' ? $('#expired_fha_table tr *:nth-child(10)').css('display', 'none') : $('#expired_fha_table tr *:nth-child(10)').css('display', 'block');"><span class="<%= demand_letter.default_reason_code_status_color() %>"><%= demand_letter.default_reason_code %></span></a></td>
                 <td style="display: none;"><%= demand_letter.occupancy_date().ToShortDateString()%></td>
-                <td><a onclick="$('#expired_fha_table tr *:nth-child(13)').css('display') == 'block' ? $('#expired_fha_table tr *:nth-child(13)').css('display', 'none') : $('#expired_fha_table tr *:nth-child(13)').css('display', 'block');
-                                $('#expired_fha_table tr *:nth-child(15)').css('display') == 'block' ? $('#expired_fha_table tr *:nth-child(15)').css('display', 'none') : $('#expired_fha_table tr *:nth-child(15)').css('display', 'block');"><span class="<%= demand_letter.occupancy_code_status_color() %>"><%= demand_letter.all_occupancy_codes_descriptions() %></span></a></td>
+                <td><a onclick="$('#expired_fha_table tr *:nth-child(12)').css('display') == 'block' ? $('#expired_fha_table tr *:nth-child(12)').css('display', 'none') : $('#expired_fha_table tr *:nth-child(12)').css('display', 'block');
+                                $('#expired_fha_table tr *:nth-child(14)').css('display') == 'block' ? $('#expired_fha_table tr *:nth-child(14)').css('display', 'none') : $('#expired_fha_table tr *:nth-child(14)').css('display', 'block');"><span class="<%= demand_letter.occupancy_code_status_color() %>"><%= demand_letter.all_occupancy_codes_descriptions() %></span></a></td>
                 <td style="display: none;"><%= demand_letter.last_pi_memo_date.ToShortDateString()%></td>
                 <td><span class="<%= demand_letter.letters_sent_status_color() %>"><%= demand_letter.last_nl_demand_memo_date.ToString() %></span></td>
                 <td>
@@ -117,7 +114,6 @@
                 <th>Officer(s)</th>
                 <th style="display: none;">Last Reason Code Change </th>
                 <th>Reason Code</th>
-                <th style="display: none;">Last BC Memo Date</th>
                 <th style="display: none;">Last Occupancy Code Change</th>
                 <th>Occupancy Code</th>
                 <th style="display: none;">Last PI Memo Date</th>
@@ -137,13 +133,11 @@
                 <td><%= demand_letter.demand_letter_due_date.ToShortDateString()%></td>
                 <td><span class="<%= demand_letter.months_demand_date_after_delinquent_color() %>"><%= demand_letter.months_demand_date_after_delinquent() %></span></td>
                 <td><%= demand_letter.foreclosure_officers%></td>
-                <td style="display: none;"><%= demand_letter.last_default_reason_code_change_date.ToShortDateString()%></td>
-                <td><a onclick="$('#expired_va_table tr *:nth-child(12)').css('display') == 'block' ? $('#expired_va_table tr *:nth-child(12)').css('display', 'none') : $('#expired_va_table tr *:nth-child(12)').css('display', 'block');
-                                $('#expired_va_table tr *:nth-child(10)').css('display') == 'block' ? $('#expired_va_table tr *:nth-child(10)').css('display', 'none') : $('#expired_va_table tr *:nth-child(10)').css('display', 'block');"><span class="<%= demand_letter.default_reason_code_status_color() %>"><%= demand_letter.default_reason_code %></span></a></td>
-                <td style="display: none;"><%= demand_letter.last_bc_memo_date.ToShortDateString()%></td>
+                <td style="display: none;"><%= demand_letter.last_memo_default_reason_code_change_date.ToShortDateString()%></td>
+                <td><a onclick="$('#expired_va_table tr *:nth-child(10)').css('display') == 'block' ? $('#expired_va_table tr *:nth-child(10)').css('display', 'none') : $('#expired_va_table tr *:nth-child(10)').css('display', 'block');"><span class="<%= demand_letter.default_reason_code_status_color() %>"><%= demand_letter.default_reason_code %></span></a></td>
                 <td style="display: none;"><%= demand_letter.occupancy_date().ToShortDateString()%></td>
-                <td><a onclick="$('#expired_va_table tr *:nth-child(13)').css('display') == 'block' ? $('#expired_va_table tr *:nth-child(13)').css('display', 'none') : $('#expired_va_table tr *:nth-child(13)').css('display', 'block');
-                                $('#expired_va_table tr *:nth-child(15)').css('display') == 'block' ? $('#expired_va_table tr *:nth-child(15)').css('display', 'none') : $('#expired_va_table tr *:nth-child(15)').css('display', 'block');"><span class="<%= demand_letter.occupancy_code_status_color() %>"><%= demand_letter.all_occupancy_codes_descriptions() %></span></a></td>
+                <td><a onclick="$('#expired_va_table tr *:nth-child(12)').css('display') == 'block' ? $('#expired_va_table tr *:nth-child(12)').css('display', 'none') : $('#expired_va_table tr *:nth-child(12)').css('display', 'block');
+                                $('#expired_va_table tr *:nth-child(14)').css('display') == 'block' ? $('#expired_va_table tr *:nth-child(14)').css('display', 'none') : $('#expired_va_table tr *:nth-child(14)').css('display', 'block');"><span class="<%= demand_letter.occupancy_code_status_color() %>"><%= demand_letter.all_occupancy_codes_descriptions() %></span></a></td>
                 <td style="display: none;"><%= demand_letter.last_pi_memo_date.ToShortDateString()%></td>
                 <td><span class="<%= demand_letter.letters_sent_status_color() %>"><%= demand_letter.last_nl_demand_memo_date.ToString() %></span></td>
                 <td>
@@ -171,7 +165,6 @@
                 <th>Officer(s)</th>
                 <th style="display: none;">Last Reason Code Change </th>
                 <th>Reason Code</th>
-                <th style="display: none;">Last BC Memo Date</th>
                 <th style="display: none;">Last Occupancy Code Change</th>
                 <th>Occupancy Code</th>
                 <th style="display: none;">Last PI Memo Date</th>
@@ -191,13 +184,11 @@
                 <td><%= demand_letter.demand_letter_due_date.ToShortDateString()%></td>
                 <td><span class="<%= demand_letter.months_demand_date_after_delinquent_color() %>"><%= demand_letter.months_demand_date_after_delinquent() %></span></td>
                 <td><%= demand_letter.foreclosure_officers%></td>
-                <td style="display: none;"><%= demand_letter.last_default_reason_code_change_date.ToShortDateString()%></td>
-                <td><a onclick="$('#expired_conv_table tr *:nth-child(12)').css('display') == 'block' ? $('#expired_conv_table tr *:nth-child(12)').css('display', 'none') : $('#expired_conv_table tr *:nth-child(12)').css('display', 'block');
-                                $('#expired_conv_table tr *:nth-child(10)').css('display') == 'block' ? $('#expired_conv_table tr *:nth-child(10)').css('display', 'none') : $('#expired_conv_table tr *:nth-child(10)').css('display', 'block');"><span class="<%= demand_letter.default_reason_code_status_color() %>"><%= demand_letter.default_reason_code %></span></a></td>
-                <td style="display: none;"><%= demand_letter.last_bc_memo_date.ToShortDateString()%></td>
+                <td style="display: none;"><%= demand_letter.last_memo_default_reason_code_change_date.ToShortDateString()%></td>
+                <td><a onclick="$('#expired_conv_table tr *:nth-child(10)').css('display') == 'block' ? $('#expired_conv_table tr *:nth-child(10)').css('display', 'none') : $('#expired_conv_table tr *:nth-child(10)').css('display', 'block');"><span class="<%= demand_letter.default_reason_code_status_color() %>"><%= demand_letter.default_reason_code %></span></a></td>
                 <td style="display: none;"><%= demand_letter.occupancy_date().ToShortDateString()%></td>
-                <td><a onclick="$('#expired_conv_table tr *:nth-child(13)').css('display') == 'block' ? $('#expired_conv_table tr *:nth-child(13)').css('display', 'none') : $('#expired_conv_table tr *:nth-child(13)').css('display', 'block');
-                                $('#expired_conv_table tr *:nth-child(15)').css('display') == 'block' ? $('#expired_conv_table tr *:nth-child(15)').css('display', 'none') : $('#expired_conv_table tr *:nth-child(15)').css('display', 'block');"><span class="<%= demand_letter.occupancy_code_status_color() %>"><%= demand_letter.all_occupancy_codes_descriptions() %></span></a></td>
+                <td><a onclick="$('#expired_conv_table tr *:nth-child(12)').css('display') == 'block' ? $('#expired_conv_table tr *:nth-child(12)').css('display', 'none') : $('#expired_conv_table tr *:nth-child(12)').css('display', 'block');
+                                $('#expired_conv_table tr *:nth-child(14)').css('display') == 'block' ? $('#expired_conv_table tr *:nth-child(14)').css('display', 'none') : $('#expired_conv_table tr *:nth-child(14)').css('display', 'block');"><span class="<%= demand_letter.occupancy_code_status_color() %>"><%= demand_letter.all_occupancy_codes_descriptions() %></span></a></td>
                 <td style="display: none;"><%= demand_letter.last_pi_memo_date.ToShortDateString()%></td>
                 <td><span class="<%= demand_letter.letters_sent_status_color() %>"><%= demand_letter.last_nl_demand_memo_date.ToString() %></span></td>
                 <td>
@@ -235,7 +226,6 @@
                 <th>Officer(s)</th>
                 <th style="display: none;">Last Reason Code Change </th>
                 <th>Reason Code</th>
-                <th style="display: none;">Last BC Memo Date</th>
                 <th style="display: none;">Last Occupancy Code Change</th>
                 <th>Occupancy Code</th>
                 <th style="display: none;">Last PI Memo Date</th>
@@ -255,13 +245,11 @@
                 <td><%= demand_letter.demand_letter_due_date.ToShortDateString()%></td>
                 <td><span class="<%= demand_letter.months_demand_date_after_delinquent_color() %>"><%= demand_letter.months_demand_date_after_delinquent() %></span></td>
                 <td><%= demand_letter.foreclosure_officers%></td>
-                <td style="display: none;"><%= demand_letter.last_default_reason_code_change_date.ToShortDateString()%></td>
-                <td><a onclick="$('#active_fha_table tr *:nth-child(12)').css('display') == 'block' ? $('#active_fha_table tr *:nth-child(12)').css('display', 'none') : $('#active_fha_table tr *:nth-child(12)').css('display', 'block');
-                                $('#active_fha_table tr *:nth-child(10)').css('display') == 'block' ? $('#active_fha_table tr *:nth-child(10)').css('display', 'none') : $('#active_fha_table tr *:nth-child(10)').css('display', 'block');"><span class="<%= demand_letter.default_reason_code_status_color() %>"><%= demand_letter.default_reason_code %></span></a></td>
-                <td style="display: none;"><%= demand_letter.last_bc_memo_date.ToShortDateString()%></td>
+                <td style="display: none;"><%= demand_letter.last_memo_default_reason_code_change_date.ToShortDateString()%></td>
+                <td><a onclick="$('#active_fha_table tr *:nth-child(10)').css('display') == 'block' ? $('#active_fha_table tr *:nth-child(10)').css('display', 'none') : $('#active_fha_table tr *:nth-child(10)').css('display', 'block');"><span class="<%= demand_letter.default_reason_code_status_color() %>"><%= demand_letter.default_reason_code %></span></a></td>
                 <td style="display: none;"><%= demand_letter.occupancy_date().ToShortDateString()%></td>
-                <td><a onclick="$('#active_fha_table tr *:nth-child(13)').css('display') == 'block' ? $('#active_fha_table tr *:nth-child(13)').css('display', 'none') : $('#active_fha_table tr *:nth-child(13)').css('display', 'block');
-                                $('#active_fha_table tr *:nth-child(15)').css('display') == 'block' ? $('#active_fha_table tr *:nth-child(15)').css('display', 'none') : $('#active_fha_table tr *:nth-child(15)').css('display', 'block');"><span class="<%= demand_letter.occupancy_code_status_color() %>"><%= demand_letter.all_occupancy_codes_descriptions() %></span></a></td>
+                <td><a onclick="$('#active_fha_table tr *:nth-child(12)').css('display') == 'block' ? $('#active_fha_table tr *:nth-child(12)').css('display', 'none') : $('#active_fha_table tr *:nth-child(12)').css('display', 'block');
+                                $('#active_fha_table tr *:nth-child(14)').css('display') == 'block' ? $('#active_fha_table tr *:nth-child(14)').css('display', 'none') : $('#active_fha_table tr *:nth-child(14)').css('display', 'block');"><span class="<%= demand_letter.occupancy_code_status_color() %>"><%= demand_letter.all_occupancy_codes_descriptions() %></span></a></td>
                 <td style="display: none;"><%= demand_letter.last_pi_memo_date.ToShortDateString()%></td>
                 <td><span class="<%= demand_letter.letters_sent_status_color() %>"><%= demand_letter.last_nl_demand_memo_date.ToString() %></span></td>
                 <td>
@@ -289,7 +277,6 @@
                 <th>Officer(s)</th>
                 <th style="display: none;">Last Reason Code Change </th>
                 <th>Reason Code</th>
-                <th style="display: none;">Last BC Memo Date</th>
                 <th style="display: none;">Last Occupancy Code Change</th>
                 <th>Occupancy Code</th>
                 <th style="display: none;">Last PI Memo Date</th>
@@ -309,13 +296,11 @@
                 <td><%= demand_letter.demand_letter_due_date.ToShortDateString()%></td>
                 <td><span class="<%= demand_letter.months_demand_date_after_delinquent_color() %>"><%= demand_letter.months_demand_date_after_delinquent() %></span></td>
                 <td><%= demand_letter.foreclosure_officers%></td>
-                <td style="display: none;"><%= demand_letter.last_default_reason_code_change_date.ToShortDateString()%></td>
-                <td><a onclick="$('#active_va_table tr *:nth-child(12)').css('display') == 'block' ? $('#active_va_table tr *:nth-child(12)').css('display', 'none') : $('#active_va_table tr *:nth-child(12)').css('display', 'block');
-                                $('#active_va_table tr *:nth-child(10)').css('display') == 'block' ? $('#active_va_table tr *:nth-child(10)').css('display', 'none') : $('#active_va_table tr *:nth-child(10)').css('display', 'block');"><span class="<%= demand_letter.default_reason_code_status_color() %>"><%= demand_letter.default_reason_code %></span></a></td>
-                <td style="display: none;"><%= demand_letter.last_bc_memo_date.ToShortDateString()%></td>
+                <td style="display: none;"><%= demand_letter.last_memo_default_reason_code_change_date.ToShortDateString()%></td>
+                <td><a onclick="$('#active_va_table tr *:nth-child(10)').css('display') == 'block' ? $('#active_va_table tr *:nth-child(10)').css('display', 'none') : $('#active_va_table tr *:nth-child(10)').css('display', 'block');"><span class="<%= demand_letter.default_reason_code_status_color() %>"><%= demand_letter.default_reason_code %></span></a></td>
                 <td style="display: none;"><%= demand_letter.occupancy_date().ToShortDateString()%></td>
-                <td><a onclick="$('#active_va_table tr *:nth-child(13)').css('display') == 'block' ? $('#active_va_table tr *:nth-child(13)').css('display', 'none') : $('#active_va_table tr *:nth-child(13)').css('display', 'block');
-                                $('#active_va_table tr *:nth-child(15)').css('display') == 'block' ? $('#active_va_table tr *:nth-child(15)').css('display', 'none') : $('#active_va_table tr *:nth-child(15)').css('display', 'block');"><span class="<%= demand_letter.occupancy_code_status_color() %>"><%= demand_letter.all_occupancy_codes_descriptions() %></span></a></td>
+                <td><a onclick="$('#active_va_table tr *:nth-child(12)').css('display') == 'block' ? $('#active_va_table tr *:nth-child(12)').css('display', 'none') : $('#active_va_table tr *:nth-child(12)').css('display', 'block');
+                                $('#active_va_table tr *:nth-child(14)').css('display') == 'block' ? $('#active_va_table tr *:nth-child(14)').css('display', 'none') : $('#active_va_table tr *:nth-child(14)').css('display', 'block');"><span class="<%= demand_letter.occupancy_code_status_color() %>"><%= demand_letter.all_occupancy_codes_descriptions() %></span></a></td>
                 <td style="display: none;"><%= demand_letter.last_pi_memo_date.ToShortDateString()%></td>
                 <td><span class="<%= demand_letter.letters_sent_status_color() %>"><%= demand_letter.last_nl_demand_memo_date.ToString() %></span></td>
                 <td>
@@ -343,7 +328,6 @@
                 <th>Officer(s)</th>
                 <th style="display: none;">Last Reason Code Change </th>
                 <th>Reason Code</th>
-                <th style="display: none;">Last BC Memo Date</th>
                 <th style="display: none;">Last Occupancy Code Change</th>
                 <th>Occupancy Code</th>
                 <th style="display: none;">Last PI Memo Date</th>
@@ -363,13 +347,11 @@
                 <td><%= demand_letter.demand_letter_due_date.ToShortDateString()%></td>
                 <td><span class="<%= demand_letter.months_demand_date_after_delinquent_color() %>"><%= demand_letter.months_demand_date_after_delinquent() %></span></td>
                 <td><%= demand_letter.foreclosure_officers%></td>
-                <td style="display: none;"><%= demand_letter.last_default_reason_code_change_date.ToShortDateString()%></td>
-                <td><a onclick="$('#active_conv_table tr *:nth-child(12)').css('display') == 'block' ? $('#active_conv_table tr *:nth-child(12)').css('display', 'none') : $('#active_conv_table tr *:nth-child(12)').css('display', 'block');
-                                $('#active_conv_table tr *:nth-child(10)').css('display') == 'block' ? $('#active_conv_table tr *:nth-child(10)').css('display', 'none') : $('#active_conv_table tr *:nth-child(10)').css('display', 'block');"><span class="<%= demand_letter.default_reason_code_status_color() %>"><%= demand_letter.default_reason_code %></span></a></td>
-                <td style="display: none;"><%= demand_letter.last_bc_memo_date.ToShortDateString()%></td>
+                <td style="display: none;"><%= demand_letter.last_memo_default_reason_code_change_date.ToShortDateString()%></td>
+                <td><a onclick="$('#active_conv_table tr *:nth-child(10)').css('display') == 'block' ? $('#active_conv_table tr *:nth-child(10)').css('display', 'none') : $('#active_conv_table tr *:nth-child(10)').css('display', 'block');"><span class="<%= demand_letter.default_reason_code_status_color() %>"><%= demand_letter.default_reason_code %></span></a></td>
                 <td style="display: none;"><%= demand_letter.occupancy_date().ToShortDateString()%></td>
-                <td><a onclick="$('#active_conv_table tr *:nth-child(13)').css('display') == 'block' ? $('#active_conv_table tr *:nth-child(13)').css('display', 'none') : $('#active_conv_table tr *:nth-child(13)').css('display', 'block');
-                                $('#active_conv_table tr *:nth-child(15)').css('display') == 'block' ? $('#active_conv_table tr *:nth-child(15)').css('display', 'none') : $('#active_conv_table tr *:nth-child(15)').css('display', 'block');"><span class="<%= demand_letter.occupancy_code_status_color() %>"><%= demand_letter.all_occupancy_codes_descriptions() %></span></a></td>
+                <td><a onclick="$('#active_conv_table tr *:nth-child(12)').css('display') == 'block' ? $('#active_conv_table tr *:nth-child(12)').css('display', 'none') : $('#active_conv_table tr *:nth-child(12)').css('display', 'block');
+                                $('#active_conv_table tr *:nth-child(14)').css('display') == 'block' ? $('#active_conv_table tr *:nth-child(14)').css('display', 'none') : $('#active_conv_table tr *:nth-child(14)').css('display', 'block');"><span class="<%= demand_letter.occupancy_code_status_color() %>"><%= demand_letter.all_occupancy_codes_descriptions() %></span></a></td>
                 <td style="display: none;"><%= demand_letter.last_pi_memo_date.ToShortDateString()%></td>
                 <td><span class="<%= demand_letter.letters_sent_status_color() %>"><%= demand_letter.last_nl_demand_memo_date.ToString() %></span></td>
                 <td>
