@@ -219,7 +219,7 @@
                     <td><%= foreclosure.foreclosure_date.ToShortDateString() %></td>
                     <td><%= foreclosure.foreclosure_officers %></td>
                     <td><%= foreclosure.last_notify_inspection_memo_date.ToShortDateString() %></td>
-                    <td><%= foreclosure.last_inspection_memo_date.ToShortDateString() %></td>
+                    <td><%= foreclosure.last_inspection_ordered_date.ToShortDateString()%></td>
                     <td><%= foreclosure.last_inspection_memo_description %></td>
                     <td><%= foreclosure.last_inspection_since() %></td>
                  </tr>
@@ -252,7 +252,7 @@
                     <td><%= foreclosure.foreclosure_date.ToShortDateString() %></td>
                     <td><%= foreclosure.foreclosure_officers %></td>
                     <td><%= foreclosure.last_notify_inspection_memo_date.ToShortDateString() %></td>
-                    <td><%= foreclosure.last_inspection_memo_date.ToShortDateString() %></td>
+                    <td><%= foreclosure.last_inspection_ordered_date.ToShortDateString()%></td>
                     <td><%= foreclosure.last_inspection_memo_description %></td>
                     <td><%= foreclosure.last_inspection_since() %></td>
                  </tr>
@@ -285,7 +285,7 @@
                     <td><%= foreclosure.foreclosure_date.ToShortDateString() %></td>
                     <td><%= foreclosure.foreclosure_officers %></td>
                     <td><%= foreclosure.last_notify_inspection_memo_date.ToShortDateString() %></td>
-                    <td><%= foreclosure.last_inspection_memo_date.ToShortDateString() %></td>
+                    <td><%= foreclosure.last_inspection_ordered_date.ToShortDateString()%></td>
                     <td><%= foreclosure.last_inspection_memo_description %></td>
                     <td><%= foreclosure.last_inspection_since() %></td>
                  </tr>

@@ -557,7 +557,7 @@
                     <td><%= demand_letter.demand_letter_due_date.ToShortDateString() %></td>
                     <td><%= demand_letter.foreclosure_officers %></td>
                     <td><%= demand_letter.last_notify_inspection_memo_date.ToShortDateString() %></td>
-                    <td><%= demand_letter.last_inspection_memo_date.ToShortDateString() %></td>
+                    <td><%= demand_letter.last_inspection_ordered_date.ToShortDateString()%></td>
                     <td><%= demand_letter.last_inspection_memo_description %></td>
                     <td><%= demand_letter.last_inspection_since() %></td>
                  </tr>
@@ -590,7 +590,7 @@
                     <td><%= demand_letter.demand_letter_due_date.ToShortDateString() %></td>
                     <td><%= demand_letter.foreclosure_officers %></td>
                     <td><%= demand_letter.last_notify_inspection_memo_date.ToShortDateString() %></td>
-                    <td><%= demand_letter.last_inspection_memo_date.ToShortDateString() %></td>
+                    <td><%= demand_letter.last_inspection_ordered_date.ToShortDateString()%></td>
                     <td><%= demand_letter.last_inspection_memo_description %></td>
                     <td><%= demand_letter.last_inspection_since() %></td>
                  </tr>
@@ -623,7 +623,180 @@
                     <td><%= demand_letter.demand_letter_due_date.ToShortDateString() %></td>
                     <td><%= demand_letter.foreclosure_officers %></td>
                     <td><%= demand_letter.last_notify_inspection_memo_date.ToShortDateString() %></td>
-                    <td><%= demand_letter.last_inspection_memo_date.ToShortDateString() %></td>
+                    <td><%= demand_letter.last_inspection_ordered_date.ToShortDateString()%></td>
+                    <td><%= demand_letter.last_inspection_memo_description %></td>
+                    <td><%= demand_letter.last_inspection_since() %></td>
+                 </tr>
+                <%
+                    }
+                %>
+            </table>
+            </div>
+            </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="span12">
+            <h2>Inspections (<%= inspections_ordered.Count + inspections_not_ordered.Count %>)
+            <a class="btn btn-primary" onclick="var e = document.getElementById('inspections_table'); e.style.display = e.style.display == 'block' ? 'none' : 'block';"><i class="icon-th-list icon-white"></i> Data</a></h2>
+            <div id="inspections_table" style="display:none">
+            <h3>Inspections Ordered (<%= inspections_ordered.Count%>)<a class="btn btn-primary" onclick="var e = document.getElementById('inspections_ordered_table'); e.style.display = e.style.display == 'block' ? 'none' : 'block';"><i class="icon-th-list icon-white"></i> Data</a></h3>
+            <div id="inspections_ordered_table" style="display:none">
+            <table class="table table-striped">
+                <tr>
+                    <th>Loan#</th>
+                    <th>Loan Type</th>
+                    <th>Loan Name</th>
+                    <th>Demand Letter Due Date</th>
+                    <th>Officer(s)</th>
+                    <th>Last Inspection Ordered Date</th>
+                    <th>Last Inspection Received Date</th>
+                    <th>Last Inspection Type</th>
+                    <th>Last Inspection Days Ago</th>
+                </tr>
+                <% foreach (com.sp.rmmc.foreclosures.models.DemandLetter demand_letter in inspections_ordered)
+                   {
+                %>
+                <tr>
+                    <td><a href="../ForeclosureLog/Default.aspx?loan_id=<%= demand_letter.loan_id.ToString()%>"><%= demand_letter.loan_id.ToString()%></a></td>
+                    <td><%= demand_letter.loan.loan_type%></td>
+                    <td><%= demand_letter.loan.loan_name%></td>
+                    <td><%= demand_letter.demand_letter_due_date.ToShortDateString() %></td>
+                    <td><%= demand_letter.foreclosure_officers %></td>
+                    <td><%= demand_letter.last_inspection_ordered_date.ToShortDateString()%></td>
+                    <td><%= demand_letter.last_notify_inspection_memo_date.ToShortDateString() %></td>
+                    <td><%= demand_letter.last_inspection_memo_description %></td>
+                    <td><%= demand_letter.last_inspection_since() %></td>
+                 </tr>
+                <%
+                    }
+                %>
+            </table>
+            </div>
+            <h3>Inspections Not Ordered (<%= inspections_not_ordered.Count%>)<a class="btn btn-primary" onclick="var e = document.getElementById('inspections_not_ordered_table'); e.style.display = e.style.display == 'block' ? 'none' : 'block';"><i class="icon-th-list icon-white"></i> Data</a></h3>
+            <div id="inspections_not_ordered_table" style="display:none">
+            <table class="table table-striped">
+                <tr>
+                    <th>Loan#</th>
+                    <th>Loan Type</th>
+                    <th>Loan Name</th>
+                    <th>Demand Letter Due Date</th>
+                    <th>Officer(s)</th>
+                    <th>Last Inspection Ordered Date</th>
+                    <th>Last Inspection Received Date</th>
+                    <th>Last Inspection Type</th>
+                    <th>Last Inspection Days Ago</th>
+                </tr>
+                <% foreach (com.sp.rmmc.foreclosures.models.DemandLetter demand_letter in inspections_not_ordered)
+                   {
+                %>
+                <tr>
+                    <td><a href="../ForeclosureLog/Default.aspx?loan_id=<%= demand_letter.loan_id.ToString()%>"><%= demand_letter.loan_id.ToString()%></a></td>
+                    <td><%= demand_letter.loan.loan_type%></td>
+                    <td><%= demand_letter.loan.loan_name%></td>
+                    <td><%= demand_letter.demand_letter_due_date.ToShortDateString() %></td>
+                    <td><%= demand_letter.foreclosure_officers %></td>
+                    <td><%= demand_letter.last_inspection_ordered_date.ToShortDateString()%></td>
+                    <td><%= demand_letter.last_notify_inspection_memo_date.ToShortDateString() %></td>
+                    <td><%= demand_letter.last_inspection_memo_description %></td>
+                    <td><%= demand_letter.last_inspection_since() %></td>
+                 </tr>
+                <%
+                    }
+                %>
+            </table>
+            </div>
+            <h3>Inspections Received (<%= inspections_received.Count%>)<a class="btn btn-primary" onclick="var e = document.getElementById('inspections_received_table'); e.style.display = e.style.display == 'block' ? 'none' : 'block';"><i class="icon-th-list icon-white"></i> Data</a></h3>
+            <div id="inspections_received_table" style="display:none">
+            <table class="table table-striped">
+                <tr>
+                    <th>Loan#</th>
+                    <th>Loan Type</th>
+                    <th>Loan Name</th>
+                    <th>Demand Letter Due Date</th>
+                    <th>Officer(s)</th>
+                    <th>Last Inspection Ordered Date</th>
+                    <th>Last Inspection Received Date</th>
+                    <th>Last Inspection Type</th>
+                    <th>Last Inspection Days Ago</th>
+                </tr>
+                <% foreach (com.sp.rmmc.foreclosures.models.DemandLetter demand_letter in inspections_received)
+                   {
+                %>
+                <tr>
+                    <td><a href="../ForeclosureLog/Default.aspx?loan_id=<%= demand_letter.loan_id.ToString()%>"><%= demand_letter.loan_id.ToString()%></a></td>
+                    <td><%= demand_letter.loan.loan_type%></td>
+                    <td><%= demand_letter.loan.loan_name%></td>
+                    <td><%= demand_letter.demand_letter_due_date.ToShortDateString() %></td>
+                    <td><%= demand_letter.foreclosure_officers %></td>
+                    <td><%= demand_letter.last_inspection_ordered_date.ToShortDateString()%></td>
+                    <td><%= demand_letter.last_notify_inspection_memo_date.ToShortDateString() %></td>
+                    <td><%= demand_letter.last_inspection_memo_description %></td>
+                    <td><%= demand_letter.last_inspection_since() %></td>
+                 </tr>
+                <%
+                    }
+                %>
+            </table>
+            </div>
+            <h3>Inspections not received Warnings (<%= inspections_not_received_from_20_to_25_days.Count%>)<a class="btn btn-primary" onclick="var e = document.getElementById('inspections_not_received_from_20_to_25_days'); e.style.display = e.style.display == 'block' ? 'none' : 'block';"><i class="icon-th-list icon-white"></i> Data</a></h3>
+            <div id="inspections_not_received_from_20_to_25_days" style="display:none">
+            <table class="table table-striped">
+                <tr>
+                    <th>Loan#</th>
+                    <th>Loan Type</th>
+                    <th>Loan Name</th>
+                    <th>Demand Letter Due Date</th>
+                    <th>Officer(s)</th>
+                    <th>Last Inspection Ordered Date</th>
+                    <th>Last Inspection Received Date</th>
+                    <th>Last Inspection Type</th>
+                    <th>Last Inspection Days Ago</th>
+                </tr>
+                <% foreach (com.sp.rmmc.foreclosures.models.DemandLetter demand_letter in inspections_not_received_from_20_to_25_days)
+                   {
+                %>
+                <tr>
+                    <td><a href="../ForeclosureLog/Default.aspx?loan_id=<%= demand_letter.loan_id.ToString()%>"><%= demand_letter.loan_id.ToString()%></a></td>
+                    <td><%= demand_letter.loan.loan_type%></td>
+                    <td><%= demand_letter.loan.loan_name%></td>
+                    <td><%= demand_letter.demand_letter_due_date.ToShortDateString() %></td>
+                    <td><%= demand_letter.foreclosure_officers %></td>
+                    <td><%= demand_letter.last_inspection_ordered_date.ToShortDateString()%></td>
+                    <td><%= demand_letter.last_notify_inspection_memo_date.ToShortDateString() %></td>
+                    <td><%= demand_letter.last_inspection_memo_description %></td>
+                    <td><%= demand_letter.last_inspection_since() %></td>
+                 </tr>
+                <%
+                    }
+                %>
+            </table>
+            </div>
+            <h3>Inspections not received (<%= inspections_not_received.Count%>)<a class="btn btn-primary" onclick="var e = document.getElementById('inspections_not_received_table'); e.style.display = e.style.display == 'block' ? 'none' : 'block';"><i class="icon-th-list icon-white"></i> Data</a></h3>
+            <div id="inspections_not_received_table" style="display:none">
+            <table class="table table-striped">
+                <tr>
+                    <th>Loan#</th>
+                    <th>Loan Type</th>
+                    <th>Loan Name</th>
+                    <th>Demand Letter Due Date</th>
+                    <th>Officer(s)</th>
+                    <th>Last Inspection Ordered Date</th>
+                    <th>Last Inspection Received Date</th>
+                    <th>Last Inspection Type</th>
+                    <th>Last Inspection Days Ago</th>
+                </tr>
+                <% foreach (com.sp.rmmc.foreclosures.models.DemandLetter demand_letter in inspections_not_received)
+                   {
+                %>
+                <tr>
+                    <td><a href="../ForeclosureLog/Default.aspx?loan_id=<%= demand_letter.loan_id.ToString()%>"><%= demand_letter.loan_id.ToString()%></a></td>
+                    <td><%= demand_letter.loan.loan_type%></td>
+                    <td><%= demand_letter.loan.loan_name%></td>
+                    <td><%= demand_letter.demand_letter_due_date.ToShortDateString() %></td>
+                    <td><%= demand_letter.foreclosure_officers %></td>
+                    <td><%= demand_letter.last_inspection_ordered_date.ToShortDateString()%></td>
+                    <td><%= demand_letter.last_notify_inspection_memo_date.ToShortDateString() %></td>
                     <td><%= demand_letter.last_inspection_memo_description %></td>
                     <td><%= demand_letter.last_inspection_since() %></td>
                  </tr>

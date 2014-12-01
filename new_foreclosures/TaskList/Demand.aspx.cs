@@ -47,6 +47,12 @@ public partial class lossmitigation_Collections_Default : System.Web.UI.Page
     protected List<DemandLetter> inspection_expired_va = new List<DemandLetter>();
     protected List<DemandLetter> inspection_expired_conv = new List<DemandLetter>();
 
+    protected List<DemandLetter> inspections_ordered = new List<DemandLetter>();
+    protected List<DemandLetter> inspections_not_ordered = new List<DemandLetter>();
+    protected List<DemandLetter> inspections_received = new List<DemandLetter>();
+    protected List<DemandLetter> inspections_not_received_from_20_to_25_days = new List<DemandLetter>();
+    protected List<DemandLetter> inspections_not_received = new List<DemandLetter>();
+
     protected List<DemandLetter> require_fannie_mae_call = new List<DemandLetter>();
     
     protected void Page_Load(object sender, EventArgs e)
@@ -132,6 +138,33 @@ public partial class lossmitigation_Collections_Default : System.Web.UI.Page
         {
             if (selected_loan_officer != "ALL" && dl.foreclosure_officers.ToUpper() != selected_loan_officer) continue;
             if (dl.loan.loan_type == "CNV" && dl.does_require_fannie_mae_call() ) this.require_fannie_mae_call.Add(dl);
+        }
+        foreach (DemandLetter dl in all_active_demands)
+        {
+            if (selected_loan_officer != "ALL" && dl.foreclosure_officers.ToUpper() != selected_loan_officer) continue;
+            if (dl.last_inspection_ordered_date.isNull == false) inspections_ordered.Add(dl);
+            else inspections_not_ordered.Add(dl);
+            if (dl.last_inspection_ordered_date.isNull == false && dl.last_inspection_memo_notify_date.isNull == false && dl.last_inspection_ordered_date.date < dl.last_inspection_memo_notify_date.date ) inspections_received.Add(dl);
+            else
+                if (dl.last_inspection_ordered_date.isNull == false)
+                {
+                    if (dl.last_inspection_ordered_date.date.AddDays(19) < DateTime.Today && dl.last_inspection_ordered_date.date.AddDays(26) > DateTime.Today)
+                        inspections_not_received_from_20_to_25_days.Add(dl);
+                    else if( dl.last_inspection_ordered_date.date.AddDays(26) <= DateTime.Today ) inspections_not_received.Add(dl);
+                }
+        }
+        foreach (DemandLetter dl in all_in_demand_letter_expired_mode)
+        {
+            if (selected_loan_officer != "ALL" && dl.foreclosure_officers.ToUpper() != selected_loan_officer) continue;
+            if (dl.last_inspection_ordered_date.isNull == false) inspections_ordered.Add(dl);
+            if (dl.last_inspection_ordered_date.isNull == false && dl.last_inspection_memo_notify_date.isNull == false && dl.last_inspection_ordered_date.date < dl.last_inspection_memo_notify_date.date) inspections_received.Add(dl);
+            else
+                if (dl.last_inspection_ordered_date.isNull == false)
+                {
+                    if (dl.last_inspection_ordered_date.date.AddDays(19) < DateTime.Today && dl.last_inspection_ordered_date.date.AddDays(26) > DateTime.Today)
+                        inspections_not_received_from_20_to_25_days.Add(dl);
+                    else if (dl.last_inspection_ordered_date.date.AddDays(26) <= DateTime.Today) inspections_not_received.Add(dl);
+                }
         }
     
     }
