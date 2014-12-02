@@ -45,12 +45,9 @@ namespace com.sp.rmmc.foreclosures.models
 "(select top 1 hist.paid_dt from ms_loan_history hist where hist.loan_id = base.loan_id and hist.trans_type_cd = 'PIF' order by paid_dt desc) as last_pay_off_date, " +
 MsLoan.columns("base.loan_id") +
 "from ms_fcl_item_amts_2 as base " +
-"where (base.fcl_item_desc like '%PART A%' OR " +
-" base.fcl_item_desc like '%VA BASIC CLAIM%' OR " +
-" base.fcl_item_desc like '%FANNIE MAE CLAIM%' OR " +
-" base.fcl_item_desc like '%' OR " +
-" base.fcl_item_desc like '%PART B%'  )  " + 
-" and received_date is not null ";
+"where (base.fcl_item_desc like '%' AND " +
+" base.fcl_item_desc not like '%LOSS%')  " +
+" and received_date is not null and received_date > dateadd(yy, -3, getdate())";
 
         private static string base_query2 = "" +
 @" UNION " +
@@ -71,8 +68,8 @@ MsLoan.columns("base.loan_id") +
 "(select top 1 hist.paid_dt from ms_loan_history hist where hist.loan_id = base.loan_id and hist.trans_type_cd = 'PIF' order by paid_dt desc) as last_pay_off_date, " +
 MsLoan.columns("base.loan_id") +
 "from ms_fcl_ud_item_amts_1 as base " +
-"where (base.fcl_ud_item_desc like '%VA ACQUISITION%')  " + 
-" and received_date is not null";
+"where (base.fcl_ud_item_desc like '%VA ACQUISITION%')  " +
+" and received_date is not null and received_date > dateadd(yy, -3, getdate())";
 
         private static List<Claim> get_list(String query)
         {
