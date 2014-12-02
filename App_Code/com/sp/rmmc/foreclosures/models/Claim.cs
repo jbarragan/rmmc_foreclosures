@@ -48,7 +48,7 @@ MsLoan.columns("base.loan_id") +
 "where (base.fcl_item_desc like '%PART A%' OR " +
 " base.fcl_item_desc like '%VA BASIC CLAIM%' OR " +
 " base.fcl_item_desc like '%FANNIE MAE CLAIM%' OR " +
-//" base.fcl_item_desc like '%LOSS%' OR " +
+" base.fcl_item_desc like '%' OR " +
 " base.fcl_item_desc like '%PART B%'  )  " + 
 " and received_date is not null ";
 
