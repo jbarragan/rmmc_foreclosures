@@ -69,12 +69,12 @@ namespace com.sp.rmmc.common.models
                 return reader.GetDateTime(pos);
         }
 
-        public static DateTimeObject readDBDateObject(DbDataReader reader, int pos, DateTime defaultValue)
+        public static DateTimeObject readDBDateObject(DbDataReader reader, int pos)
         {
             DateTimeObject ret = new DateTimeObject();
             if (reader.GetValue(pos) is DBNull)
             {
-                ret.date = defaultValue;
+                ret.date = DateTime.Now;
             }
             else
             {

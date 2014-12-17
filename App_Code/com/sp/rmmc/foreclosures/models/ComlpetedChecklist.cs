@@ -60,6 +60,24 @@ namespace com.sp.rmmc.foreclosures.models
                 return new List<ComlpetedChecklist>();
         }
 
+        public static List<ComlpetedChecklist> getCompletedChecklists(List<BaseForeclosure> bfs)
+        {
+            if (bfs.Count > 0)
+            {
+                string query = base_query + " where 1 = 1 and (";
+                foreach (BaseForeclosure bf in bfs)
+                {
+                    DateTimeObject minimal_completed_date = new DateTimeObject();
+                    minimal_completed_date.set_date(bf.demand_letter_due_date.date.AddDays(-30));
+                    query += " (loan_id = " + bf.loan_id + " and date >  " + minimal_completed_date.toDBValue() + ") OR ";
+                }
+                query += " (1 = 2))";
+                return get_completed_checklists(query);
+            }
+            else
+                return new List<ComlpetedChecklist>();
+        }
+
         public static List<ComlpetedChecklist> get_foreclosure_completed_checklists(List<Foreclosure> foreclosures)
         {
             if (foreclosures.Count > 0)

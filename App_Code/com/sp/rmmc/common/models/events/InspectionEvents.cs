@@ -6,30 +6,79 @@ using System.Data.Sql;
 using System.Data.SqlClient;
 using System.Data.Common;
 
-/// <summary>
-/// Summary description for InspectionEvents
-/// </summary>
+using com.sp.rmmc.foreclosures.models;
+
 namespace com.sp.rmmc.common.models.events
 {
     public class InspectionEvents : BaseEvents
     {
-        private static String[] data_sources = 
+        public DateTimeObject last_ordered_date = new DateTimeObject();
+        public DateTimeObject last_received_notify_date = new DateTimeObject();
+        public String last_received_description = "";
+
+        private static String[] class_fields = 
             {
-             " (select top 1 ms_loan_info.loan_id from ms_loan_information ms_loan_info where ms_loan_info.loan_id = loan_id_placer order by ms_loan_info.loan_id  ) as inspection_events_loan_id, "
+             "(select top 1 ms_loan_info.loan_id from ms_loan_information ms_loan_info where ms_loan_info.loan_id = loan_id_column order by ms_loan_info.loan_id  ) as inspection_events_loan_id",
+             "(select top 1 memo.memo_create_dt from ms_loan_memo memo where memo.loan_id = loan_id_column and lower(memo.memo_subject) like '%property inspection report%' order by memo.memo_create_dt desc ) as inspection_events_last_ordered_date", 
+             "(select top 1 memo.memo_notify_dt from ms_loan_memo memo, ms_memo_types where memo.loan_id = loan_id_column and memo.memo_type_id = ms_memo_types.memo_type_id and ms_memo_types.memo_type_desc like 'PI-%' order by memo.memo_notify_dt desc ) as inspection_events_last_received_notify_date",
+             "(select top 1 ms_memo_types.memo_type_desc from ms_loan_memo memo, ms_memo_types where memo.loan_id = loan_id_column and memo.memo_type_id = ms_memo_types.memo_type_id and ms_memo_types.memo_type_desc like 'PI-%' order by memo.memo_notify_dt desc ) as inspection_events_last_received_description"
             };
 
-        public static InspectionEvents read(DbDataReader reader, int pos)
+        public InspectionEvents()
         {
-            InspectionEvents data = new InspectionEvents();
-            data.loan_id = DbModel.readDBDecimal(reader, pos++);
-            return data;
+            this.fields = class_fields;
         }
 
-        public static string columns(string loan_id_column)
+        private void load_events()
         {
-            string s = String.Join(", ", data_sources);
-            s = s.Replace("loan_id_placer", loan_id_column);
-            return s;
+            if (this.last_ordered_date.isNull ){
+                Event e = new Event();
+                e.loan = this.loan;
+                e.type = Event.ALERT;
+                e.name = "No Inspection Ordered";
+                e.description = "No Inspection Ordered";
+                this.events.Add(e);
+                /* TODO: Inspection non ordered in the last 30 days.
+                }else if(this.last_ordered_date.date < DateTime.Now.AddDays(-31)){
+                    Event e = new Event();
+                    e.loan = this.loan;
+                    e.type = Event.ALERT;
+                    e.name = "No Inspection Ordered";
+                    e.description = "No Inspection Ordered in the last 30 days, last ordered on " + this.last_ordered_date.ToShortDateString();
+                    this.events.Add(e);
+                */
+            }
+            else if (this.last_received_notify_date.isNull || this.last_received_notify_date.date < this.last_ordered_date.date.AddDays(-1))
+            {
+                if (this.last_ordered_date.date.AddDays(19) < DateTime.Today && this.last_ordered_date.date.AddDays(26) > DateTime.Today)
+                {
+                    Event e = new Event();
+                    e.loan = this.loan;
+                    e.type = Event.WARNING;
+                    e.name = "No Inspection Received Warning";
+                    e.description = "No Inspection Received in the last 19 days, last ordered on " + this.last_ordered_date.ToShortDateString();
+                    this.events.Add(e);
+                }
+                else if (this.last_ordered_date.date.AddDays(26) <= DateTime.Today)
+                {
+                    Event e = new Event();
+                    e.loan = this.loan;
+                    e.type = Event.ALERT;
+                    e.name = "No Inspection Received Alert";
+                    e.description = "No Inspection Received in the last 26 days, last ordered on " + this.last_ordered_date.ToShortDateString();
+                    this.events.Add(e);
+                }
+            }
         }
+
+        public void read(DbDataReader reader, int pos, MsLoan loan)
+        {
+            this.loan = loan;
+            this.loan_id = DbModel.readDBDecimal(reader, pos++);
+            this.last_ordered_date = DbModel.readDBDateObject(reader, pos++);
+            this.last_received_notify_date = DbModel.readDBDateObject(reader, pos++);
+            this.last_received_description = DbModel.readDBString(reader, pos++);
+            this.load_events();
+        }        
     }
 }

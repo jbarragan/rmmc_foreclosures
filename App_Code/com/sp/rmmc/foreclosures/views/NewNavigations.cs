@@ -114,6 +114,30 @@ namespace com.sp.rmmc.foreclosures.views
             return s + nav_end;
         }
 
+        private static List<Nav> foreclosure_sub_main_navs()
+        {
+            List<Nav> navs = new List<Nav>();
+            Nav nav = new Nav(); nav.link = "../Default.aspx"; nav.text = "Main Home"; navs.Add(nav);
+            nav = new Nav(); nav.link = "../Workflow/Default.aspx"; nav.text = "Workflow"; navs.Add(nav);
+            nav = new Nav(); nav.link = "../Metrics/Claims.aspx"; nav.text = "Metrics"; navs.Add(nav);
+            nav.ad_departments.Add("mis");
+            nav.ad_groups.Add("servicing_fc"); nav.ad_groups.Add("foreclosure_metrics");
+            nav = new Nav(); nav.link = "../Utilities/PreservationCodes.aspx"; nav.text = "Utilities"; navs.Add(nav);
+            nav = new Nav(); nav.link = "../Default.aspx"; nav.text = "Dashboard"; navs.Add(nav);
+            return navs;
+        }
+
+        public static string foreclosure_sub_main_nav_select(string selected_text, ADUser ad_user)
+        {
+            string s = nav_start;
+
+            foreach (Nav n in foreclosure_sub_main_navs())
+            {
+                s += n.link_html(selected_text, ad_user);
+            }
+            return s + nav_end;
+        }
+
         private static List<Nav> main_navs()
         {
             List<Nav> navs = new List<Nav>();
@@ -139,6 +163,39 @@ namespace com.sp.rmmc.foreclosures.views
         }
 
         public static bool main_nav_access(string selected_text, ADUser ad_user)
+        {
+            foreach (Nav n in main_navs())
+            {
+                if (n.text == selected_text) return n.with_access(ad_user);
+            }
+            return true;
+        }
+
+        private static List<Nav> foreclosure_main_navs()
+        {
+            List<Nav> navs = new List<Nav>();
+            Nav nav = new Nav(); nav.link = "Default.aspx"; nav.text = "Main Home"; navs.Add(nav);
+            nav = new Nav(); nav.link = "Workflow/Default.aspx"; nav.text = "Workflow"; navs.Add(nav);
+            nav = new Nav(); nav.link = "Metrics/Claims.aspx"; nav.text = "Metrics"; navs.Add(nav);
+            nav.ad_departments.Add("mis");
+            nav.ad_groups.Add("servicing_fc"); nav.ad_groups.Add("foreclosure_metrics");
+            nav = new Nav(); nav.link = "Utilities/PreservationCodes.aspx"; nav.text = "Utilities"; navs.Add(nav);
+            nav = new Nav(); nav.link = "Default.aspx"; nav.text = "Dashboard"; navs.Add(nav);
+            return navs;
+        }
+
+        public static string foreclosure_main_nav_select(string selected_text, ADUser ad_user)
+        {
+            string s = nav_start;
+
+            foreach (Nav n in foreclosure_main_navs())
+            {
+                s += n.link_html(selected_text, ad_user);
+            }
+            return s + nav_end;
+        }
+
+        public static bool foreclosure_main_nav_access(string selected_text, ADUser ad_user)
         {
             foreach (Nav n in main_navs())
             {
@@ -180,12 +237,30 @@ namespace com.sp.rmmc.foreclosures.views
             }
             return s + nav_end;
         }
+
         public static string metrics_list_nav_select(string active)
         {
             string s = nav_start;
             List<Nav> navs = new List<Nav>();
             Nav nav = new Nav(); nav.link = "Claims.aspx"; nav.text = "Claims"; navs.Add(nav);
             nav = new Nav(); nav.link = "Foreclosures.aspx"; nav.text = "Foreclosures By Sale Date Completed"; navs.Add(nav);
+            string active_class = "";
+            foreach (Nav n in navs)
+            {
+                if (active == n.text) active_class = @" class=""active"""; else active_class = "";
+                s += @"<li" + active_class + @"><a href=""" + n.link + @""">" + n.text + "</a></li>";
+            }
+            return s + nav_end;
+        }
+
+        public static string workflow_list_nav_select(string active)
+        {
+            string s = nav_start;
+            List<Nav> navs = new List<Nav>();
+            Nav nav = new Nav(); nav.link = "Default.aspx?workflow=Demands"; nav.text = "Demands"; navs.Add(nav);
+            nav = new Nav(); nav.link = "Default.aspx?workflow=Demands"; nav.text = "PreForeclosure"; navs.Add(nav);
+            nav = new Nav(); nav.link = "Default.aspx?workflow=Demands"; nav.text = "Foreclosure"; navs.Add(nav);
+            nav = new Nav(); nav.link = "Default.aspx?workflow=Demands"; nav.text = "Foreclosed"; navs.Add(nav);
             string active_class = "";
             foreach (Nav n in navs)
             {

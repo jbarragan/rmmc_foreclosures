@@ -19,11 +19,38 @@ namespace com.sp.rmmc.foreclosures.models
 "received " +
 "from receptions ";
 
+        private static string base_query2 = "" +
+"select " +
+"receptions.loan_id, " +
+"receptions.received " +
+"from receptions, status " + 
+"where 1 = 1 and  " + 
+"receptions.loan_id = status.loan_id   " + 
+" and incomplete_denied > receptions.received ";
+
         private static string mssqlConnectionString =
             System.Configuration.ConfigurationManager.ConnectionStrings["loss_mitigation"].ConnectionString;
 
         public LMReception()
         {
+        }
+
+        public static List<LMReception> getLMReceptions(List<BaseForeclosure> foreclosures)
+        {
+            if (foreclosures.Count > 0)
+            {
+                string query = base_query2 + " and 1 = 1 and (";
+                foreach (BaseForeclosure f in foreclosures)
+                {
+                    DateTimeObject minimal_completed_date = new DateTimeObject();
+                    minimal_completed_date.set_date(f.demand_letter_due_date.date.AddDays(-30));
+                    query += loan_in_lm_query2(f.loan_id, minimal_completed_date);
+                }
+                query += " (1 = 2))";
+                return get_lm_receptions(query);
+            }
+            else
+                return new List<LMReception>();
         }
 
         public static List<LMReception> get_demand_letters_lm_receptions(List<DemandLetter> demand_letters)
@@ -62,9 +89,17 @@ namespace com.sp.rmmc.foreclosures.models
                 return new List<LMReception>();
         }
 
-        public static string loan_in_lm_query(decimal loan_id, DateTimeObject completed_date){
+        public static string loan_in_lm_query(decimal loan_id, DateTimeObject completed_date)
+        {
             string query = " (loan_id = " + loan_id + " and received >  " + completed_date.toDBValue() + " AND ";
             query += "(select top 1 incomplete_denied from status where receptions.loan_id = status.loan_id AND incomplete_denied > receptions.received) is null ";
+            query += ") OR ";
+            return query;
+        }
+
+        public static string loan_in_lm_query2(decimal loan_id, DateTimeObject completed_date)
+        {
+            string query = " (receptions.loan_id = " + loan_id + " and received >  " + completed_date.toDBValue();
             query += ") OR ";
             return query;
         }
