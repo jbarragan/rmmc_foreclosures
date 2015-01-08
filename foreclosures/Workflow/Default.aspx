@@ -15,7 +15,7 @@
         <img src="../../assets/img/logo.png" class="img-rounded" alt="RMMC Logo" />
         <h1><%= workflow %></h1>
         <p></p>
-    </div>    
+    </div>
     <%= com.sp.rmmc.foreclosures.views.NewNavigations.foreclosure_sub_main_nav_select("Workflow", new ADUser(HttpContext.Current.User.Identity.Name.ToString()))%>
     <%= com.sp.rmmc.foreclosures.views.NewNavigations.workflow_list_nav_select(workflow)%>
     <!-- Example row of columns -->    
@@ -105,6 +105,119 @@
     <%
         }
     %>
+    
+    <%if (this.workflow == "PreForeclosures")
+      {
+    %>
+    <div class="row">
+        <div class="span12">
+        <h2><%= this.workflow%> (<%= bfs.Count%>)</h2>
+        <table class="table table-striped">
+            <tr>
+                <th>Loan#</th>
+                <th>Exceptions</th>
+                <th>Loan Type</th>
+                <th>Loan Name</th>
+                <th>Due Date of next payment</th>
+                <th>UPB</th>
+                <th>Interest Rate</th>
+                <th>Papers To Attorney Date</th>
+                <th>Posting Date</th>
+                <th>Foreclosure Date</th>
+                <th>Officer(s)</th>
+                <th>Checklist</th>
+            </tr>
+            <% 
+               foreach (com.sp.rmmc.foreclosures.models.BaseForeclosure bf in bfs)
+               {
+            %>
+            <tr class="<%= bf.getEventStatusColor() %>">
+                <td><%= bf.loan_id.ToString()%></td>
+                <%  int events_count = 0; if ((events_count = bf.getEvents().Count) > 0)
+                    { %>
+                    <td><a href="Events.aspx?loan_id=<%=bf.loan_id %>&workflow=<%=workflow %>"><%= events_count.ToString()%></a></td>
+                <%  }
+                    else
+                    { %>
+                    <td>0</td>
+                <%  } %>
+                <td><%= bf.loan.loan_type%></td>
+                <td><%= bf.loan.loan_name%></td>
+                <td><%= bf.loan.due_date_next_payment.ToShortDateString()%></td>
+                <td><%= bf.loan.prin_bal.ToString("C")%></td>
+                <td><%= bf.loan.int_rate.ToString("0.000")%></td>
+                <td><%= bf.papers_to_attorney_date.ToShortDateString()%></td>
+                <td><%= bf.posting_date.ToShortDateString()%></td>
+                <td><span class="text-error"><%= bf.foreclosure_date.ToShortDateString()%></span></td>
+                <td><%= bf.foreclosure_officers%></td>
+                <td><a href="PreforeclosureEvents.aspx?loan_id=<%=bf.loan_id.ToString() %>">Checklist</a></td>
+             </tr>
+            <%
+               }
+            %>
+        </table>
+        </div>
+    </div>    
+    <%
+        }
+    %>
+    
+    <%if (this.workflow == "Foreclosures")
+      {
+    %>
+    <div class="row">
+        <div class="span12">
+        <h2><%= this.workflow%> (<%= bfs.Count%>)</h2>
+        <table class="table table-striped">
+            <tr>
+                <th>Loan#</th>
+                <th>Exceptions</th>
+                <th>Loan Type</th>
+                <th>Loan Name</th>
+                <th>Due Date of next payment</th>
+                <th>UPB</th>
+                <th>Interest Rate</th>
+                <th>Papers To Attorney Date</th>
+                <th>Posting Date</th>
+                <th>Foreclosure Date</th>
+                <th>Officer(s)</th>
+                <th>Checklist</th>
+            </tr>
+            <% 
+               foreach (com.sp.rmmc.foreclosures.models.BaseForeclosure bf in bfs)
+               {
+            %>
+            <tr class="<%= bf.getEventStatusColor() %>">
+                <td><%= bf.loan_id.ToString()%></td>
+                <%  int events_count = 0; if ((events_count = bf.getEvents().Count) > 0)
+                    { %>
+                    <td><a href="Events.aspx?loan_id=<%=bf.loan_id %>&workflow=<%=workflow %>"><%= events_count.ToString()%></a></td>
+                <%  }
+                    else
+                    { %>
+                    <td>0</td>
+                <%  } %>
+                <td><%= bf.loan.loan_type%></td>
+                <td><%= bf.loan.loan_name%></td>
+                <td><%= bf.loan.due_date_next_payment.ToShortDateString()%></td>
+                <td><%= bf.loan.prin_bal.ToString("C")%></td>
+                <td><%= bf.loan.int_rate.ToString("0.000")%></td>
+                <td><%= bf.papers_to_attorney_date.ToShortDateString()%></td>
+                <td><%= bf.posting_date.ToShortDateString()%></td>
+                <td><span class="text-error"><%= bf.foreclosure_date.ToShortDateString()%></span></td>
+                <td><%= bf.foreclosure_officers%></td>
+                <td><a href="PreforeclosureEvents.aspx?loan_id=<%=bf.loan_id.ToString() %>">Checklist</a></td>
+             </tr>
+            <%
+               }
+            %>
+        </table>
+        </div>
+    </div>    
+    <%
+        }
+    %>
+
     
     <%if (this.workflow == "Foreclosed")
       {

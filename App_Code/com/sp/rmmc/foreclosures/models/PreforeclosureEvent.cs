@@ -101,7 +101,21 @@ namespace com.sp.rmmc.foreclosures.models
         {
             string query = base_query + " where loan_id = " + foreclosure.loan_id.ToString();
             PreforeclosureEvent preforeclosure_event = new PreforeclosureEvent();
-            DbDataReader reader = getMsSQLReader(mssqlConnectionString, query); 
+            DbDataReader reader = getMsSQLReader(mssqlConnectionString, query);
+            if (reader.Read())
+            {
+                preforeclosure_event = read(reader);
+            }
+            reader.Close();
+            closeMsSQLConnection();
+            return preforeclosure_event;
+        }
+
+        public static PreforeclosureEvent getFromBaseForeclosure(BaseForeclosure foreclosure)
+        {
+            string query = base_query + " where loan_id = " + foreclosure.loan_id.ToString();
+            PreforeclosureEvent preforeclosure_event = new PreforeclosureEvent();
+            DbDataReader reader = getMsSQLReader(mssqlConnectionString, query);
             if (reader.Read())
             {
                 preforeclosure_event = read(reader);

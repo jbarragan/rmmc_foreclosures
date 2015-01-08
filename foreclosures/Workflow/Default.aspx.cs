@@ -26,7 +26,11 @@ public partial class lossmitigation_Default : System.Web.UI.Page
         this.event_type = getArg("event_type", "ALL");
 
         if (workflow == "Demands")
-            BaseForeclosure.getDemands(accepted_bfs, removed_bfs); 
+            BaseForeclosure.getDemands(accepted_bfs, removed_bfs);
+        else if (workflow == "PreForeclosures")
+            BaseForeclosure.getPreForeclosures(accepted_bfs, removed_bfs);
+        else if (workflow == "Foreclosures")
+            BaseForeclosure.getForeclosures(accepted_bfs, removed_bfs);
         else if (workflow == "Foreclosed")
             BaseForeclosure.getForeclosed(accepted_bfs, removed_bfs);
         all_bfs.AddRange(accepted_bfs);

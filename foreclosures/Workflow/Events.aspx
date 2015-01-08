@@ -16,7 +16,8 @@
         <h1>Events</h1>
         <p></p>
     </div>
-    <%= com.sp.rmmc.foreclosures.views.NewNavigations.main_nav_select("Main Home", new ADUser(HttpContext.Current.User.Identity.Name.ToString()))%>
+    <%= com.sp.rmmc.foreclosures.views.NewNavigations.foreclosure_sub_main_nav_select("Workflow", new ADUser(HttpContext.Current.User.Identity.Name.ToString()))%>
+    <%= com.sp.rmmc.foreclosures.views.NewNavigations.workflow_list_nav_select("PreforeclosureEvents")%>
     <!-- Example row of columns -->    
     <div class="row">
         <div class="span4">

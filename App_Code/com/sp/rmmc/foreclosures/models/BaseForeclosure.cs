@@ -24,12 +24,18 @@ namespace com.sp.rmmc.foreclosures.models
         public DateTimeObject bankruptcy_discharge_date = new DateTimeObject();
         public DateTimeObject bankruptcy_case_dismissed_date = new DateTimeObject();
         public DateTimeObject bankruptcy_closed_date = new DateTimeObject();
+        public DateTimeObject fc_foreclosure_referral_date = new DateTimeObject();
+        public DateTimeObject fc_payoff_date = new DateTimeObject();
+        public DateTimeObject appraisal_ordered_date = new DateTimeObject();
+        public DateTimeObject foreclosure_date = new DateTimeObject();
 
         public DateTimeObject sale_date = new DateTimeObject();
         public decimal ytd_prin_paid_amt = 0M;
         public decimal principal_amt_from_history = 0M;
 
         public com.sp.rmmc.common.models.MsLoan loan = new com.sp.rmmc.common.models.MsLoan();
+        public PreforeclosureEvent preforeclosure_events = new PreforeclosureEvent();
+
         public InspectionEvents inspection = new InspectionEvents();
         public ReasonCodeEvents reason_code = new ReasonCodeEvents();
         public SaleInspectionEvents sale_inspection = new SaleInspectionEvents();
@@ -45,14 +51,14 @@ namespace com.sp.rmmc.foreclosures.models
         public SaleREONoticeEvents sale_reo_notice_events = new SaleREONoticeEvents();
         public SaleFannieMaeClaim571Events sale_fannie_mae_claim_571_events = new SaleFannieMaeClaim571Events();
         
-        
-        
         public ReviewChecklist review_checklist = new ReviewChecklist();
 
         public string filter_reason = "";
         public string type = "";
         public const string DEMAND_TYPE = "Demand";
         public const string FORECLOSED_TYPE = "Foreclosed";
+        public const string FORECLOSURE_TYPE = "Foreclosure";
+        public const string PREFORECLOSURE_TYPE = "PreForeclosure";
 
         private static string columns_query = "" +
 " base.loan_id, " +
@@ -71,6 +77,10 @@ namespace com.sp.rmmc.foreclosures.models
 "(select top 1 mfia1.fcl_item_date from ms_fcl_item_amts_1 mfia1 where mfia1.item_id = 1600 and mfia1.loan_id = base.loan_id order by mfia1.fcl_item_date ) as sale_date, " + 
 "(select top 1 ms_loan_balances.ytd_prin_paid_amt from ms_loan_balances where ms_loan_balances.loan_id = base.loan_id order by ms_loan_balances.ytd_prin_paid_amt) as ytd_prin_paid_amt, " +
 "(select top 1 abs(ms_loan_history.prin_amt) from ms_loan_history where ms_loan_history.loan_id = base.loan_id and ms_loan_history.trans_type_cd = 'PIF'  order by ms_loan_history.paid_dt desc) as principal_amt_from_history, " +
+"(select top 1 memo.memo_create_dt from ms_loan_memo memo where memo.loan_id = base.loan_id and memo.memo_type_id = 139 order by memo_id desc) as fc_foreclosure_referral_date, " +
+"(select top 1 memo.memo_create_dt from ms_loan_memo memo where memo.loan_id = base.loan_id and memo.memo_type_id = 148 order by memo_id desc) as fc_payoff_date, " +
+"(select top 1 ms_fcl.fcl_item_date from ms_fcl_item_amts_1 ms_fcl where ms_fcl.item_id = 1100 and ms_fcl.loan_id = base.loan_id order by ms_fcl.fcl_item_date )  as appraisal_ordered_date, " +
+"(select top 1 ms_fcl.fcl_item_recvd_expd from ms_fcl_item_amts_1 ms_fcl where ms_fcl.item_id = 1200 and ms_fcl.loan_id = base.loan_id order by ms_fcl.fcl_item_recvd_expd ) as foreclosure_date, " +
 com.sp.rmmc.common.models.MsLoan.columns("base.loan_id") + ", " +
 new InspectionEvents().query("base.loan_id") + ", " +
 new ReasonCodeEvents().query("base.loan_id") + ", " +
@@ -121,6 +131,13 @@ columns_query + " from " +
     " where base.item_id = 1600 " +
     " and base.fcl_item_date > '2014-01-01' " +
     ") " +
+    "UNION " +
+    "( " +
+    " select base.loan_id " +
+    " from  ms_fcl_info as base " +
+    " where base.fcl_type = 'A' " +
+    ") " +
+    " " +
 ")base where 1=1 ";
 
 
@@ -142,12 +159,51 @@ columns_query + " from " +
             commonFilters(foreclosed, removed_foreclosed);
         }
 
+        private static void commonPreAndForeclosures(List<BaseForeclosure> foreclosures, List<BaseForeclosure> removed_foreclosures)
+        {
+            string query = base_query + foreclosures_conditions();
+            query = query + " order by foreclosure_date asc, ms_loan_type, demand_letter_due_date asc";
+            List<BaseForeclosure> all = get_list(query);
+            foreach (BaseForeclosure f in all) { f.type = FORECLOSURE_TYPE; foreclosures.Add(f); }
+            commonFilters(foreclosures, removed_foreclosures);
+        }
+
+        public static void getForeclosures(List<BaseForeclosure> foreclosures, List<BaseForeclosure> removed_foreclosures)
+        {
+            List<BaseForeclosure> both = new List<BaseForeclosure>();
+            commonPreAndForeclosures(both, removed_foreclosures);
+            foreach (BaseForeclosure bf in both)
+            {
+                bf.preforeclosure_events = PreforeclosureEvent.getFromBaseForeclosure(bf);
+                if (bf.is_preforeclosure_complete() == true)
+                {
+                    bf.type = FORECLOSURE_TYPE;
+                    foreclosures.Add(bf);
+                }
+            }
+        }
+
+        public static void getPreForeclosures(List<BaseForeclosure> PreForeclosures, List<BaseForeclosure> removed_foreclosures)
+        {
+            List<BaseForeclosure> both = new List<BaseForeclosure>();
+            commonPreAndForeclosures(both, removed_foreclosures);
+            foreach (BaseForeclosure bf in both)
+            {
+                bf.preforeclosure_events = PreforeclosureEvent.getFromBaseForeclosure(bf);
+                if (bf.is_preforeclosure_complete() == false)
+                {
+                    bf.type = PREFORECLOSURE_TYPE;
+                    PreForeclosures.Add(bf);
+                }
+            }
+        }
+
         public static void getForeclosureLoan(decimal loan_id, List<BaseForeclosure> accepted, List<BaseForeclosure> removed, String type)
         {
             string query = base_query + single_loan_conditions(loan_id);
             query = query + " order by ms_loan_type, demand_letter_due_date asc";
             List<BaseForeclosure> all = get_list(query);
-            foreach (BaseForeclosure f in all) { f.type = type; accepted.Add(f); }
+            foreach (BaseForeclosure f in all) { f.type = type; accepted.Add(f); f.preforeclosure_events = PreforeclosureEvent.getFromBaseForeclosure(f); }
             commonFilters(accepted, removed);
         }
 
@@ -182,8 +238,8 @@ columns_query + " from " +
         {
             foreach (BaseForeclosure f in accepted)
             {
-                if (f.loan_id == 152526M)
-                    f.filter_reason = "";
+                //if (f.loan_id == 152526M)
+                //    f.filter_reason = "";
                 if ((f.last_reg_paid_dt.isNull == false &&
                     f.last_reg_paid_dt.date >= f.demand_letter_due_date.date.AddDays(-33) &&
                     f.last_payments_balance >= 0)  ||
@@ -209,6 +265,14 @@ columns_query + " from " +
         {
             string query = " and ( sale_date is not null ) \n" +
                            "";
+            return query;
+        }
+
+        public static string foreclosures_conditions()
+        {
+            string query = " and ( fcl_type = 'A' ) \n" +
+                           " and ( sale_date is null ) \n" +
+                           " and ( ms_loan_prin_bal > 0 )";
             return query;
         }
 
@@ -268,6 +332,11 @@ columns_query + " from " +
             f.sale_date = readDBDateObject(reader, pos++);
             f.ytd_prin_paid_amt = readDBDecimal(reader, pos++);
             f.principal_amt_from_history = readDBDecimal(reader, pos++);
+            f.fc_foreclosure_referral_date = readDBDateObject(reader, pos++);
+            f.fc_payoff_date = readDBDateObject(reader, pos++);
+            f.appraisal_ordered_date = readDBDateObject(reader, pos++);
+            f.foreclosure_date = readDBDateObject(reader, pos++);
+            
             if (f.loan_id > 0)
             {
                 f.loan = com.sp.rmmc.common.models.MsLoan.read(reader, pos);
@@ -338,6 +407,16 @@ columns_query + " from " +
                 es.AddRange(inspection.events);
                 es.AddRange(reason_code.events);
             }
+            if (this.type == PREFORECLOSURE_TYPE)
+            {
+                es.AddRange(inspection.events);
+                es.AddRange(reason_code.events);
+            }
+            if (this.type == FORECLOSURE_TYPE)
+            {
+                es.AddRange(inspection.events);
+                es.AddRange(reason_code.events);
+            }
             else if (this.type == FORECLOSED_TYPE)
             {
                 es.AddRange(sale_inspection.events);
@@ -372,6 +451,19 @@ columns_query + " from " +
                     es.Add(e);
                 }
             }
+            if (this.type == FORECLOSURE_TYPE)
+            {
+                if (this.papers_to_attorney_date.isNull )
+                {
+                    Event e = new Event();
+                    e.loan = this.loan;
+                    e.type = Event.WARNING;
+                    e.name = "Papers not sent to Attorneys.";
+                    e.description = "Papers not sent to Attorneys";
+                    e.loan = this.loan;
+                    es.Add(e);
+                }
+            }
             return es;
         }
 
@@ -392,6 +484,31 @@ columns_query + " from " +
                 if (e.type == Event.ALERT) { s = e.getEventStatusColor(); break; }
             }
             return s;
+        }
+
+        public bool is_preforeclosure_complete()
+        {
+            if (this.fc_foreclosure_referral_date.isNull ||
+                this.papers_to_attorney_date.isNull ||
+                this.fc_payoff_date.isNull ||
+                this.preforeclosure_events.is_copy_demand_letters == false ||
+                this.preforeclosure_events.is_copy_notes == false ||
+                this.preforeclosure_events.is_copy_deed_of_trust_notes == false)
+            {
+                return false;
+            }
+
+            if (loan.loan_type == "VA")
+            {
+                if (this.appraisal_ordered_date.isNull || this.preforeclosure_events.is_notify_appraisal == false)
+                    return false;
+            }
+            else if (loan.loan_type == "CONV")
+            {
+                if (this.appraisal_ordered_date.isNull)
+                    return false;
+            }
+            return true;
         }
 
     }
