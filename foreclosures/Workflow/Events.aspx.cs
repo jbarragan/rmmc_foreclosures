@@ -33,7 +33,10 @@ public partial class lossmitigation_Default : System.Web.UI.Page
 
         if (this.decimal_loan_id != 0M)
         {
-            BaseForeclosure.getForeclosureLoan(this.decimal_loan_id, accepted_bfs, removed_bfs);
+            if (workflow == "Demands")
+                BaseForeclosure.getForeclosureLoan(this.decimal_loan_id, accepted_bfs, removed_bfs, BaseForeclosure.DEMAND_TYPE);
+            else if( workflow == "Foreclosed")
+                BaseForeclosure.getForeclosureLoan(this.decimal_loan_id, accepted_bfs, removed_bfs, BaseForeclosure.FORECLOSED_TYPE);
         }
         else if (workflow == "Demands")
         {

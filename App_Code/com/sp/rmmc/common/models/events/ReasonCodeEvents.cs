@@ -6,8 +6,7 @@ using System.Data.Sql;
 using System.Data.SqlClient;
 using System.Data.Common;
 
-using com.sp.rmmc.foreclosures.models;
-
+using com.sp.rmmc.common.models;
 namespace com.sp.rmmc.common.models.events
 {
     public class ReasonCodeEvents : BaseEvents

@@ -11,6 +11,7 @@ public partial class lossmitigation_Default : System.Web.UI.Page
     protected string loan_officer = "ALL";
     protected string workflow = "Demands";
     protected string loan_type = "ALL";
+    protected string event_type = "ALL";
     protected List<BaseForeclosure> bfs = new List<BaseForeclosure>();
     protected List<BaseForeclosure> all_bfs = new List<BaseForeclosure>();
     protected List<BaseForeclosure> accepted_bfs = new List<BaseForeclosure>();
@@ -22,14 +23,18 @@ public partial class lossmitigation_Default : System.Web.UI.Page
         this.loan_officer = getArg("loan_officer", "ALL");
         this.workflow = getArg("workflow", "Demands");
         this.loan_type = getArg("loan_type", "ALL");
+        this.event_type = getArg("event_type", "ALL");
 
         if (workflow == "Demands")
-            BaseForeclosure.getDemands(accepted_bfs, removed_bfs);
+            BaseForeclosure.getDemands(accepted_bfs, removed_bfs); 
+        else if (workflow == "Foreclosed")
+            BaseForeclosure.getForeclosed(accepted_bfs, removed_bfs);
         all_bfs.AddRange(accepted_bfs);
         all_bfs.AddRange(removed_bfs);
 
         populateddlLoanTypes();
         populateddlLoanOfficer();
+        populateddlEventType();
 
         filter();
         getCompletedChecklists();
@@ -40,8 +45,26 @@ public partial class lossmitigation_Default : System.Web.UI.Page
         bfs.Clear();
         foreach (BaseForeclosure bf in accepted_bfs)
         {
-            if( (loan_officer == "ALL" || loan_officer == bf.foreclosure_officers) && 
-                (loan_type == "ALL" || loan_type == bf.loan.loan_type) ) bfs.Add(bf);
+            if ((loan_officer == "ALL" || loan_officer == bf.foreclosure_officers) &&
+                (loan_type == "ALL" || loan_type == bf.loan.loan_type))
+            {
+                if (this.event_type == "ALL")
+                {
+                    bfs.Add(bf);
+                }
+                else
+                {
+                    foreach (com.sp.rmmc.common.models.events.Event e in bf.getEvents())
+                    {
+                        if (e.name == this.event_type || this.event_type == "ALL")
+                        {
+                            bfs.Add(bf);
+                            break;
+                        }
+                    }
+                }
+                
+            }
         }
     }
 
@@ -97,6 +120,38 @@ public partial class lossmitigation_Default : System.Web.UI.Page
         }
     }
 
+
+    protected void populateddlEventType()
+    {
+        ListItem li = new ListItem("ALL");
+        ddlEventType.Items.Add(li);
+        List<String> event_types = new List<string>();
+        foreach (BaseForeclosure bf in all_bfs)
+        {
+            foreach( com.sp.rmmc.common.models.events.Event ev in bf.getEvents())
+            {
+                bool is_new_event_type = true;
+
+                foreach (string evt in event_types)
+                {
+                    if (ev.name == evt)
+                    {
+                        is_new_event_type = false;
+                        break;
+                    }
+                }
+                if (is_new_event_type)
+                {
+                    event_types.Add(ev.name);
+                    ListItem new_li = new ListItem(ev.name);
+                    if (this.event_type == ev.name) new_li.Selected = true;
+                    ddlEventType.Items.Add(new_li);
+                }
+            }
+        }
+    }
+
+
     protected void ddlLoanOfficer_SelectedIndexChanged(object sender, EventArgs e)
     {
         this.loan_officer = ddlLoanOfficer.SelectedValue.ToUpper();
@@ -114,6 +169,13 @@ public partial class lossmitigation_Default : System.Web.UI.Page
         return "Default.aspx" +
             "?workflow=" + workflow +
             "&loan_officer=" + loan_officer +
-            "&loan_type=" + loan_type;
+            "&loan_type=" + loan_type +
+            "&event_type=" + event_type;
+    }
+
+    protected void ddlEventType_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        this.event_type = ddlEventType.SelectedValue;
+        Response.Redirect(generate_url());
     }
 }

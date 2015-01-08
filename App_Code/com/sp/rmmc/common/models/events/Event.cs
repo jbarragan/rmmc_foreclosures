@@ -2,8 +2,7 @@
 using System.Collections.Generic;
 using System.Web;
 
-using com.sp.rmmc.foreclosures.models;
-
+using com.sp.rmmc.common.models;
 namespace com.sp.rmmc.common.models.events
 {
     public class Event

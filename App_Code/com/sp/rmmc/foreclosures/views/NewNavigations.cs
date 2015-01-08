@@ -260,7 +260,7 @@ namespace com.sp.rmmc.foreclosures.views
             Nav nav = new Nav(); nav.link = "Default.aspx?workflow=Demands"; nav.text = "Demands"; navs.Add(nav);
             nav = new Nav(); nav.link = "Default.aspx?workflow=Demands"; nav.text = "PreForeclosure"; navs.Add(nav);
             nav = new Nav(); nav.link = "Default.aspx?workflow=Demands"; nav.text = "Foreclosure"; navs.Add(nav);
-            nav = new Nav(); nav.link = "Default.aspx?workflow=Demands"; nav.text = "Foreclosed"; navs.Add(nav);
+            nav = new Nav(); nav.link = "Default.aspx?workflow=Foreclosed"; nav.text = "Foreclosed"; navs.Add(nav);
             string active_class = "";
             foreach (Nav n in navs)
             {

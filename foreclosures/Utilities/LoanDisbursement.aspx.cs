@@ -14,7 +14,7 @@ public partial class lossmitigation_Collections_Default : System.Web.UI.Page
     protected string invalid_reasons = "";
     protected decimal loan_id = 0M;
     protected int fcl_misc_disb_id = 0;
-    protected MsLoan loan = new MsLoan();
+    protected com.sp.rmmc.foreclosures.models.MsLoan loan = new com.sp.rmmc.foreclosures.models.MsLoan();
     protected List<PreservationCode> available_preservation_codes = new List<PreservationCode>();
 
     protected void Page_Load(object sender, EventArgs e)
@@ -47,7 +47,7 @@ public partial class lossmitigation_Collections_Default : System.Web.UI.Page
         {
             loan_id = Convert.ToDecimal(sloan_id);
             fcl_misc_disb_id = Convert.ToInt32(sfcl_misc_disb_id);
-            loan = MsLoan.get_ms_loan(loan_id);
+            loan = com.sp.rmmc.foreclosures.models.MsLoan.get_ms_loan(loan_id);
         }
         catch (Exception) { }
         if (loan_id == 0M || loan.loan_id == 0M) Response.Redirect("PreservationCodes.aspx");

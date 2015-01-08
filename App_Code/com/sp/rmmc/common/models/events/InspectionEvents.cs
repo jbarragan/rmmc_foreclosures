@@ -1,4 +1,5 @@
-﻿using System;
+﻿
+using System;
 using System.Collections.Generic;
 using System.Web;
 
@@ -6,8 +7,7 @@ using System.Data.Sql;
 using System.Data.SqlClient;
 using System.Data.Common;
 
-using com.sp.rmmc.foreclosures.models;
-
+using com.sp.rmmc.common.models;
 namespace com.sp.rmmc.common.models.events
 {
     public class InspectionEvents : BaseEvents
@@ -31,7 +31,8 @@ namespace com.sp.rmmc.common.models.events
 
         private void load_events()
         {
-            if (this.last_ordered_date.isNull ){
+            if (this.last_ordered_date.isNull)
+            {
                 Event e = new Event();
                 e.loan = this.loan;
                 e.type = Event.ALERT;
@@ -79,6 +80,6 @@ namespace com.sp.rmmc.common.models.events
             this.last_received_notify_date = DbModel.readDBDateObject(reader, pos++);
             this.last_received_description = DbModel.readDBString(reader, pos++);
             this.load_events();
-        }        
+        }
     }
 }
