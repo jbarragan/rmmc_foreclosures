@@ -30,7 +30,6 @@ namespace com.sp.rmmc.common.models.events
         {
             if (this.loan.loan_type != "VA") return;
             if (this.sale_date.isNull) return;
-            if (this.sale_date.date >= DateTime.Today.AddDays(-1)) return;
 
             if (this.result_of_sale_date.isNull)
             {

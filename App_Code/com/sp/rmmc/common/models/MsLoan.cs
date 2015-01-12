@@ -21,9 +21,10 @@ namespace com.sp.rmmc.common.models
         public string property_city = "";
         public string property_state = "";
         public string property_zip = "";
+        public string inv_cd = "";
         public string borrower_phone = "";
 
-        public static int COLUMNS = 11;
+        public static int COLUMNS = 12;
 
         private static string base_query = @"
 select ms_loan_information.loan_id,
@@ -36,6 +37,7 @@ select ms_loan_information.loan_id,
     ms_property_information.property_city,
     ms_property_information.property_state,
     ms_property_information.property_zip,
+    ms_investor_loan.inv_cd,
     (select top 1 ms_borrower_information.borrower_phone from ms_borrower_information where ms_borrower_information.loan_id = ms_loan_information.loan_id  and length(ms_borrower_information.borrower_phone) >= 10 order by ms_borrower_information.borrower_id asc ) as borrower_phone
 from ms_loan_information, ms_loan_balances, ms_property_information
 where ms_loan_information.loan_id = ms_loan_balances.loan_id
@@ -46,6 +48,11 @@ and   ms_loan_information.loan_id = ms_property_information.loan_id
             //
             // TODO: Add constructor logic here
             //
+        }
+
+        public bool isGNMA()
+        {
+            return this.inv_cd == "800";
         }
 
         public static MsLoan get_ms_loan(decimal loan_id)
@@ -74,6 +81,7 @@ and   ms_loan_information.loan_id = ms_property_information.loan_id
             loan.property_city = readDBString(reader, pos++);
             loan.property_state = readDBString(reader, pos++);
             loan.property_zip = readDBString(reader, pos++);
+            loan.inv_cd = readDBString(reader, pos++);
             loan.borrower_phone = readDBString(reader, pos++);
 
             return loan;
@@ -92,6 +100,7 @@ and   ms_loan_information.loan_id = ms_property_information.loan_id
             " (select top 1 ms_prop.property_city from ms_property_information ms_prop where ms_prop.loan_id = " + loan_id_column + " order by ms_prop.property_city ) as property_city, " +
             " (select top 1 ms_prop.property_state from ms_property_information ms_prop where ms_prop.loan_id = " + loan_id_column + " order by ms_prop.property_state ) as property_state, " +
             " (select top 1 ms_prop.property_zip from ms_property_information ms_prop where ms_prop.loan_id = " + loan_id_column + " order by ms_prop.property_zip ) as property_zip, " +
+            " (select top 1 ms_investor_loan.inv_cd from ms_investor_loan where ms_investor_loan.loan_id = " + loan_id_column + " order by ms_investor_loan.inv_cd ) as loan_inv_cd, " +
             " (select top 1 'h:' || isnull(ms_borrower_information.borrower_phone, '') || '  b:' ||   isnull(ms_borrower_information.borrower_bus_phone, '') || ' c:' || isnull(ms_borrower_information.borrower_cell_phone, '') from ms_borrower_information where ms_borrower_information.loan_id = " + loan_id_column + " and (length(ms_borrower_information.borrower_phone) >= 10 or length(ms_borrower_information.borrower_bus_phone) >= 10 or length(ms_borrower_information.borrower_cell_phone) >= 10 ) order by ms_borrower_information.borrower_id asc ) as borrower_phone ";
             return s;
         }
