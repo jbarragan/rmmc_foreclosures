@@ -28,7 +28,8 @@ namespace com.sp.rmmc.common.models.events
 
         private void load_events()
         {
-            if (this.loan.loan_type != "VA") return;
+            if (this.loan.loan_type != "VA") return; // Only for VA loans.
+            if (this.loan.isGNMA() == false) return; // Only for GNMA loans.
             if (this.sale_date.isNull) return;
 
             if (this.result_of_sale_date.isNull)
