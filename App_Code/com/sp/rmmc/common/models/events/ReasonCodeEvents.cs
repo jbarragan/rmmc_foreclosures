@@ -34,7 +34,7 @@ namespace com.sp.rmmc.common.models.events
                 e.loan = this.loan;
                 e.type = Event.ALERT;
                 e.name = "Different Reason Codes";
-                e.description = "Current Reason Code (" + this.reason_code + ") is diffent that last Memo Reason Code (" + this.last_memo_reason_code + ")";
+                e.description = "Current Reason Code (" + this.reason_code + ") is different that last Memo Reason Code (" + this.last_memo_reason_code + ")";
                 this.events.Add(e);
             }
         }
