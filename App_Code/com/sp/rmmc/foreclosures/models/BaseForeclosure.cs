@@ -57,7 +57,9 @@ namespace com.sp.rmmc.foreclosures.models
         public ForeclosureAppraisalBPOEvents foreclosure_appraisal_bpo_events = new ForeclosureAppraisalBPOEvents();
         public ForeclosureRfsGnmaForeclosureStatusEvents foreclosure_rfs_gnma_foreclosure_status_events = new ForeclosureRfsGnmaForeclosureStatusEvents();
         public SaleMortgageStatusEvents sale_mortgage_status_events = new SaleMortgageStatusEvents();
-        
+        public SaleOriginalDocumentsOrderedEvents sale_original_documents_ordered_events = new SaleOriginalDocumentsOrderedEvents();
+        public DemandFileExpireEvents demand_expire_events = new DemandFileExpireEvents();
+
         public ReviewChecklist review_checklist = new ReviewChecklist();
 
         public string filter_reason = "";
@@ -110,6 +112,9 @@ new ForeclosureMortgageStatusEvents().query("base.loan_id") + ", " +
 new ForeclosureAppraisalBPOEvents().query("base.loan_id") + ", " +
 new ForeclosureRfsGnmaForeclosureStatusEvents().query("base.loan_id") + ", " +
 new SaleMortgageStatusEvents().query("base.loan_id") + ", " +
+new SaleOriginalDocumentsOrderedEvents().query("base.loan_id") + ", " +
+new DemandFileExpireEvents().query("base.loan_id") + ", " +
+
 ReviewChecklist.columns("base.loan_id") + " ";
 
         private static string demands_base_query = "" +
@@ -413,6 +418,11 @@ columns_query + " from " +
                 pos += f.foreclosure_rfs_gnma_foreclosure_status_events.fields_count();
                 f.sale_mortgage_status_events.read(reader, pos, f.loan);
                 pos += f.sale_mortgage_status_events.fields_count();
+                f.sale_original_documents_ordered_events.read(reader, pos, f.loan);
+                pos += f.sale_original_documents_ordered_events.fields_count();
+                f.demand_expire_events.read(reader, pos, f.loan);
+                pos += f.demand_expire_events.fields_count();
+
                 f.review_checklist = ReviewChecklist.read(reader, pos);
             }
             return f;
@@ -462,6 +472,8 @@ columns_query + " from " +
             {
                 es.AddRange(inspection.events);
                 es.AddRange(reason_code.events);
+                es.AddRange(foreclosure_mortgage_status_events.events);
+                es.AddRange(demand_expire_events.events);
             }
             if (this.type == PREFORECLOSURE_TYPE)
             {
@@ -491,6 +503,7 @@ columns_query + " from " +
                 es.AddRange(sale_reo_notice_events.events);
                 es.AddRange(sale_fannie_mae_claim_571_events.events);
                 es.AddRange(sale_mortgage_status_events.events);
+                es.AddRange(sale_original_documents_ordered_events.events);
             }
             return es;
         }
