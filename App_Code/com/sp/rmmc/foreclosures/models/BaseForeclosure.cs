@@ -59,6 +59,7 @@ namespace com.sp.rmmc.foreclosures.models
         public SaleMortgageStatusEvents sale_mortgage_status_events = new SaleMortgageStatusEvents();
         public SaleOriginalDocumentsOrderedEvents sale_original_documents_ordered_events = new SaleOriginalDocumentsOrderedEvents();
         public DemandFileExpireEvents demand_expire_events = new DemandFileExpireEvents();
+        public DemandOccupancyEvents demand_occupancy_events = new DemandOccupancyEvents();
 
         public ReviewChecklist review_checklist = new ReviewChecklist();
 
@@ -114,7 +115,7 @@ new ForeclosureRfsGnmaForeclosureStatusEvents().query("base.loan_id") + ", " +
 new SaleMortgageStatusEvents().query("base.loan_id") + ", " +
 new SaleOriginalDocumentsOrderedEvents().query("base.loan_id") + ", " +
 new DemandFileExpireEvents().query("base.loan_id") + ", " +
-
+new DemandOccupancyEvents().query("base.loan_id") + ", " +
 ReviewChecklist.columns("base.loan_id") + " ";
 
         private static string demands_base_query = "" +
@@ -422,6 +423,8 @@ columns_query + " from " +
                 pos += f.sale_original_documents_ordered_events.fields_count();
                 f.demand_expire_events.read(reader, pos, f.loan);
                 pos += f.demand_expire_events.fields_count();
+                f.demand_occupancy_events.read(reader, pos, f.loan);
+                pos += f.demand_occupancy_events.fields_count();
 
                 f.review_checklist = ReviewChecklist.read(reader, pos);
             }
@@ -474,6 +477,7 @@ columns_query + " from " +
                 es.AddRange(reason_code.events);
                 es.AddRange(foreclosure_mortgage_status_events.events);
                 es.AddRange(demand_expire_events.events);
+                es.AddRange(demand_occupancy_events.events);                
             }
             if (this.type == PREFORECLOSURE_TYPE)
             {
@@ -487,6 +491,7 @@ columns_query + " from " +
                 es.AddRange(reason_code.events);
                 es.AddRange(foreclosure_mortgage_status_events.events);
                 es.AddRange(foreclosure_rfs_gnma_foreclosure_status_events.events);
+                es.AddRange(foreclosure_appraisal_bpo_events.events);
             }
             else if (this.type == FORECLOSED_TYPE)
             {
