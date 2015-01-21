@@ -61,7 +61,12 @@
             <tr class="<%= e.getEventStatusColor() %>">
                 <td><%= e.loan.loan_id.ToString()%></td>
                 <!-- Foreclosure Officer<td></td> -->
-                <td><%= e.name %></td>
+                <td><%= e.name %> 
+                    <% if (e.name == "Different Reason Codes")
+                       {%>
+                       &nbsp;<a href="../events/<%=e.name %>.aspx">Description</a>
+                    <% } %>
+                </td>
                 <td><%= e.type %></td>
                 <td><%= e.description %></td>                
              </tr>
