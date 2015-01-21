@@ -258,6 +258,7 @@ namespace com.sp.rmmc.foreclosures.views
             string s = nav_start;
             List<Nav> navs = new List<Nav>();
             Nav nav = new Nav(); nav.link = "Default.aspx?workflow=Demands"; nav.text = "Demands"; navs.Add(nav);
+            nav = new Nav(); nav.link = "Default.aspx?workflow=Removed Demands"; nav.text = "Removed Demands"; navs.Add(nav);
             nav = new Nav(); nav.link = "Default.aspx?workflow=PreForeclosures"; nav.text = "PreForeclosures"; navs.Add(nav);
             nav = new Nav(); nav.link = "Default.aspx?workflow=Foreclosures"; nav.text = "Foreclosures"; navs.Add(nav);
             nav = new Nav(); nav.link = "Default.aspx?workflow=Foreclosed"; nav.text = "Foreclosed"; navs.Add(nav);

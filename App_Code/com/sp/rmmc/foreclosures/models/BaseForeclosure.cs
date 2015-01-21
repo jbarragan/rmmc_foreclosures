@@ -60,12 +60,15 @@ namespace com.sp.rmmc.foreclosures.models
         public SaleOriginalDocumentsOrderedEvents sale_original_documents_ordered_events = new SaleOriginalDocumentsOrderedEvents();
         public DemandFileExpireEvents demand_expire_events = new DemandFileExpireEvents();
         public DemandOccupancyEvents demand_occupancy_events = new DemandOccupancyEvents();
+        public XdemandMortgageStatusEvents xdemand_mortgage_status_events = new XdemandMortgageStatusEvents();
+        public XdemandOccupancyLetterEvents xdemand_occupancy_letter_events = new XdemandOccupancyLetterEvents();
 
         public ReviewChecklist review_checklist = new ReviewChecklist();
 
         public string filter_reason = "";
         public string type = "";
         public const string DEMAND_TYPE = "Demand";
+        public const string XDEMAND_TYPE = "Xdemand";
         public const string FORECLOSED_TYPE = "Foreclosed";
         public const string FORECLOSURE_TYPE = "Foreclosure";
         public const string PREFORECLOSURE_TYPE = "PreForeclosure";
@@ -116,6 +119,8 @@ new SaleMortgageStatusEvents().query("base.loan_id") + ", " +
 new SaleOriginalDocumentsOrderedEvents().query("base.loan_id") + ", " +
 new DemandFileExpireEvents().query("base.loan_id") + ", " +
 new DemandOccupancyEvents().query("base.loan_id") + ", " +
+new XdemandMortgageStatusEvents().query("base.loan_id") + ", " +
+new XdemandOccupancyLetterEvents().query("base.loan_id") + ", " +
 ReviewChecklist.columns("base.loan_id") + " ";
 
         private static string demands_base_query = "" +
@@ -168,6 +173,15 @@ columns_query + " from " +
             List<BaseForeclosure> all = get_list(query);
             foreach (BaseForeclosure f in all) { f.type = DEMAND_TYPE; demands.Add(f); }
             commonFilters(demands, removed_demands);
+        }
+
+        public static void getXDemands(List<BaseForeclosure> xdemands, List<BaseForeclosure> demands)
+        {
+            string query = base_query + demand_conditions();
+            query = query + " order by demand_letter_due_date desc";
+            List<BaseForeclosure> all = get_list(query);
+            foreach (BaseForeclosure f in all) { f.type = XDEMAND_TYPE; demands.Add(f); }
+            commonFilters(demands, xdemands);
         }
 
         public static void getForeclosed(List<BaseForeclosure> foreclosed, List<BaseForeclosure> removed_foreclosed)
@@ -229,9 +243,9 @@ columns_query + " from " +
 
         private static void commonFilters(List<BaseForeclosure> accepted, List<BaseForeclosure> removed){
             List<BaseForeclosure> all_accepted = new List<BaseForeclosure>();
-            foreach(BaseForeclosure f in accepted ) all_accepted.Add(f);
-            remove_bankruptcy(all_accepted, removed);
+            foreach (BaseForeclosure f in accepted) all_accepted.Add(f);
             remove_received_payment(all_accepted, removed);
+            remove_bankruptcy(all_accepted, removed);
             remove_third_party_sale(all_accepted, removed);
             remove_lm(all_accepted, removed);
             foreach(BaseForeclosure f in all_accepted)
@@ -242,6 +256,7 @@ columns_query + " from " +
         {
             foreach (BaseForeclosure f in accepted)
             {
+                if (removed.Contains(f)) continue;
                 if (f.memo_fc_third_party_sale_date.isNull == false)
                 {
                     f.filter_reason = "Third Party Sale";
@@ -254,13 +269,14 @@ columns_query + " from " +
         {
             foreach (BaseForeclosure f in accepted)
             {
+                if (removed.Contains(f)) continue;
                 if (f.bankruptcy_filed_date.isNull == false &&
                     (   f.bankruptcy_discharge_date.isNull == true &&
                         f.bankruptcy_case_dismissed_date.isNull == true &&
                         f.bankruptcy_closed_date.isNull == true
                     )
                    )
-                {
+                {   
                     f.filter_reason = "Bankruptcy";
                     removed.Add(f);
                 }
@@ -268,16 +284,17 @@ columns_query + " from " +
         }
 
         private static void remove_received_payment(List<BaseForeclosure> accepted, List<BaseForeclosure> removed)
-        {
+        {   
             foreach (BaseForeclosure f in accepted)
             {
                 //if (f.loan_id == 152526M)
                 //    f.filter_reason = "";
+                if (removed.Contains(f)) continue;
                 if ((f.last_reg_paid_dt.isNull == false &&
                     f.last_reg_paid_dt.date >= f.demand_letter_due_date.date.AddDays(-33) &&
                     f.last_payments_balance >= 0)  ||
                     f.loan.due_date_next_payment.date >= f.demand_letter_due_date.date )
-                {
+                {   
                     f.filter_reason = "Received Payment";
                     removed.Add(f);
                 }
@@ -318,11 +335,14 @@ columns_query + " from " +
         public static void remove_lm(List<BaseForeclosure> accepted, List<BaseForeclosure> removed)
         {
             foreach (BaseForeclosure f in accepted)
+            {
+                if (removed.Contains(f)) continue;
                 if (f.lm_stop_code_id > 0)
                 {
                     f.filter_reason = "Loss Mitigation";
                     removed.Add(f);
                 }
+            }
             List<LMReception> demand_letters_lm_receptions = LMReception.getLMReceptions(accepted);
             List<decimal> list_lm_reception_loan_ids = new List<decimal>();
             decimal[] array_lm_reception_loan_ids;
@@ -330,10 +350,14 @@ columns_query + " from " +
                 list_lm_reception_loan_ids.Add(lm_reception.loan_id);
             array_lm_reception_loan_ids = list_lm_reception_loan_ids.ToArray();
             foreach (BaseForeclosure f in accepted)
-                if (Array.IndexOf(array_lm_reception_loan_ids, f.loan_id) >= 0){
+            {
+                if (removed.Contains(f)) continue;
+                if (Array.IndexOf(array_lm_reception_loan_ids, f.loan_id) >= 0)
+                {
                     f.filter_reason = "Loss Mitigation";
                     removed.Add(f);
                 }
+            }
         }
 
         private static List<BaseForeclosure> get_list(String query)
@@ -425,7 +449,12 @@ columns_query + " from " +
                 pos += f.demand_expire_events.fields_count();
                 f.demand_occupancy_events.read(reader, pos, f.loan);
                 pos += f.demand_occupancy_events.fields_count();
-
+                f.xdemand_mortgage_status_events.read(reader, pos, f.loan);
+                pos += f.xdemand_mortgage_status_events.fields_count();
+                f.xdemand_occupancy_letter_events.read(reader, pos, f.loan);
+                pos += f.xdemand_occupancy_letter_events.fields_count();
+                
+                
                 f.review_checklist = ReviewChecklist.read(reader, pos);
             }
             return f;
@@ -477,7 +506,12 @@ columns_query + " from " +
                 es.AddRange(reason_code.events);
                 es.AddRange(foreclosure_mortgage_status_events.events);
                 es.AddRange(demand_expire_events.events);
-                es.AddRange(demand_occupancy_events.events);                
+                es.AddRange(demand_occupancy_events.events);
+            }
+            if (this.type == XDEMAND_TYPE)
+            {
+                es.AddRange(xdemand_mortgage_status_events.events);
+                es.AddRange(xdemand_occupancy_letter_events.events);
             }
             if (this.type == PREFORECLOSURE_TYPE)
             {

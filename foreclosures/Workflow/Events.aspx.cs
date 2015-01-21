@@ -35,6 +35,8 @@ public partial class lossmitigation_Default : System.Web.UI.Page
         {
             if (workflow == "Demands")
                 BaseForeclosure.getForeclosureLoan(this.decimal_loan_id, accepted_bfs, removed_bfs, BaseForeclosure.DEMAND_TYPE);
+            else if (workflow == "Removed Demands")
+                BaseForeclosure.getForeclosureLoan(this.decimal_loan_id, removed_bfs, accepted_bfs, BaseForeclosure.XDEMAND_TYPE);
             else if (workflow == "PreForeclosures")
                 BaseForeclosure.getForeclosureLoan(this.decimal_loan_id, accepted_bfs, removed_bfs, BaseForeclosure.PREFORECLOSURE_TYPE);
             else if (workflow == "Foreclosures")
