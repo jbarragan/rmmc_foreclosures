@@ -62,7 +62,8 @@
                 <td><%= e.loan.loan_id.ToString()%></td>
                 <!-- Foreclosure Officer<td></td> -->
                 <td><%= e.name %> 
-                    <% if (e.name == "Different Reason Codes")
+                    <% if (e.name == "Different Reason Codes" ||
+                           e.name == "Demand Occupancy Alert")
                        {%>
                        &nbsp;<a href="../events/<%=e.name %>.aspx">Description</a>
                     <% } %>
