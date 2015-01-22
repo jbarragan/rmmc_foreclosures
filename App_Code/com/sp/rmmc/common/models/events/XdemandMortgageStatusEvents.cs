@@ -27,7 +27,9 @@ namespace com.sp.rmmc.common.models.events
         private void load_events()
         {
             if (this.loan.loan_type != "FHA") return;
-            if (this.mortgage_status != "20")
+            if (this.mortgage_status == "20") return;
+            if (this.mortgage_status == "") return;
+            if (this.mortgage_status != "20" )
             {
                 Event e = new Event();
                 e.loan = this.loan;

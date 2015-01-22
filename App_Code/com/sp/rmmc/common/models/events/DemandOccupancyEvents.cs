@@ -36,6 +36,7 @@ namespace com.sp.rmmc.common.models.events
 
         private void load_events()
         {
+            if (this.loan.loan_type != "FHA") return;
             if (this.demand_letter_due_date.isNull) return;
             String description = "";
             TimeSpan ts = this.occupancy_date().date - this.last_pi_memo_date.date;

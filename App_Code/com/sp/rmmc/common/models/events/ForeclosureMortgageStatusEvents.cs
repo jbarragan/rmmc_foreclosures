@@ -34,6 +34,7 @@ namespace com.sp.rmmc.common.models.events
 
         private void load_events()
         {
+            if (this.loan.loan_type != "FHA") return;
             if (fcl_type != "A" && this.demand_letter_due_date.isNull == false)
             {
                 if (this.mortgage_status != "42")
@@ -47,7 +48,6 @@ namespace com.sp.rmmc.common.models.events
                 }
             }
 
-            if (this.loan.loan_type != "FHA") return;
             if (fcl_type != "A") return;
             if (this.posting_date.isNull && this.papers_to_attorney_date.isNull == false)
             {
