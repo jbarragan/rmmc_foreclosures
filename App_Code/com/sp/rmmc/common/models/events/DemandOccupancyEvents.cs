@@ -84,7 +84,7 @@ namespace com.sp.rmmc.common.models.events
                 return this.occupancy_prop_insp_date;
         }
 
-        public void read(DbDataReader reader, int pos, MsLoan loan)
+        public override void read(DbDataReader reader, int pos, MsLoan loan)
         {
             this.loan = loan;
             this.loan_id = DbModel.readDBDecimal(reader, pos++);

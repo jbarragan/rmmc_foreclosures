@@ -2,6 +2,10 @@
 using System.Collections.Generic;
 using System.Web;
 
+using System.Data.Sql;
+using System.Data.SqlClient;
+using System.Data.Common;
+
 using com.sp.rmmc.common.models;
 namespace com.sp.rmmc.common.models.events
 {
@@ -20,6 +24,11 @@ namespace com.sp.rmmc.common.models.events
             string s = " " + String.Join(", ", fields);
             s = s.Replace("loan_id_column", loan_id_column);
             return s;
+        }
+
+        public virtual void read(DbDataReader reader, int pos, MsLoan loan)
+        {
+            return;
         }
     }
 }

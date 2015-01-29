@@ -34,19 +34,21 @@ public partial class lossmitigation_Default : System.Web.UI.Page
         if (this.decimal_loan_id != 0M)
         {
             if (workflow == "Demands")
-                BaseForeclosure.getForeclosureLoan(this.decimal_loan_id, accepted_bfs, removed_bfs, BaseForeclosure.DEMAND_TYPE);
+                (new BaseForeclosure()).getForeclosureLoan(this.decimal_loan_id, accepted_bfs, removed_bfs, BaseForeclosure.DEMAND_TYPE);
+            else if (workflow == "Demands that Became Current")
+                (new BaseForeclosure()).getForeclosureLoan(this.decimal_loan_id, removed_bfs, accepted_bfs, BaseForeclosure.CURRENTXDEMAND_TYPE);
             else if (workflow == "Removed Demands")
-                BaseForeclosure.getForeclosureLoan(this.decimal_loan_id, removed_bfs, accepted_bfs, BaseForeclosure.XDEMAND_TYPE);
+                (new BaseForeclosure()).getForeclosureLoan(this.decimal_loan_id, removed_bfs, accepted_bfs, BaseForeclosure.XDEMAND_TYPE);
             else if (workflow == "PreForeclosures")
-                BaseForeclosure.getForeclosureLoan(this.decimal_loan_id, accepted_bfs, removed_bfs, BaseForeclosure.PREFORECLOSURE_TYPE);
+                (new BaseForeclosure()).getForeclosureLoan(this.decimal_loan_id, accepted_bfs, removed_bfs, BaseForeclosure.PREFORECLOSURE_TYPE);
             else if (workflow == "Foreclosures")
-                BaseForeclosure.getForeclosureLoan(this.decimal_loan_id, accepted_bfs, removed_bfs, BaseForeclosure.FORECLOSURE_TYPE);
+                (new BaseForeclosure()).getForeclosureLoan(this.decimal_loan_id, accepted_bfs, removed_bfs, BaseForeclosure.FORECLOSURE_TYPE);
             else if (workflow == "Foreclosed")
-                BaseForeclosure.getForeclosureLoan(this.decimal_loan_id, accepted_bfs, removed_bfs, BaseForeclosure.FORECLOSED_TYPE);
+                (new BaseForeclosure()).getForeclosureLoan(this.decimal_loan_id, accepted_bfs, removed_bfs, BaseForeclosure.FORECLOSED_TYPE);
         }
         else if (workflow == "Demands")
         {
-            BaseForeclosure.getDemands(accepted_bfs, removed_bfs);
+            (new BaseForeclosure()).getDemands(accepted_bfs, removed_bfs);
         }
         all_bfs.AddRange(accepted_bfs);
         all_bfs.AddRange(removed_bfs);

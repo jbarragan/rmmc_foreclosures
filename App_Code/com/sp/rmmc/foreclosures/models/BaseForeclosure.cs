@@ -39,41 +39,42 @@ namespace com.sp.rmmc.foreclosures.models
         public com.sp.rmmc.common.models.MsLoan loan = new com.sp.rmmc.common.models.MsLoan();
         public PreforeclosureEvent preforeclosure_events = new PreforeclosureEvent();
 
-        public InspectionEvents inspection = new InspectionEvents();
-        public ReasonCodeEvents reason_code = new ReasonCodeEvents();
-        public SaleInspectionEvents sale_inspection = new SaleInspectionEvents();
-        public SaleConveyanceEvents sale_conveyance = new SaleConveyanceEvents();
-        public SaleHudAdviceEvents sale_hud_advice = new SaleHudAdviceEvents();
-        public SaleTitlePackageEvents sale_title_package = new SaleTitlePackageEvents();
-        public SaleTitleApprovalEvents sale_title_approval = new SaleTitleApprovalEvents();
-        public SaleClaimPartBEvents sale_claim_part_b = new SaleClaimPartBEvents();
-        public SaleResultSaleEvents sale_result_sale = new SaleResultSaleEvents();
-        public SaleTransferCustodyEvents sale_transfer_of_custody = new SaleTransferCustodyEvents();
-        public SaleAcquisitionPaymentEvents sale_acquisition_payment = new SaleAcquisitionPaymentEvents();
-        public SaleBasicClaimEvents sale_basic_claim_events = new SaleBasicClaimEvents();
-        public SaleREONoticeEvents sale_reo_notice_events = new SaleREONoticeEvents();
-        public SaleFannieMaeClaim571Events sale_fannie_mae_claim_571_events = new SaleFannieMaeClaim571Events();
-        public ForeclosureMortgageStatusEvents foreclosure_mortgage_status_events = new ForeclosureMortgageStatusEvents();
-        public ForeclosureAppraisalBPOEvents foreclosure_appraisal_bpo_events = new ForeclosureAppraisalBPOEvents();
-        public ForeclosureRfsGnmaForeclosureStatusEvents foreclosure_rfs_gnma_foreclosure_status_events = new ForeclosureRfsGnmaForeclosureStatusEvents();
-        public SaleMortgageStatusEvents sale_mortgage_status_events = new SaleMortgageStatusEvents();
-        public SaleOriginalDocumentsOrderedEvents sale_original_documents_ordered_events = new SaleOriginalDocumentsOrderedEvents();
-        public DemandFileExpireEvents demand_expire_events = new DemandFileExpireEvents();
-        public DemandOccupancyEvents demand_occupancy_events = new DemandOccupancyEvents();
-        public XdemandMortgageStatusEvents xdemand_mortgage_status_events = new XdemandMortgageStatusEvents();
-        public XdemandOccupancyLetterEvents xdemand_occupancy_letter_events = new XdemandOccupancyLetterEvents();
+        public InspectionEvents inspection = null;
+        public ReasonCodeEvents reason_code = null;
+        public SaleInspectionEvents sale_inspection = null;
+        public SaleConveyanceEvents sale_conveyance = null;
+        public SaleHudAdviceEvents sale_hud_advice = null;
+        public SaleTitlePackageEvents sale_title_package = null;
+        public SaleTitleApprovalEvents sale_title_approval = null;
+        public SaleClaimPartBEvents sale_claim_part_b = null;
+        public SaleResultSaleEvents sale_result_sale = null;
+        public SaleTransferCustodyEvents sale_transfer_of_custody = null;
+        public SaleAcquisitionPaymentEvents sale_acquisition_payment = null;
+        public SaleBasicClaimEvents sale_basic_claim_events = null;
+        public SaleREONoticeEvents sale_reo_notice_events = null;
+        public SaleFannieMaeClaim571Events sale_fannie_mae_claim_571_events = null;
+        public ForeclosureMortgageStatusEvents foreclosure_mortgage_status_events = null;
+        public ForeclosureAppraisalBPOEvents foreclosure_appraisal_bpo_events = null;
+        public ForeclosureRfsGnmaForeclosureStatusEvents foreclosure_rfs_gnma_foreclosure_status_events = null;
+        public SaleMortgageStatusEvents sale_mortgage_status_events = null;
+        public SaleOriginalDocumentsOrderedEvents sale_original_documents_ordered_events = null;
+        public DemandFileExpireEvents demand_expire_events = null;
+        public DemandOccupancyEvents demand_occupancy_events = null;
+        public XdemandMortgageStatusEvents xdemand_mortgage_status_events = null;
+        public XdemandOccupancyLetterEvents xdemand_occupancy_letter_events = null;
 
-        public ReviewChecklist review_checklist = new ReviewChecklist();
+        public ReviewChecklist review_checklist = null;
 
         public string filter_reason = "";
         public string type = "";
         public const string DEMAND_TYPE = "Demand";
         public const string XDEMAND_TYPE = "Xdemand";
+        public const string CURRENTXDEMAND_TYPE = "CurrentXdemand";
         public const string FORECLOSED_TYPE = "Foreclosed";
         public const string FORECLOSURE_TYPE = "Foreclosure";
         public const string PREFORECLOSURE_TYPE = "PreForeclosure";
 
-        private static string columns_query = "" +
+        private string default_columns = "" +
 " base.loan_id, " +
 "(select top 1 misc.misc_dt_value from ms_loan_misc_fields misc where misc_field_id = 10020 and misc.loan_id = base.loan_id order by misc.misc_dt_value ) as demand_letter_due_date, " +
 "(select top 1 misc.misc_field_value from ms_loan_misc_fields misc where misc_field_id = 10023 and misc.loan_id = base.loan_id order by misc.misc_field_value ) as foreclosure_officers, " +
@@ -87,7 +88,7 @@ namespace com.sp.rmmc.foreclosures.models
 "(select top 1 ms_bankruptcy_info.discharge_date from ms_bankruptcy_info where ms_bankruptcy_info.loan_id = base.loan_id order by ms_bankruptcy_info.discharge_date ) as bankruptcy_discharge_date, " +
 "(select top 1 ms_bankruptcy_info.case_dismissed_date from ms_bankruptcy_info where ms_bankruptcy_info.loan_id = base.loan_id order by ms_bankruptcy_info.case_dismissed_date ) as bankruptcy_case_dismissed_date, " +
 "(select top 1 ms_bankruptcy_info.closed_date from ms_bankruptcy_info where ms_bankruptcy_info.loan_id = base.loan_id order by ms_bankruptcy_info.closed_date ) as bankruptcy_closed_date, " +
-"(select top 1 mfia1.fcl_item_date from ms_fcl_item_amts_1 mfia1 where mfia1.item_id = 1600 and mfia1.loan_id = base.loan_id order by mfia1.fcl_item_date ) as sale_date, " + 
+"(select top 1 mfia1.fcl_item_date from ms_fcl_item_amts_1 mfia1 where mfia1.item_id = 1600 and mfia1.loan_id = base.loan_id order by mfia1.fcl_item_date ) as sale_date, " +
 "(select top 1 ms_loan_balances.ytd_prin_paid_amt from ms_loan_balances where ms_loan_balances.loan_id = base.loan_id order by ms_loan_balances.ytd_prin_paid_amt) as ytd_prin_paid_amt, " +
 "(select top 1 abs(ms_loan_history.prin_amt) from ms_loan_history where ms_loan_history.loan_id = base.loan_id and ms_loan_history.trans_type_cd = 'PIF'  order by ms_loan_history.paid_dt desc) as principal_amt_from_history, " +
 "(select top 1 memo.memo_create_dt from ms_loan_memo memo where memo.loan_id = base.loan_id and memo.memo_type_id = 139 order by memo_id desc) as fc_foreclosure_referral_date, " +
@@ -96,113 +97,109 @@ namespace com.sp.rmmc.foreclosures.models
 "(select top 1 ms_fcl.fcl_item_recvd_expd from ms_fcl_item_amts_1 ms_fcl where ms_fcl.item_id = 1200 and ms_fcl.loan_id = base.loan_id order by ms_fcl.fcl_item_recvd_expd ) as foreclosure_date, " +
 "(select top 1 mlsc.stop_code_id from ms_loan_stop_code mlsc where mlsc.stop_code_id = 153 and mlsc.loan_id = base.loan_id order by mlsc.stop_code_id ) as lm_stop_code_id, " +
 "(select top 1 memo.memo_create_dt  from ms_loan_memo memo, ms_memo_types where memo.loan_id = base.loan_id and memo.memo_type_id = ms_memo_types.memo_type_id and ms_memo_types.memo_type_desc like 'FC-3rd%' order by memo.memo_create_dt desc ) as memo_fc_third_party_sale_date, " +
-"(select top 1 ms_fcl.fcl_item_ord_req from ms_fcl_item_amts_2 ms_fcl where ms_fcl.item_id = 10800 and ms_fcl.loan_id = base.loan_id order by ms_fcl.fcl_item_ord_req )  as extension_ordered_date, " + 
-com.sp.rmmc.common.models.MsLoan.columns("base.loan_id") + ", " +
-new InspectionEvents().query("base.loan_id") + ", " +
-new ReasonCodeEvents().query("base.loan_id") + ", " +
-new SaleInspectionEvents().query("base.loan_id") + ", " +
-new SaleConveyanceEvents().query("base.loan_id") + ", " +
-new SaleHudAdviceEvents().query("base.loan_id") + ", " +
-new SaleTitlePackageEvents().query("base.loan_id") + ", " +
-new SaleTitleApprovalEvents().query("base.loan_id") + ", " +
-new SaleClaimPartBEvents().query("base.loan_id") + ", " +
-new SaleResultSaleEvents().query("base.loan_id") + ", " +
-new SaleTransferCustodyEvents().query("base.loan_id") + ", " +
-new SaleAcquisitionPaymentEvents().query("base.loan_id") + ", " +
-new SaleBasicClaimEvents().query("base.loan_id") + ", " +
-new SaleREONoticeEvents().query("base.loan_id") + ", " +
-new SaleFannieMaeClaim571Events().query("base.loan_id") + ", " +
-new ForeclosureMortgageStatusEvents().query("base.loan_id") + ", " +
-new ForeclosureAppraisalBPOEvents().query("base.loan_id") + ", " +
-new ForeclosureRfsGnmaForeclosureStatusEvents().query("base.loan_id") + ", " +
-new SaleMortgageStatusEvents().query("base.loan_id") + ", " +
-new SaleOriginalDocumentsOrderedEvents().query("base.loan_id") + ", " +
-new DemandFileExpireEvents().query("base.loan_id") + ", " +
-new DemandOccupancyEvents().query("base.loan_id") + ", " +
-new XdemandMortgageStatusEvents().query("base.loan_id") + ", " +
-new XdemandOccupancyLetterEvents().query("base.loan_id") + ", " +
-ReviewChecklist.columns("base.loan_id") + " ";
+"(select top 1 ms_fcl.fcl_item_ord_req from ms_fcl_item_amts_2 ms_fcl where ms_fcl.item_id = 10800 and ms_fcl.loan_id = base.loan_id order by ms_fcl.fcl_item_ord_req )  as extension_ordered_date, " +
+com.sp.rmmc.common.models.MsLoan.columns("base.loan_id") + " ";
 
-        private static string demands_base_query = "" +
-"select * from " +
-"( " +
-columns_query + " " +
-"from ms_loan_misc_fields as base " +
-"where base.misc_field_id = 10020 " +
-" ) base where 1=1 ";
+        public string demands_query =
+            "( " +
+            " select base.loan_id " +
+            " from ms_loan_misc_fields as base " +
+            " where base.misc_field_id = 10020 " +
+            ") ";
 
-        private static string foreclosed_base_query = "" +
-"select * from " +
-"( " +
-columns_query + " " +
-"from ms_fcl_item_amts_1 as base " +
-"where base.item_id = 1600 " +
-"and base.fcl_item_date > '2014-01-01' " +
-" ) base where 1=1 ";
+        public string foreclosures_query =
+            "( " +
+            " select base.loan_id " +
+            " from  ms_fcl_info as base " +
+            " where base.fcl_type = 'A' " +
+            ") ";
 
-        private static string base_query = "" + 
-"select " +
-columns_query + " from " +
-"( " +
-    "( " +
-    " select base.loan_id " +
-    " from ms_loan_misc_fields as base " +
-    " where base.misc_field_id = 10020 " +
-    ") " +
-    "UNION " +
-    "( " +
-    " select base.loan_id " +
-    " from ms_fcl_item_amts_1 as base " +
-    " where base.item_id = 1600 " +
-    " and base.fcl_item_date > '2014-01-01' " +
-    ") " +
-    "UNION " +
-    "( " +
-    " select base.loan_id " +
-    " from  ms_fcl_info as base " +
-    " where base.fcl_type = 'A' " +
-    ") " +
-    " " +
-")base where 1=1 ";
+        public string foreclosed_query =
+            "( " +
+            " select base.loan_id " +
+            " from ms_fcl_item_amts_1 as base " +
+            " where base.item_id = 1600 " +
+            " and base.fcl_item_date > '2014-01-01' " +
+            ") ";
 
+        public string all_types_query =
+            "( " +
+            " select base.loan_id " +
+            " from ms_loan_misc_fields as base " +
+            " where base.misc_field_id = 10020 " +
+            ") " +
+            "UNION " +
+            "( " +
+            " select base.loan_id " +
+            " from ms_fcl_item_amts_1 as base " +
+            " where base.item_id = 1600 " +
+            " and base.fcl_item_date > '2014-01-01' " +
+            ") " +
+            "UNION " +
+            "( " +
+            " select base.loan_id " +
+            " from  ms_fcl_info as base " +
+            " where base.fcl_type = 'A' " +
+            ") " +
+            " ";
 
-        public static void getDemands(List<BaseForeclosure> demands, List<BaseForeclosure> removed_demands)
+        public void getDemands(List<BaseForeclosure> demands, List<BaseForeclosure> removed_demands)
         {
-            string query = base_query + demand_conditions();
+            this.type = DEMAND_TYPE;
+            string columns = this.default_columns + getEventsColumns();
+            string query = "select " + columns + " from " + "( " + demands_query + ")base where 1=1 " + demand_conditions();
             query = query + " order by ms_loan_type, demand_letter_due_date asc";
-            List<BaseForeclosure> all = get_list(query);
+            List<BaseForeclosure> all = this.get_loan_list(query);
             foreach (BaseForeclosure f in all) { f.type = DEMAND_TYPE; demands.Add(f); }
             commonFilters(demands, removed_demands);
         }
 
-        public static void getXDemands(List<BaseForeclosure> xdemands, List<BaseForeclosure> demands)
+        public void getXDemands(List<BaseForeclosure> xdemands, List<BaseForeclosure> demands)
         {
-            string query = base_query + demand_conditions();
+            this.type = XDEMAND_TYPE;
+            string columns = this.default_columns + getEventsColumns();
+            string query = "select " + columns + " from " + "( " + demands_query + ")base where 1=1 " + demand_conditions();
             query = query + " order by demand_letter_due_date desc";
-            List<BaseForeclosure> all = get_list(query);
+            List<BaseForeclosure> all = get_loan_list(query);
             foreach (BaseForeclosure f in all) { f.type = XDEMAND_TYPE; demands.Add(f); }
             commonFilters(demands, xdemands);
         }
 
-        public static void getForeclosed(List<BaseForeclosure> foreclosed, List<BaseForeclosure> removed_foreclosed)
+        public void getCurrentXDemands(List<BaseForeclosure> xdemands, List<BaseForeclosure> demands)
         {
-            string query = base_query + foreclosed_conditions();
+            this.type = CURRENTXDEMAND_TYPE;
+            string columns = this.default_columns + getEventsColumns();
+            string query = "select " + columns + " from " + "( " + demands_query + ")base where 1=1 " + demand_conditions();
+            query = query + " AND ms_loan_due_date_next_payment >= getdate() ";
+            query = query + " order by demand_letter_due_date desc";
+            List<BaseForeclosure> all = get_loan_list(query);
+            foreach (BaseForeclosure f in all) { demands.Add(f); }
+            commonFilters(demands, xdemands);
+        }
+
+        public void getForeclosed(List<BaseForeclosure> foreclosed, List<BaseForeclosure> removed_foreclosed)
+        {
+            this.type = FORECLOSED_TYPE;
+            string columns = this.default_columns + getEventsColumns();
+            string query = "select " + columns + " from " + "( " + foreclosed_query + ")base where 1=1 " + foreclosed_conditions();
             query = query + " order by sale_date desc, ms_loan_type, demand_letter_due_date asc";
-            List<BaseForeclosure> all = get_list(query);
+            List<BaseForeclosure> all = get_loan_list(query);
             foreach (BaseForeclosure f in all) { f.type = FORECLOSED_TYPE; foreclosed.Add(f); }
             commonFilters(foreclosed, removed_foreclosed);
         }
 
-        private static void commonPreAndForeclosures(List<BaseForeclosure> foreclosures, List<BaseForeclosure> removed_foreclosures)
+        private void commonPreAndForeclosures(List<BaseForeclosure> foreclosures, List<BaseForeclosure> removed_foreclosures)
         {
-            string query = base_query + foreclosures_conditions();
+            this.type = FORECLOSURE_TYPE;
+            string columns = this.default_columns + getEventsColumns();
+            string query = "select " + columns + " from " + "( " + foreclosures_query + ")base where 1=1 " + foreclosures_conditions();
             query = query + " order by foreclosure_date asc, ms_loan_type, demand_letter_due_date asc";
-            List<BaseForeclosure> all = get_list(query);
+            List<BaseForeclosure> all = get_loan_list(query);
             foreach (BaseForeclosure f in all) { f.type = FORECLOSURE_TYPE; foreclosures.Add(f); }
             commonFilters(foreclosures, removed_foreclosures);
         }
 
-        public static void getForeclosures(List<BaseForeclosure> foreclosures, List<BaseForeclosure> removed_foreclosures)
+        public void getForeclosures(List<BaseForeclosure> foreclosures, List<BaseForeclosure> removed_foreclosures)
         {
             List<BaseForeclosure> both = new List<BaseForeclosure>();
             commonPreAndForeclosures(both, removed_foreclosures);
@@ -217,7 +214,7 @@ columns_query + " from " +
             }
         }
 
-        public static void getPreForeclosures(List<BaseForeclosure> PreForeclosures, List<BaseForeclosure> removed_foreclosures)
+        public void getPreForeclosures(List<BaseForeclosure> PreForeclosures, List<BaseForeclosure> removed_foreclosures)
         {
             List<BaseForeclosure> both = new List<BaseForeclosure>();
             commonPreAndForeclosures(both, removed_foreclosures);
@@ -232,12 +229,14 @@ columns_query + " from " +
             }
         }
 
-        public static void getForeclosureLoan(decimal loan_id, List<BaseForeclosure> accepted, List<BaseForeclosure> removed, String type)
+        public void getForeclosureLoan(decimal loan_id, List<BaseForeclosure> accepted, List<BaseForeclosure> removed, String type)
         {
-            string query = base_query + single_loan_conditions(loan_id);
+            this.type = type;
+            string columns = this.default_columns + getEventsColumns();
+            string query = "select " + columns + " from " + "( " + all_types_query + ")base where 1=1 " + single_loan_conditions(loan_id);
             query = query + " order by ms_loan_type, demand_letter_due_date asc";
-            List<BaseForeclosure> all = get_list(query);
-            foreach (BaseForeclosure f in all) { f.type = type; accepted.Add(f); f.preforeclosure_events = PreforeclosureEvent.getFromBaseForeclosure(f); }
+            List<BaseForeclosure> all = get_loan_list(query);
+            foreach (BaseForeclosure f in all) { f.type = type; accepted.Add(f); }
             commonFilters(accepted, removed);
         }
 
@@ -359,6 +358,66 @@ columns_query + " from " +
                 }
             }
         }
+
+        private List<BaseForeclosure> get_loan_list(String query)
+        {
+            List<BaseForeclosure> list = new List<BaseForeclosure>();
+            DbDataReader reader = getReader(query);
+            while (reader.Read())
+            {
+                BaseForeclosure f = new BaseForeclosure();
+                f.type = this.type;
+                f.read_loan(reader);
+                list.Add(f);
+            }
+            reader.Close();
+            close_connection();
+            return list;
+        }
+
+        private BaseForeclosure read_loan(DbDataReader reader)
+        {
+            BaseForeclosure f = this;
+            int pos = 0;
+            f.loan_id = readDBDecimal(reader, pos++);
+            f.demand_letter_due_date = readDBDateObject(reader, pos++);
+            f.foreclosure_officers = readDBString(reader, pos++);
+            f.fcl_type = readDBString(reader, pos++);
+            f.last_reg_paid_dt = readDBDateObject(reader, pos++);
+            f.last_payments_balance = readDBDecimal(reader, pos++);
+            f.papers_to_attorney_date = readDBDateObject(reader, pos++);
+            f.posting_date = readDBDateObject(reader, pos++);
+            f.chapter_filed = readDBString(reader, pos++);
+            f.bankruptcy_filed_date = readDBDateObject(reader, pos++);
+            f.bankruptcy_discharge_date = readDBDateObject(reader, pos++);
+            f.bankruptcy_case_dismissed_date = readDBDateObject(reader, pos++);
+            f.bankruptcy_closed_date = readDBDateObject(reader, pos++);
+            f.sale_date = readDBDateObject(reader, pos++);
+            f.ytd_prin_paid_amt = readDBDecimal(reader, pos++);
+            f.principal_amt_from_history = readDBDecimal(reader, pos++);
+            f.fc_foreclosure_referral_date = readDBDateObject(reader, pos++);
+            f.fc_payoff_date = readDBDateObject(reader, pos++);
+            f.appraisal_ordered_date = readDBDateObject(reader, pos++);
+            f.foreclosure_date = readDBDateObject(reader, pos++);
+            f.lm_stop_code_id = readDBInt(reader, pos++);
+            f.memo_fc_third_party_sale_date = readDBDateObject(reader, pos++);
+            f.extension_ordered_date = readDBDateObject(reader, pos++);
+
+            if (f.loan_id > 0)
+            {
+                f.loan = com.sp.rmmc.common.models.MsLoan.read(reader, pos);
+                pos += com.sp.rmmc.common.models.MsLoan.COLUMNS;
+                foreach (BaseEvents be in f.getEventsTypes())
+                {
+                    be.read(reader, pos, f.loan);
+                    pos += be.fields_count();
+                }
+                // TODO
+                if( f.review_checklist != null ) f.review_checklist = ReviewChecklist.read(reader, pos);
+            }
+            return f;
+        }
+
 
         private static List<BaseForeclosure> get_list(String query)
         {
@@ -508,7 +567,7 @@ columns_query + " from " +
                 es.AddRange(demand_expire_events.events);
                 es.AddRange(demand_occupancy_events.events);
             }
-            if (this.type == XDEMAND_TYPE)
+            if (this.type == CURRENTXDEMAND_TYPE)
             {
                 es.AddRange(xdemand_mortgage_status_events.events);
                 es.AddRange(xdemand_occupancy_letter_events.events);
@@ -545,6 +604,97 @@ columns_query + " from " +
                 es.AddRange(sale_original_documents_ordered_events.events);
             }
             return es;
+        }
+
+        private string getEventsColumns()
+        {
+            string s = "";
+            foreach (BaseEvents be in this.getEventsTypes())
+            {
+                s += ", \n" + be.query("base.loan_id");
+            }
+            if (this.review_checklist != null) s += ", \n" + ReviewChecklist.columns("base.loan_id");
+            return s;
+        }
+
+        private List<BaseEvents> getEventsTypes()
+        {
+            List<BaseEvents> event_types = new List<BaseEvents>();
+            if (this.type == DEMAND_TYPE)
+            {
+                if (inspection == null) inspection = new InspectionEvents();
+                event_types.Add(inspection);
+                if (reason_code == null) reason_code = new ReasonCodeEvents();
+                event_types.Add(reason_code);
+                if (foreclosure_mortgage_status_events == null) foreclosure_mortgage_status_events = new ForeclosureMortgageStatusEvents();
+                event_types.Add(foreclosure_mortgage_status_events);
+                if (demand_expire_events == null) demand_expire_events = new DemandFileExpireEvents();
+                event_types.Add(demand_expire_events);
+                if (demand_occupancy_events == null) demand_occupancy_events = new DemandOccupancyEvents();
+                event_types.Add(demand_occupancy_events);
+                this.review_checklist = new ReviewChecklist();
+            }
+            if (this.type == CURRENTXDEMAND_TYPE)
+            {
+                if (xdemand_mortgage_status_events == null) xdemand_mortgage_status_events = new XdemandMortgageStatusEvents();
+                event_types.Add(xdemand_mortgage_status_events);
+                if (xdemand_occupancy_letter_events == null) xdemand_occupancy_letter_events = new XdemandOccupancyLetterEvents();
+                event_types.Add(xdemand_occupancy_letter_events);
+            }
+            if (this.type == PREFORECLOSURE_TYPE)
+            {
+                if (inspection == null) inspection = new InspectionEvents();
+                event_types.Add(inspection);
+                if (reason_code == null) reason_code = new ReasonCodeEvents();
+                event_types.Add(reason_code);
+                if (foreclosure_appraisal_bpo_events == null) foreclosure_appraisal_bpo_events = new ForeclosureAppraisalBPOEvents();
+                event_types.Add(foreclosure_appraisal_bpo_events);
+            }
+            if (this.type == FORECLOSURE_TYPE)
+            {
+                if (inspection == null) inspection = new InspectionEvents();
+                event_types.Add(inspection);
+                if (reason_code == null) reason_code = new ReasonCodeEvents();
+                event_types.Add(reason_code);
+                if (foreclosure_appraisal_bpo_events == null) foreclosure_appraisal_bpo_events = new ForeclosureAppraisalBPOEvents();
+                event_types.Add(foreclosure_appraisal_bpo_events);
+                if (foreclosure_mortgage_status_events == null) foreclosure_mortgage_status_events = new ForeclosureMortgageStatusEvents();
+                event_types.Add(foreclosure_mortgage_status_events);
+                if (foreclosure_rfs_gnma_foreclosure_status_events == null) foreclosure_rfs_gnma_foreclosure_status_events = new ForeclosureRfsGnmaForeclosureStatusEvents();
+                event_types.Add(foreclosure_rfs_gnma_foreclosure_status_events);
+            }
+            if (this.type == FORECLOSED_TYPE)
+            {
+                if (sale_inspection == null) sale_inspection = new SaleInspectionEvents();
+                event_types.Add(sale_inspection);
+                if (sale_conveyance == null) sale_conveyance = new SaleConveyanceEvents();
+                event_types.Add(sale_conveyance);
+                if (sale_hud_advice == null) sale_hud_advice = new SaleHudAdviceEvents();
+                event_types.Add(sale_hud_advice);
+                if (sale_title_package == null) sale_title_package = new SaleTitlePackageEvents();
+                event_types.Add(sale_title_package);
+                if (sale_title_approval == null) sale_title_approval = new SaleTitleApprovalEvents();
+                event_types.Add(sale_title_approval);
+                if (sale_claim_part_b == null) sale_claim_part_b = new SaleClaimPartBEvents();
+                event_types.Add(sale_claim_part_b);
+                if (sale_result_sale == null) sale_result_sale = new SaleResultSaleEvents();
+                event_types.Add(sale_result_sale);
+                if (sale_transfer_of_custody == null) sale_transfer_of_custody = new SaleTransferCustodyEvents();
+                event_types.Add(sale_transfer_of_custody);
+                if (sale_acquisition_payment == null) sale_acquisition_payment = new SaleAcquisitionPaymentEvents();
+                event_types.Add(sale_acquisition_payment);
+                if (sale_basic_claim_events == null) sale_basic_claim_events = new SaleBasicClaimEvents();
+                event_types.Add(sale_basic_claim_events);
+                if (sale_reo_notice_events == null) sale_reo_notice_events = new SaleREONoticeEvents();
+                event_types.Add(sale_reo_notice_events);
+                if (sale_fannie_mae_claim_571_events == null) sale_fannie_mae_claim_571_events = new SaleFannieMaeClaim571Events();
+                event_types.Add(sale_fannie_mae_claim_571_events);
+                if (sale_mortgage_status_events == null) sale_mortgage_status_events = new SaleMortgageStatusEvents();
+                event_types.Add(sale_mortgage_status_events);
+                if (sale_original_documents_ordered_events == null) sale_original_documents_ordered_events = new SaleOriginalDocumentsOrderedEvents();
+                event_types.Add(sale_original_documents_ordered_events);
+            }
+            return event_types;
         }
 
         private List<Event> internalEvents()

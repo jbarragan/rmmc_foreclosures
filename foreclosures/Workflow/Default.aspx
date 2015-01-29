@@ -106,6 +106,73 @@
         }
     %>
     
+    <%if (this.workflow == "Demands that Became Current")
+      {
+    %>
+    <div class="row">
+        <div class="span12">
+        <h2><%= this.workflow%> (<%= bfs.Count%>)</h2>
+        <table class="table table-striped">
+            <tr>
+                <th>Loan#</th>
+                <th>Exceptions</th>
+                <th>Loan Type</th>
+                <th>Loan Name</th>
+                <th>Due Date of next payment</th>
+                <th>UPB</th>
+                <th>Interest Rate</th>
+                <th>Demand Letter Due Date</th>
+                <th>Months Demand after Delinquent</th>
+                <th>Officer(s)</th>
+                <!-- 
+                <th>Reason Code</th>
+                <th>Occupancy Code</th>
+                -->
+                <th>Last Inspection Received</th>                
+                <!-- 
+                <th>Letters Sent</th>                
+                -->
+                <th>Reason</th>
+            </tr>
+            <% foreach (com.sp.rmmc.foreclosures.models.BaseForeclosure bf in bfs)
+               {
+            %>
+            <tr class="<%= bf.getEventStatusColor() %>">
+                <td><%= bf.loan_id.ToString()%></td>
+                <%  int events_count = 0; if ((events_count = bf.getEvents().Count) > 0)
+                    { %>
+                    <td><a href="Events.aspx?loan_id=<%=bf.loan_id %>&workflow=<%=workflow %>"><%= events_count.ToString()%></a></td>
+                <%  }
+                    else
+                    { %>
+                    <td>0</td>
+                <%  } %>
+                <td><%= bf.loan.loan_type%></td>
+                <td><%= bf.loan.loan_name%></td>
+                <td><%= bf.loan.due_date_next_payment.ToShortDateString()%></td>
+                <td><%= bf.loan.prin_bal.ToString("C")%></td>
+                <td><%= bf.loan.int_rate.ToString("0.000")%></td>
+                <td><%= bf.demand_letter_due_date.ToShortDateString()%></td>
+                <td><span class="<%= bf.months_demand_date_after_delinquent_color() %>"><%= bf.months_demand_date_after_delinquent()%></span></td>
+                <td><%= bf.foreclosure_officers%></td>
+                <!--bf.default_reason_code -->
+                <!--bf.all_occupancy_codes_descriptions()-->
+                <td>NA</td>
+                <!--bf.last_nl_demand_memo_date.ToString()-->
+                <td><%= bf.filter_reason %>
+                </td>
+                
+             </tr>
+            <%
+               }
+            %>
+        </table>
+        </div>
+    </div>    
+    <%
+        }
+    %>
+    
     <%if (this.workflow == "Removed Demands")
       {
     %>
@@ -157,7 +224,7 @@
                 <td><%= bf.foreclosure_officers%></td>
                 <!--bf.default_reason_code -->
                 <!--bf.all_occupancy_codes_descriptions()-->
-                <td><%= bf.inspection.last_received_notify_date.ToShortDateString()%></td>
+                <td>NA</td>
                 <!--bf.last_nl_demand_memo_date.ToString()-->
                 <td><%= bf.filter_reason %>
                 </td>
