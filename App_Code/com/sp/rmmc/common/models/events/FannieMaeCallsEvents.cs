@@ -33,7 +33,7 @@ namespace com.sp.rmmc.common.models.events
             Event e = new Event();
             e.loan = this.loan;
             e.type = Event.WARNING;
-            e.name = "FANNIE MAE loan last call Warning.";
+            e.name = "FANNIE MAE loan last call Warning";
             e.description = "Last call " + this.last_bc_call_memo_date.ToString() +
                 ". Last promised to pay date " + this.last_bc_promised_to_pay_date.ToString() + ". New call is required.";
             this.events.Add(e);

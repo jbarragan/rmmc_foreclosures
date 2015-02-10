@@ -64,7 +64,8 @@
                 <!-- Foreclosure Officer<td></td> -->
                 <td><%= e.name %> 
                     <% if (e.name == "Different Reason Codes" ||
-                           e.name == "Demand Occupancy Alert")
+                           e.name == "Demand Occupancy Alert" ||
+                           e.name == "FANNIE MAE loan last call Warning")
                        {%>
                        &nbsp;<a href="../events/<%=e.name %>.aspx">Description</a>
                     <% } %>
