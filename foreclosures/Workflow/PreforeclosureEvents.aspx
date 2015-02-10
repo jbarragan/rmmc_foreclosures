@@ -20,7 +20,7 @@
         </div>
         <div class="span9">
         <%= com.sp.rmmc.foreclosures.views.NewNavigations.foreclosure_sub_main_nav_select("Workflow", new ADUser(HttpContext.Current.User.Identity.Name.ToString()))%>
-        <%= com.sp.rmmc.foreclosures.views.NewNavigations.workflow_list_nav_select("PreforeclosureEvents")%>
+        <%= com.sp.rmmc.foreclosures.views.NewNavigations.workflow_list_nav_select("", version)%>
         </div>
     </div>
     </div>

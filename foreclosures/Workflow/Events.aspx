@@ -14,10 +14,11 @@
     <div class="hero-unit">
         <img src="../../assets/img/logo.png" class="img-rounded" alt="RMMC Logo" />
         <h1>Events</h1>
+        <h2><%= (this.history == null) ?  "Current" : "History: " + history.history_text %></h2>
         <p></p>
     </div>
     <%= com.sp.rmmc.foreclosures.views.NewNavigations.foreclosure_sub_main_nav_select("Workflow", new ADUser(HttpContext.Current.User.Identity.Name.ToString()))%>
-    <%= com.sp.rmmc.foreclosures.views.NewNavigations.workflow_list_nav_select("PreforeclosureEvents")%>
+    <%= com.sp.rmmc.foreclosures.views.NewNavigations.workflow_list_nav_select("", version)%>
     <!-- Example row of columns -->    
     <div class="row">
         <div class="span4">

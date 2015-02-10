@@ -46,7 +46,7 @@ namespace com.sp.rmmc.foreclosures.models
 MsLoan.columns("base.loan_id") +
 "from ms_fcl_item_amts_2 as base " +
 "where (base.fcl_item_desc like '%' AND " +
-" base.fcl_item_desc not like '%LOSS%')  " +
+" base.fcl_item_desc not like '%LOSS%') AND base.item_id in (11900, 10600, 10700, 10300, 11200) " +
 " and received_date is not null and received_date > dateadd(yy, -3, getdate())";
 
         private static string base_query2 = "" +

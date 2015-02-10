@@ -42,7 +42,16 @@ namespace com.sp.rmmc.common.models
             if (reader.GetValue(pos) is DBNull)
                 return 0;
             else
-                return reader.GetInt16(pos);
+            {
+                try
+                {
+                    return reader.GetInt16(pos);
+                }
+                catch (Exception e)
+                {
+                    return reader.GetInt32(pos);
+                }
+            }
         }
 
         public static bool readDBYesNo(DbDataReader reader, int pos)

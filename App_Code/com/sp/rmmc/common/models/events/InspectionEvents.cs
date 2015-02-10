@@ -81,5 +81,14 @@ namespace com.sp.rmmc.common.models.events
             this.last_received_description = DbModel.readDBString(reader, pos++);
             this.load_events();
         }
+
+        public override void addInsertParameters(SqlCommand cmd)
+        {
+            cmd.Parameters.AddWithValue("@inspection_events_loan_id", this.loan_id);
+            cmd.Parameters.AddWithValue("@inspection_events_last_ordered_date", this.last_ordered_date.toDBInsert());
+            cmd.Parameters.AddWithValue("@inspection_events_last_received_notify_date", this.last_received_notify_date.toDBInsert());
+            cmd.Parameters.AddWithValue("@inspection_events_last_received_description", this.last_received_description);
+        }
+
     }
 }

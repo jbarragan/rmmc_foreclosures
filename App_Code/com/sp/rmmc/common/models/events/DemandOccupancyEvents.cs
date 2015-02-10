@@ -95,6 +95,17 @@ namespace com.sp.rmmc.common.models.events
             this.va_occupancy_code = DbModel.readDBString(reader, pos++);
             this.occupancy_code = DbModel.readDBString(reader, pos++);
             this.load_events();
-        }        
+        }
+
+        public override void addInsertParameters(SqlCommand cmd)
+        {
+            cmd.Parameters.AddWithValue("@demand_occupancy_events_loan_id", this.loan_id);
+            cmd.Parameters.AddWithValue("@demand_occupancy_events_demand_letter_due_date", this.demand_letter_due_date.toDBInsert());
+            cmd.Parameters.AddWithValue("@demand_occupancy_events_occupancy_fcl_hud_notice_of_occ_sent_date", this.occupancy_fcl_hud_notice_of_occ_sent_date.toDBInsert());
+            cmd.Parameters.AddWithValue("@demand_occupancy_events_occupancy_prop_insp_date", this.occupancy_prop_insp_date.toDBInsert());
+            cmd.Parameters.AddWithValue("@demand_occupancy_events_last_pi_memo_date", this.last_pi_memo_date.toDBInsert());
+            cmd.Parameters.AddWithValue("@demand_occupancy_events_va_occupancy_code", this.va_occupancy_code);
+            cmd.Parameters.AddWithValue("@demand_occupancy_events_occupancy_code", this.occupancy_code);
+        }
     }
 }

@@ -5,6 +5,7 @@ using System.Web;
 
 using System.Data.OleDb;
 using System.Data.Common;
+using System.Data.SqlClient;
 
 using com.sp.rmmc.common.models;
 namespace com.sp.rmmc.common.models
@@ -85,6 +86,22 @@ and   ms_loan_information.loan_id = ms_property_information.loan_id
             loan.borrower_phone = readDBString(reader, pos++);
 
             return loan;
+        }
+
+        public void addInsertParameters(SqlCommand cmd)
+        {
+            cmd.Parameters.AddWithValue("@ms_loan_id", this.loan_id);
+            cmd.Parameters.AddWithValue("@ms_loan_name", this.loan_name);
+            cmd.Parameters.AddWithValue("@ms_loan_prin_bal", this.prin_bal);
+            cmd.Parameters.AddWithValue("@ms_loan_due_date_next_payment", this.due_date_next_payment.toDBInsert());
+            cmd.Parameters.AddWithValue("@ms_loan_type", this.loan_type);
+            cmd.Parameters.AddWithValue("@ms_int_rate", this.int_rate);
+            cmd.Parameters.AddWithValue("@property_address", this.property_address);
+            cmd.Parameters.AddWithValue("@property_city", this.property_city);
+            cmd.Parameters.AddWithValue("@property_state", this.property_state);
+            cmd.Parameters.AddWithValue("@property_zip", this.property_zip);
+            cmd.Parameters.AddWithValue("@loan_inv_cd", this.inv_cd);
+            cmd.Parameters.AddWithValue("@borrower_phone", this.borrower_phone);
         }
 
         public static string columns(string loan_id_column)

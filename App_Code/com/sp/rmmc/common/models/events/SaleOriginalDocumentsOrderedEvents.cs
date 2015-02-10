@@ -47,6 +47,13 @@ namespace com.sp.rmmc.common.models.events
             this.last_memo_original_docs_date = DbModel.readDBDateObject(reader, pos++);
             this.sale_date = DbModel.readDBDateObject(reader, pos++);
             this.load_events();
-        }        
+        }
+
+        public override void addInsertParameters(SqlCommand cmd)
+        {
+            cmd.Parameters.AddWithValue("@sale_original_documents_ordered_events_loan_id", this.loan_id);
+            cmd.Parameters.AddWithValue("@sale_original_documents_ordered_events_last_memo_original_docs_date", this.last_memo_original_docs_date.toDBInsert());
+            cmd.Parameters.AddWithValue("@sale_original_documents_ordered_events_sale_date", this.sale_date.toDBInsert());
+        }
     }
 }

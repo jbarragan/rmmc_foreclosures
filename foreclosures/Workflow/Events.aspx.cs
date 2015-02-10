@@ -15,12 +15,14 @@ public partial class lossmitigation_Default : System.Web.UI.Page
     protected string workflow = "Demands";
     protected string loan_type = "ALL";
     protected string loan_id = "ALL";
+    protected string version = "current";
     protected decimal decimal_loan_id = 0M;
     protected List<Event> events = new List<Event>();
     protected List<BaseForeclosure> bfs = new List<BaseForeclosure>();
     protected List<BaseForeclosure> all_bfs = new List<BaseForeclosure>();
     protected List<BaseForeclosure> accepted_bfs = new List<BaseForeclosure>();
     protected List<BaseForeclosure> removed_bfs = new List<BaseForeclosure>();
+    protected History history = null;
 
     protected void Page_Load(object sender, EventArgs e)
     {
@@ -30,25 +32,35 @@ public partial class lossmitigation_Default : System.Web.UI.Page
         this.loan_type = getArg("loan_type", "ALL");
         this.loan_id = stringDecimal(getArg("loan_id", "ALL"), "ALL");
         this.decimal_loan_id = stringToDecimal(this.loan_id, 0M);
+        this.version = getArg("version", "current");
+
+        int iverstion = stringToInt(version, 0);
+
+        BaseForeclosure query_foreclosure = new CurrentForeclosure();
+        if (iverstion > 0)
+        {
+            history = (new History()).get(iverstion);
+            if (history != null) query_foreclosure = new HistoryForeclosure(iverstion);
+        }
 
         if (this.decimal_loan_id != 0M)
         {
             if (workflow == "Demands")
-                (new BaseForeclosure()).getForeclosureLoan(this.decimal_loan_id, accepted_bfs, removed_bfs, BaseForeclosure.DEMAND_TYPE);
+                query_foreclosure.getForeclosureLoan(this.decimal_loan_id, accepted_bfs, removed_bfs, BaseForeclosure.DEMAND_TYPE);
             else if (workflow == "Demands that Became Current")
-                (new BaseForeclosure()).getForeclosureLoan(this.decimal_loan_id, removed_bfs, accepted_bfs, BaseForeclosure.CURRENTXDEMAND_TYPE);
+                query_foreclosure.getForeclosureLoan(this.decimal_loan_id, removed_bfs, accepted_bfs, BaseForeclosure.CURRENTXDEMAND_TYPE);
             else if (workflow == "Removed Demands")
-                (new BaseForeclosure()).getForeclosureLoan(this.decimal_loan_id, removed_bfs, accepted_bfs, BaseForeclosure.XDEMAND_TYPE);
+                query_foreclosure.getForeclosureLoan(this.decimal_loan_id, removed_bfs, accepted_bfs, BaseForeclosure.XDEMAND_TYPE);
             else if (workflow == "PreForeclosures")
-                (new BaseForeclosure()).getForeclosureLoan(this.decimal_loan_id, accepted_bfs, removed_bfs, BaseForeclosure.PREFORECLOSURE_TYPE);
+                query_foreclosure.getForeclosureLoan(this.decimal_loan_id, accepted_bfs, removed_bfs, BaseForeclosure.PREFORECLOSURE_TYPE);
             else if (workflow == "Foreclosures")
-                (new BaseForeclosure()).getForeclosureLoan(this.decimal_loan_id, accepted_bfs, removed_bfs, BaseForeclosure.FORECLOSURE_TYPE);
+                query_foreclosure.getForeclosureLoan(this.decimal_loan_id, accepted_bfs, removed_bfs, BaseForeclosure.FORECLOSURE_TYPE);
             else if (workflow == "Foreclosed")
-                (new BaseForeclosure()).getForeclosureLoan(this.decimal_loan_id, accepted_bfs, removed_bfs, BaseForeclosure.FORECLOSED_TYPE);
+                query_foreclosure.getForeclosureLoan(this.decimal_loan_id, accepted_bfs, removed_bfs, BaseForeclosure.FORECLOSED_TYPE);
         }
         else if (workflow == "Demands")
         {
-            (new BaseForeclosure()).getDemands(accepted_bfs, removed_bfs);
+            query_foreclosure.getDemands(accepted_bfs, removed_bfs);
         }
         all_bfs.AddRange(accepted_bfs);
         all_bfs.AddRange(removed_bfs);
@@ -122,7 +134,18 @@ public partial class lossmitigation_Default : System.Web.UI.Page
         }
     }
 
-
+    protected int stringToInt(string value, int default_value)
+    {
+        if (value == "") return default_value;
+        try
+        {
+            return Convert.ToInt32(Regex.Replace(value, "[^0-9]", ""));
+        }
+        catch (Exception)
+        {
+            return default_value;
+        }
+    }
 
     protected void populateddlLoanOfficer()
     {
@@ -193,6 +216,7 @@ public partial class lossmitigation_Default : System.Web.UI.Page
             "?workflow=" + workflow +
             "&loan_officer=" + loan_officer +
             "&loan_id=" + loan_id +
-            "&loan_type=" + loan_type;
+            "&loan_type=" + loan_type +
+            "&version=" + version;
     }
 }

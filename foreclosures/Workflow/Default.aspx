@@ -14,10 +14,11 @@
     <div class="hero-unit">
         <img src="../../assets/img/logo.png" class="img-rounded" alt="RMMC Logo" />
         <h1><%= workflow %></h1>
+        <h2><%= (this.history == null) ?  "Current" : "History: " + history.history_text %></h2>
         <p></p>
     </div>
     <%= com.sp.rmmc.foreclosures.views.NewNavigations.foreclosure_sub_main_nav_select("Workflow", new ADUser(HttpContext.Current.User.Identity.Name.ToString()))%>
-    <%= com.sp.rmmc.foreclosures.views.NewNavigations.workflow_list_nav_select(workflow)%>
+    <%= com.sp.rmmc.foreclosures.views.NewNavigations.workflow_list_nav_select(workflow, this.version)%>
     <!-- Example row of columns -->    
     <div class="row">
         <div class="span4">
@@ -72,7 +73,7 @@
                 <td><%= bf.loan_id.ToString()%></td>
                 <%  int events_count = 0; if ((events_count = bf.getEvents().Count) > 0)
                     { %>
-                    <td><a href="Events.aspx?loan_id=<%=bf.loan_id %>"><%= events_count.ToString()%></a></td>
+                    <td><a href="Events.aspx?loan_id=<%=bf.loan_id %>&version=<%=version %>"><%= events_count.ToString()%></a></td>
                 <%  }
                     else
                     { %>
@@ -141,7 +142,7 @@
                 <td><%= bf.loan_id.ToString()%></td>
                 <%  int events_count = 0; if ((events_count = bf.getEvents().Count) > 0)
                     { %>
-                    <td><a href="Events.aspx?loan_id=<%=bf.loan_id %>&workflow=<%=workflow %>"><%= events_count.ToString()%></a></td>
+                    <td><a href="Events.aspx?loan_id=<%=bf.loan_id %>&workflow=<%=workflow %>&version=<%=version %>"><%= events_count.ToString()%></a></td>
                 <%  }
                     else
                     { %>
@@ -208,7 +209,7 @@
                 <td><%= bf.loan_id.ToString()%></td>
                 <%  int events_count = 0; if ((events_count = bf.getEvents().Count) > 0)
                     { %>
-                    <td><a href="Events.aspx?loan_id=<%=bf.loan_id %>&workflow=<%=workflow %>"><%= events_count.ToString()%></a></td>
+                    <td><a href="Events.aspx?loan_id=<%=bf.loan_id %>&workflow=<%=workflow %>&version=<%=version %>"><%= events_count.ToString()%></a></td>
                 <%  }
                     else
                     { %>
@@ -269,7 +270,7 @@
                 <td><%= bf.loan_id.ToString()%></td>
                 <%  int events_count = 0; if ((events_count = bf.getEvents().Count) > 0)
                     { %>
-                    <td><a href="Events.aspx?loan_id=<%=bf.loan_id %>&workflow=<%=workflow %>"><%= events_count.ToString()%></a></td>
+                    <td><a href="Events.aspx?loan_id=<%=bf.loan_id %>&workflow=<%=workflow %>&version=<%=version %>"><%= events_count.ToString()%></a></td>
                 <%  }
                     else
                     { %>
@@ -284,7 +285,7 @@
                 <td><%= bf.posting_date.ToShortDateString()%></td>
                 <td><span class="text-error"><%= bf.foreclosure_date.ToShortDateString()%></span></td>
                 <td><%= bf.foreclosure_officers%></td>
-                <td><a href="PreforeclosureEvents.aspx?loan_id=<%=bf.loan_id.ToString() %>">Checklist</a></td>
+                <td><a href="PreforeclosureEvents.aspx?loan_id=<%=bf.loan_id.ToString() %>&version=<%=version %>">Checklist</a></td>
              </tr>
             <%
                }
@@ -325,7 +326,7 @@
                 <td><%= bf.loan_id.ToString()%></td>
                 <%  int events_count = 0; if ((events_count = bf.getEvents().Count) > 0)
                     { %>
-                    <td><a href="Events.aspx?loan_id=<%=bf.loan_id %>&workflow=<%=workflow %>"><%= events_count.ToString()%></a></td>
+                    <td><a href="Events.aspx?loan_id=<%=bf.loan_id %>&workflow=<%=workflow %>&version=<%=version %>"><%= events_count.ToString()%></a></td>
                 <%  }
                     else
                     { %>
@@ -340,7 +341,7 @@
                 <td><%= bf.posting_date.ToShortDateString()%></td>
                 <td><span class="text-error"><%= bf.foreclosure_date.ToShortDateString()%></span></td>
                 <td><%= bf.foreclosure_officers%></td>
-                <td><a href="PreforeclosureEvents.aspx?loan_id=<%=bf.loan_id.ToString() %>">Checklist</a></td>
+                <td><a href="PreforeclosureEvents.aspx?loan_id=<%=bf.loan_id.ToString() %>&version=<%=version %>">Checklist</a></td>
              </tr>
             <%
                }
@@ -397,7 +398,7 @@
                 <td><%= bf.loan_id.ToString()%></td>
                 <%  int events_count = 0; if ((events_count = bf.getEvents().Count) > 0)
                     { %>
-                    <td><a href="Events.aspx?loan_id=<%=bf.loan_id %>&workflow=<%=workflow %>"><%= events_count.ToString()%></a></td>
+                    <td><a href="Events.aspx?loan_id=<%=bf.loan_id %>&workflow=<%=workflow %>&version=<%=version %>"><%= events_count.ToString()%></a></td>
                 <%  }
                     else
                     { %>

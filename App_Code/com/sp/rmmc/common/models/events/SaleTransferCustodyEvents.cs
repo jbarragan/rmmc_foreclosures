@@ -77,6 +77,13 @@ namespace com.sp.rmmc.common.models.events
             this.transfer_of_custody_date = DbModel.readDBDateObject(reader, pos++);
             this.sale_date = DbModel.readDBDateObject(reader, pos++);
             this.load_events();
-        }        
+        }
+
+        public override void addInsertParameters(SqlCommand cmd)
+        {
+            cmd.Parameters.AddWithValue("@sale_transfer_custody_events_loan_id", this.loan_id);
+            cmd.Parameters.AddWithValue("@sale_transfer_custody_events_transfer_of_custody_date", this.transfer_of_custody_date.toDBInsert());
+            cmd.Parameters.AddWithValue("@sale_transfer_custody_events_sale_date", this.sale_date.toDBInsert());
+        }
     }
 }

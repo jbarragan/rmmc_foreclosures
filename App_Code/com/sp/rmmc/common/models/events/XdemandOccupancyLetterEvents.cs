@@ -55,6 +55,13 @@ namespace com.sp.rmmc.common.models.events
             this.nl_current_occupancy_letter_date = DbModel.readDBDateObject(reader, pos++);
             this.demand_letter_due_date = DbModel.readDBDateObject(reader, pos++);
             this.load_events();
-        }        
+        }
+
+        public override void addInsertParameters(SqlCommand cmd)
+        {
+            cmd.Parameters.AddWithValue("@xdemand_occupancy_letter_events_loan_id", this.loan_id);
+            cmd.Parameters.AddWithValue("@xdemand_occupancy_letter_events_nl_current_occupancy_letter_date", this.nl_current_occupancy_letter_date.toDBInsert());
+            cmd.Parameters.AddWithValue("@xdemand_occupancy_letter_events_demand_letter_due_date", this.demand_letter_due_date.toDBInsert());
+        }
     }
 }

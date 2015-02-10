@@ -10,7 +10,7 @@ using com.sp.rmmc.common.models;
 public partial class lossmitigation_Collections_Default : System.Web.UI.Page
 {
     protected Foreclosure foreclosure = new Foreclosure();
-
+    protected string version = "current";
     protected void Page_Load(object sender, EventArgs e)
     {
         if (IsPostBack) return;

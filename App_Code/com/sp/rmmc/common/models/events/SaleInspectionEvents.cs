@@ -70,6 +70,13 @@ namespace com.sp.rmmc.common.models.events
             this.last_ordered_date = DbModel.readDBDateObject(reader, pos++);
             this.sale_date = DbModel.readDBDateObject(reader, pos++);
             this.load_events();
-        }        
+        }
+
+        public override void addInsertParameters(SqlCommand cmd)
+        {
+            cmd.Parameters.AddWithValue("@sale_inspection_events_loan_id", this.loan_id);
+            cmd.Parameters.AddWithValue("@sale_inspection_events_last_ordered_date", this.last_ordered_date.toDBInsert());
+            cmd.Parameters.AddWithValue("@sale_inspection_events_sale_date", this.sale_date.toDBInsert());
+        }
     }
 }

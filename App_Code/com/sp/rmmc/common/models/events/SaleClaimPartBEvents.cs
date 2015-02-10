@@ -77,6 +77,13 @@ namespace com.sp.rmmc.common.models.events
             this.claim_part_b_date = DbModel.readDBDateObject(reader, pos++);
             this.title_approval_date = DbModel.readDBDateObject(reader, pos++);
             this.load_events();
-        }        
+        }
+
+        public override void addInsertParameters(SqlCommand cmd)
+        {
+            cmd.Parameters.AddWithValue("@sale_claim_part_b_events_loan_id", this.loan_id);
+            cmd.Parameters.AddWithValue("@sale_claim_part_b_events_claim_part_b_date", this.claim_part_b_date.toDBInsert());
+            cmd.Parameters.AddWithValue("@sale_claim_part_b_events_title_approval_date", this.title_approval_date.toDBInsert());
+        }
     }
 }

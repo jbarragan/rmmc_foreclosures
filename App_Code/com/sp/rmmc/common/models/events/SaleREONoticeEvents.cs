@@ -51,6 +51,13 @@ namespace com.sp.rmmc.common.models.events
             this.reo_notice_date = DbModel.readDBDateObject(reader, pos++);
             this.sale_date = DbModel.readDBDateObject(reader, pos++);
             this.load_events();
+        }
+
+        public override void addInsertParameters(SqlCommand cmd)
+        {
+            cmd.Parameters.AddWithValue("@sale_reo_notice_events_loan_id", this.loan_id);
+            cmd.Parameters.AddWithValue("@sale_reo_notice_events_reo_notice_date", this.reo_notice_date.toDBInsert());
+            cmd.Parameters.AddWithValue("@sale_reo_notice_events_sale_date", this.reo_notice_date.toDBInsert());
         }        
     }
 }

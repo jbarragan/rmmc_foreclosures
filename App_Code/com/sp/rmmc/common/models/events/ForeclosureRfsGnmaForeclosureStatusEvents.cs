@@ -47,6 +47,13 @@ namespace com.sp.rmmc.common.models.events
             this.foreclosure_status = DbModel.readDBString(reader, pos++);
             this.fcl_type = DbModel.readDBString(reader, pos++);
             this.load_events();
-        }        
+        }
+
+        public override void addInsertParameters(SqlCommand cmd)
+        {
+            cmd.Parameters.AddWithValue("@foreclosure_rfs_foreclosure_status_events_loan_id", this.loan_id);
+            cmd.Parameters.AddWithValue("@foreclosure_rfs_foreclosure_status_events_foreclosure_status", this.foreclosure_status);
+            cmd.Parameters.AddWithValue("@foreclosure_rfs_foreclosure_status_events_fcl_type", this.fcl_type);
+        }
     }
 }

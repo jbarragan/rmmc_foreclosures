@@ -54,6 +54,12 @@ namespace com.sp.rmmc.common.models.events
             this.loan_id = DbModel.readDBDecimal(reader, pos++);
             this.demand_letter_due_date = DbModel.readDBDateObject(reader, pos++);
             this.load_events();
-        }        
+        }
+
+        public override void addInsertParameters(SqlCommand cmd)
+        {
+            cmd.Parameters.AddWithValue("@demand_file_expire_events_loan_id", this.loan_id);
+            cmd.Parameters.AddWithValue("@demand_file_expire_events_demand_letter_due_date", this.demand_letter_due_date.toDBInsert());
+        }
     }
 }

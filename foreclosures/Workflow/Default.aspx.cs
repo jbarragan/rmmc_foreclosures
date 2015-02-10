@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using System.Text.RegularExpressions;
 
 using com.sp.rmmc.foreclosures.models;
 
@@ -12,10 +13,12 @@ public partial class lossmitigation_Default : System.Web.UI.Page
     protected string workflow = "Demands";
     protected string loan_type = "ALL";
     protected string event_type = "ALL";
+    protected string version = "current";
     protected List<BaseForeclosure> bfs = new List<BaseForeclosure>();
     protected List<BaseForeclosure> all_bfs = new List<BaseForeclosure>();
     protected List<BaseForeclosure> accepted_bfs = new List<BaseForeclosure>();
     protected List<BaseForeclosure> removed_bfs = new List<BaseForeclosure>();
+    protected History history = null;
     protected decimal[] array_completed_checklists_loan_ids;
 
     protected void Page_Load(object sender, EventArgs e)
@@ -24,19 +27,28 @@ public partial class lossmitigation_Default : System.Web.UI.Page
         this.workflow = getArg("workflow", "Demands");
         this.loan_type = getArg("loan_type", "ALL");
         this.event_type = getArg("event_type", "ALL");
+        this.version = getArg("version", "current");
+        int iverstion = stringToInt(version, 0);
+
+        BaseForeclosure query_foreclosure = new CurrentForeclosure();
+        if (iverstion > 0)
+        {
+            history = (new History()).get(iverstion);
+            if( history != null ) query_foreclosure = new HistoryForeclosure(iverstion);
+        }
 
         if (workflow == "Demands")
-            (new BaseForeclosure()).getDemands(accepted_bfs, removed_bfs);
+            query_foreclosure.getDemands(accepted_bfs, removed_bfs);
         if (workflow == "Demands that Became Current")
-            (new BaseForeclosure()).getCurrentXDemands(accepted_bfs, removed_bfs);
+            query_foreclosure.getCurrentXDemands(accepted_bfs, removed_bfs);
         if (workflow == "Removed Demands")
-            (new BaseForeclosure()).getXDemands(accepted_bfs, removed_bfs);
+            query_foreclosure.getXDemands(accepted_bfs, removed_bfs);
         else if (workflow == "PreForeclosures")
-            (new BaseForeclosure()).getPreForeclosures(accepted_bfs, removed_bfs);
+            query_foreclosure.getPreForeclosures(accepted_bfs, removed_bfs);
         else if (workflow == "Foreclosures")
-            (new BaseForeclosure()).getForeclosures(accepted_bfs, removed_bfs);
+            query_foreclosure.getForeclosures(accepted_bfs, removed_bfs);
         else if (workflow == "Foreclosed")
-            (new BaseForeclosure()).getForeclosed(accepted_bfs, removed_bfs);
+            query_foreclosure.getForeclosed(accepted_bfs, removed_bfs);
         all_bfs.AddRange(accepted_bfs);
         all_bfs.AddRange(removed_bfs);
 
@@ -159,7 +171,6 @@ public partial class lossmitigation_Default : System.Web.UI.Page
         }
     }
 
-
     protected void ddlLoanOfficer_SelectedIndexChanged(object sender, EventArgs e)
     {
         this.loan_officer = ddlLoanOfficer.SelectedValue.ToUpper();
@@ -178,7 +189,8 @@ public partial class lossmitigation_Default : System.Web.UI.Page
             "?workflow=" + workflow +
             "&loan_officer=" + loan_officer +
             "&loan_type=" + loan_type +
-            "&event_type=" + event_type;
+            "&event_type=" + event_type +
+            "&version=" + version;
     }
 
     protected void ddlEventType_SelectedIndexChanged(object sender, EventArgs e)
@@ -186,4 +198,18 @@ public partial class lossmitigation_Default : System.Web.UI.Page
         this.event_type = ddlEventType.SelectedValue;
         Response.Redirect(generate_url());
     }
+
+    protected int stringToInt(string value, int default_value)
+    {
+        if (value == "") return default_value;
+        try
+        {
+            return Convert.ToInt32(Regex.Replace(value, "[^0-9]", ""));
+        }
+        catch (Exception)
+        {
+            return default_value;
+        }
+    }
+
 }

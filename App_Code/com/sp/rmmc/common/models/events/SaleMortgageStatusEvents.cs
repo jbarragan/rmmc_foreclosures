@@ -48,6 +48,13 @@ namespace com.sp.rmmc.common.models.events
             this.mortgage_status = DbModel.readDBString(reader, pos++);
             this.conveyance_date = DbModel.readDBDateObject(reader, pos++);
             this.load_events();
-        }        
+        }
+
+        public override void addInsertParameters(SqlCommand cmd)
+        {
+            cmd.Parameters.AddWithValue("@sale_mortgage_status_events_loan_id", this.loan_id);
+            cmd.Parameters.AddWithValue("@sale_mortgage_status_events_mortgage_status", this.mortgage_status);
+            cmd.Parameters.AddWithValue("@sale_mortgage_status_events_conveyance_date", this.conveyance_date.toDBInsert());
+        }
     }
 }

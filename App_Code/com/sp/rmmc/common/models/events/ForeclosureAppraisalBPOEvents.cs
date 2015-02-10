@@ -76,6 +76,15 @@ namespace com.sp.rmmc.common.models.events
             this.fcl_type = DbModel.readDBString(reader, pos++);
             this.papers_to_attorney_date = DbModel.readDBDateObject(reader, pos++);
             this.load_events();
-        }        
+        }
+
+        public override void addInsertParameters(SqlCommand cmd)
+        {
+            cmd.Parameters.AddWithValue("@foreclosure_appraisal_bpo_events_loan_id", this.loan_id);
+            cmd.Parameters.AddWithValue("@foreclosure_appraisal_bpo_events_appraisal_ordered_date", this.appraisal_ordered_date.toDBInsert());
+            cmd.Parameters.AddWithValue("@foreclosure_appraisal_bpo_events_appraisal_received_date", this.appraisal_received_date.toDBInsert());
+            cmd.Parameters.AddWithValue("@foreclosure_appraisal_bpo_events_fcl_type", this.fcl_type);
+            cmd.Parameters.AddWithValue("@foreclosure_appraisal_bpo_events_papers_to_attorney_date", this.papers_to_attorney_date.toDBInsert());
+        }
     }
 }

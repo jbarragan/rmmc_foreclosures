@@ -22,7 +22,7 @@ namespace com.sp.rmmc.common.models.events
              "(select top 1 ms_memo_categories.memo_category_desc from ms_loan_memo memo, ms_memo_categories, ms_memo_types where memo.loan_id = loan_id_column and memo.memo_category_id = ms_memo_categories.memo_category_id and memo.memo_type_id = ms_memo_types.memo_type_id and ms_memo_categories.memo_category_desc like '0%' and ms_memo_categories.memo_category_desc not like '031%' and (ms_memo_types.memo_type_desc = 'BC-Promised to Pay' or ms_memo_types.memo_type_desc = 'BC-First Right Party Contact')  order by memo_create_dt desc ) as reason_code_events_last_memo_reason_code",
              "(select top 1 memo.memo_create_dt from ms_loan_memo memo, ms_memo_categories, ms_memo_types where memo.loan_id = loan_id_column and memo.memo_category_id = ms_memo_categories.memo_category_id and memo.memo_type_id = ms_memo_types.memo_type_id and ms_memo_categories.memo_category_desc like '0%' and ms_memo_categories.memo_category_desc not like '031%' and (ms_memo_types.memo_type_desc = 'BC-Promised to Pay' or ms_memo_types.memo_type_desc = 'BC-First Right Party Contact')  order by memo_create_dt desc ) as reason_code_events_memo_create_dt"
             };
-        
+
         public ReasonCodeEvents()
         {
             this.fields = class_fields;
@@ -34,9 +34,9 @@ namespace com.sp.rmmc.common.models.events
                 this.loan_id = 11161M;
             if (this.last_memo_reason_code == "" && this.reason_code == "031") return;
 
-            if( this.memo_create_dt.isNull == true && this.reason_code == "031") return;
+            if (this.memo_create_dt.isNull == true && this.reason_code == "031") return;
 
-            if( this.loan.due_date_next_payment.isNull == false && this.memo_create_dt.isNull == false &&
+            if (this.loan.due_date_next_payment.isNull == false && this.memo_create_dt.isNull == false &&
                 this.loan.due_date_next_payment.date > this.memo_create_dt.date && this.reason_code == "031") return;
 
             if (this.last_memo_reason_code.StartsWith(this.reason_code) == false)
@@ -51,13 +51,21 @@ namespace com.sp.rmmc.common.models.events
         }
 
         public override void read(DbDataReader reader, int pos, MsLoan loan)
-        {   
+        {
             this.loan = loan;
             this.loan_id = DbModel.readDBDecimal(reader, pos++);
             this.reason_code = DbModel.readDBString(reader, pos++);
             this.last_memo_reason_code = DbModel.readDBString(reader, pos++);
             this.memo_create_dt = DbModel.readDBDateObject(reader, pos++);
             this.load_events();
+        }
+
+        public override void addInsertParameters(SqlCommand cmd)
+        {
+            cmd.Parameters.AddWithValue("@reason_code_events_loan_id", this.loan_id);
+            cmd.Parameters.AddWithValue("@reason_code_events_reason_code", this.reason_code);
+            cmd.Parameters.AddWithValue("@reason_code_events_last_memo_reason_code", this.last_memo_reason_code);
+            cmd.Parameters.AddWithValue("@reason_code_events_memo_create_dt", this.memo_create_dt.toDBInsert());
         }
     }
 }

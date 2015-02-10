@@ -1,0 +1,4 @@
+alter table history_loan_details add	
+	fannie_mae_calls_events_loan_id decimal(18,0),
+	fannie_mae_calls_events_last_bc_call_memo_date datetime,
+	fannie_mae_calls_events_last_bc_promised_to_pay_date datetime;

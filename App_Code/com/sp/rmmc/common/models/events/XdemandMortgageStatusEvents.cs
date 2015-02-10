@@ -46,6 +46,12 @@ namespace com.sp.rmmc.common.models.events
             this.loan_id = DbModel.readDBDecimal(reader, pos++);
             this.mortgage_status = DbModel.readDBString(reader, pos++);
             this.load_events();
-        }        
+        }
+
+        public override void addInsertParameters(SqlCommand cmd)
+        {
+            cmd.Parameters.AddWithValue("@xdemand_mortgage_status_events_loan_id", this.loan_id);
+            cmd.Parameters.AddWithValue("@xdemand_mortgage_status_events_mortgage_status", this.mortgage_status);
+        }
     }
 }

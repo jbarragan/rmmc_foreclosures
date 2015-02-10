@@ -85,6 +85,16 @@ namespace com.sp.rmmc.common.models.events
             this.papers_to_attorney_date = DbModel.readDBDateObject(reader, pos++);
             this.demand_letter_due_date = DbModel.readDBDateObject(reader, pos++);
             this.load_events();
-        }        
+        }
+
+        public override void addInsertParameters(SqlCommand cmd)
+        {
+            cmd.Parameters.AddWithValue("@foreclosure_mortgage_status_events_loan_id", this.loan_id);
+            cmd.Parameters.AddWithValue("@foreclosure_mortgage_status_events_mortgage_status", this.mortgage_status);
+            cmd.Parameters.AddWithValue("@foreclosure_mortgage_status_events_posting_date", this.posting_date.toDBInsert());
+            cmd.Parameters.AddWithValue("@foreclosure_mortgage_status_events_fcl_type", this.fcl_type);
+            cmd.Parameters.AddWithValue("@foreclosure_mortgage_status_events_papers_to_attorney_date", this.papers_to_attorney_date.toDBInsert());
+            cmd.Parameters.AddWithValue("@foreclosure_mortgage_status_events_demand_letter_due_date", this.demand_letter_due_date.toDBInsert());
+        }
     }
 }

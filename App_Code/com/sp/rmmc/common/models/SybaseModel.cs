@@ -18,15 +18,16 @@ namespace com.sp.rmmc.common.models
     public class SybaseModel : DbModel
     {
         //public static string connectionString = @"Data Source=fics_server_any5;Provider=SAOLEDB.12";
-        public static string connectionString = @"Data Source=fics;Provider=SAOLEDB.12";
-        public static OleDbConnection connection = null;
-        public static OleDbConnection accessConnection = null;
-        public static string error = "";
+        public string connectionString = @"Data Source=fics;Provider=SAOLEDB.12";
+        public OleDbConnection connection = null;
+        public OleDbConnection accessConnection = null;
+        public string error = "";
 
         public SybaseModel()
         {
         }
-        protected static OleDbConnection get_connecetion() 
+
+        protected OleDbConnection get_connecetion() 
         {
             if (connection == null)
                 connection = new OleDbConnection(connectionString);
@@ -34,7 +35,7 @@ namespace com.sp.rmmc.common.models
             return connection;
         }
 
-        public static void close_connection()
+        public void close_connection()
         {
             if (connection != null)
             {
@@ -43,7 +44,7 @@ namespace com.sp.rmmc.common.models
             }
         }
 
-        protected static OleDbDataReader getReader(string query)
+        public OleDbDataReader getReader(string query)
         {
             error = "";
             OleDbConnection dbConnection = get_connecetion();
@@ -60,7 +61,7 @@ namespace com.sp.rmmc.common.models
             }
         }
 
-        protected static string executeStatement(string query)
+        protected string executeStatement(string query)
         {
             error = "";
             OleDbConnection dbConnection = new OleDbConnection(connectionString);
