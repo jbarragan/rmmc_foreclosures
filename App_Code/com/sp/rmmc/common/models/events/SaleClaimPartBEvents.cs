@@ -44,7 +44,7 @@ namespace com.sp.rmmc.common.models.events
                 }
                 else
                 {
-                    e.name = "No Claim Part B Date Alert";
+                    e.name = "No Claim Part B Alert";
                     e.type = Event.ALERT;
                 }
                 e.description = "No Claim Part B Date with Title Approval Date " + this.title_approval_date.ToShortDateString();

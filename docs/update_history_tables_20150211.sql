@@ -1,0 +1,4 @@
+alter table history_loan_details add	
+	sale_eviction_process_events_loan_id decimal(18,0),
+	sale_eviction_process_events_fs_eviction_initiated varchar(255),
+	sale_eviction_process_events_eviction_stop_date datetime;

@@ -64,6 +64,7 @@ namespace com.sp.rmmc.foreclosures.models
         public XdemandMortgageStatusEvents xdemand_mortgage_status_events = null;
         public XdemandOccupancyLetterEvents xdemand_occupancy_letter_events = null;
         public FannieMaeCallsEvents fannie_mae_calls_events = null;
+        public SaleEvictionProcessEvents sale_eviction_process_events = null;
 
         public ReviewChecklist review_checklist = null;
 
@@ -498,6 +499,7 @@ namespace com.sp.rmmc.foreclosures.models
                 es.AddRange(sale_fannie_mae_claim_571_events.events);
                 es.AddRange(sale_mortgage_status_events.events);
                 es.AddRange(sale_original_documents_ordered_events.events);
+                es.AddRange(sale_eviction_process_events.events);
             }
             else if (this.type == ALL_TYPE)
             {
@@ -525,6 +527,7 @@ namespace com.sp.rmmc.foreclosures.models
                 es.AddRange(sale_mortgage_status_events.events);
                 es.AddRange(sale_original_documents_ordered_events.events);
                 es.AddRange(fannie_mae_calls_events.events);
+                es.AddRange(sale_eviction_process_events.events);
             }
             return es;
         }
@@ -622,6 +625,8 @@ namespace com.sp.rmmc.foreclosures.models
                 event_types.Add(sale_mortgage_status_events);
                 if (sale_original_documents_ordered_events == null) sale_original_documents_ordered_events = new SaleOriginalDocumentsOrderedEvents();
                 event_types.Add(sale_original_documents_ordered_events);
+                if (sale_eviction_process_events == null) sale_eviction_process_events = new SaleEvictionProcessEvents();
+                event_types.Add(sale_eviction_process_events);
             }
             if (this.type == ALL_TYPE)
             {
@@ -673,6 +678,8 @@ namespace com.sp.rmmc.foreclosures.models
                 event_types.Add(sale_original_documents_ordered_events);
                 if (fannie_mae_calls_events == null) fannie_mae_calls_events = new FannieMaeCallsEvents();
                 event_types.Add(fannie_mae_calls_events);
+                if (sale_eviction_process_events == null) sale_eviction_process_events = new SaleEvictionProcessEvents();
+                event_types.Add(sale_eviction_process_events);
                 this.review_checklist = new ReviewChecklist();
             }
 
