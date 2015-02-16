@@ -14,6 +14,7 @@ namespace com.sp.rmmc.common.models.events
         public String description = "";
         public int type = WARNING;
         public DateTimeObject date = new DateTimeObject();
+        public string parent_type = "";
 
 
         public string getEventStatusColor()

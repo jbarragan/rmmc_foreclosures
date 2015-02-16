@@ -13,12 +13,13 @@
     <div class="container-print">
     <div class="hero-unit">
         <img src="../../assets/img/logo.png" class="img-rounded" alt="RMMC Logo" />
-        <h1><%= workflow %></h1>
+        <h1><%= workflow %> <%= ( sublist != "ALL" ? " - " + this.sublist : "") %></h1>
         <h2><%= (this.history == null) ?  "Current" : "History: " + history.history_text %></h2>
         <p></p>
     </div>
     <%= com.sp.rmmc.foreclosures.views.NewNavigations.foreclosure_sub_main_nav_select("Workflow", new ADUser(HttpContext.Current.User.Identity.Name.ToString()))%>
     <%= com.sp.rmmc.foreclosures.views.NewNavigations.workflow_list_nav_select(workflow, this.version)%>
+    <%= com.sp.rmmc.foreclosures.views.NewNavigations.workflow_sublist_nav_select(workflow, sublist, this.version)%>
     <!-- Example row of columns -->    
     <div class="row">
         <div class="span4">
@@ -73,7 +74,7 @@
                 <td><%= bf.loan_id.ToString()%></td>
                 <%  int events_count = 0; if ((events_count = bf.getEvents().Count) > 0)
                     { %>
-                    <td><a href="Events.aspx?loan_id=<%=bf.loan_id %>&version=<%=version %>"><%= events_count.ToString()%></a></td>
+                    <td><a href="Events.aspx?loan_id=<%=bf.loan_id %>&version=<%=version %>&workflow=<%= workflow %>"><%= events_count.ToString()%></a></td>
                 <%  }
                     else
                     { %>
@@ -302,7 +303,7 @@
     %>
     <div class="row">
         <div class="span12">
-        <h2><%= this.workflow%> (<%= bfs.Count%>)</h2>
+        <h2><%= this.workflow%><%= ( sublist != "ALL" ? " - " + this.sublist : "") %> (<%= bfs.Count%>)</h2>
         <table class="table table-striped">
             <tr>
                 <th>Loan#</th>
@@ -315,6 +316,10 @@
                 <th>Papers To Attorney Date</th>
                 <th>Posting Date</th>
                 <th>Foreclosure Date</th>
+                <% if( this.sublist == "Probates" ) {%>
+                    <th>Probate Start Date</th>
+                    <th>Probate End Date</th>
+                <% } %>
                 <th>Officer(s)</th>
                 <th>Checklist</th>
             </tr>
@@ -340,6 +345,10 @@
                 <td><%= bf.papers_to_attorney_date.ToShortDateString()%></td>
                 <td><%= bf.posting_date.ToShortDateString()%></td>
                 <td><span class="text-error"><%= bf.foreclosure_date.ToShortDateString()%></span></td>
+                <% if( this.sublist == "Probates" ) {%>
+                    <td><%= bf.foreclosure_probate_events != null ? bf.foreclosure_probate_events.probate_start_date.ToString() : "" %></td>
+                    <td><%= bf.foreclosure_probate_events != null ? bf.foreclosure_probate_events.probate_end_date.ToString() : "" %></td>
+                <% } %>
                 <td><%= bf.foreclosure_officers%></td>
                 <td><a href="PreforeclosureEvents.aspx?loan_id=<%=bf.loan_id.ToString() %>&version=<%=version %>">Checklist</a></td>
              </tr>

@@ -56,6 +56,7 @@ namespace com.sp.rmmc.foreclosures.models
         public SaleFannieMaeClaim571Events sale_fannie_mae_claim_571_events = null;
         public ForeclosureMortgageStatusEvents foreclosure_mortgage_status_events = null;
         public ForeclosureAppraisalBPOEvents foreclosure_appraisal_bpo_events = null;
+        public ForeclosureProbateEvents foreclosure_probate_events = null;
         public ForeclosureRfsGnmaForeclosureStatusEvents foreclosure_rfs_gnma_foreclosure_status_events = null;
         public SaleMortgageStatusEvents sale_mortgage_status_events = null;
         public SaleOriginalDocumentsOrderedEvents sale_original_documents_ordered_events = null;
@@ -165,6 +166,31 @@ namespace com.sp.rmmc.foreclosures.models
             foreach (BaseForeclosure f in all_bfs) { f.type = ALL_TYPE; all.Add(f); }
         }
 
+        public void getAllWithType(List<BaseForeclosure> all, List<BaseForeclosure> none)
+        {
+            this.type = ALL_TYPE;
+            string columns = this.default_columns + getEventsColumns();
+            string query = "select " + columns + " from " + "( " + all_types_query + ")base where 1=1 ";
+            query = query + " order by loan_id";
+            List<BaseForeclosure> all_bfs = get_loan_list(query);
+            foreach (BaseForeclosure f in all_bfs) { 
+                f.setType();
+                if( f.type != "" && f.type != ALL_TYPE ) all.Add(f);
+            }
+            commonFilters(all, none);
+        }
+
+        private void setType()
+        {
+            if (this.sale_date.isNull == false){ this.type = FORECLOSED_TYPE; return;}
+            if (this.fcl_type == "A" && this.loan.prin_bal > 0M)
+            {
+                this.type = (this.is_preforeclosure_complete() ? FORECLOSURE_TYPE : PREFORECLOSURE_TYPE);
+                return;
+            }
+            if (this.demand_letter_due_date.isNull == false && this.loan.prin_bal > 0M) { this.type = DEMAND_TYPE; return; }
+        }
+
         public void getPreForeclosures(List<BaseForeclosure> PreForeclosures, List<BaseForeclosure> removed_foreclosures)
         {
             List<BaseForeclosure> both = new List<BaseForeclosure>();
@@ -270,6 +296,12 @@ namespace com.sp.rmmc.foreclosures.models
             }
         }
 
+        private bool isThirdPartySale()
+        {
+            BaseForeclosure f = this;
+            return (f.memo_fc_third_party_sale_date.isNull == false);
+        }
+
         private static void remove_bankruptcy(List<BaseForeclosure> accepted, List<BaseForeclosure> removed)
         {
             foreach (BaseForeclosure f in accepted)
@@ -288,6 +320,17 @@ namespace com.sp.rmmc.foreclosures.models
             }
         }
 
+        private bool isBankruptcy()
+        {
+            BaseForeclosure f = this;
+            return (f.bankruptcy_filed_date.isNull == false &&
+                    (f.bankruptcy_discharge_date.isNull == true &&
+                        f.bankruptcy_case_dismissed_date.isNull == true &&
+                        f.bankruptcy_closed_date.isNull == true
+                    )
+                   );
+        }
+
         private static void remove_received_payment(List<BaseForeclosure> accepted, List<BaseForeclosure> removed)
         {   
             foreach (BaseForeclosure f in accepted)
@@ -304,6 +347,15 @@ namespace com.sp.rmmc.foreclosures.models
                     removed.Add(f);
                 }
             }
+        }
+
+        private bool hasReceivedPayment()
+        {
+            BaseForeclosure f = this;
+            return ((f.last_reg_paid_dt.isNull == false &&
+                    f.last_reg_paid_dt.date >= f.demand_letter_due_date.date.AddDays(-33) &&
+                    f.last_payments_balance >= 0) ||
+                    f.loan.due_date_next_payment.date >= f.demand_letter_due_date.date);
         }
 
         public static string demands_conditions()
@@ -326,8 +378,7 @@ namespace com.sp.rmmc.foreclosures.models
         public static string foreclosures_conditions()
         {
             string query = " and ( fcl_type = 'A' ) \n" +
-                           " and ( sale_date is null ) \n" +
-                           " and ( ms_loan_prin_bal > 0 )";
+                           " and ( sale_date is null ) \n ";
             return query;
         }
 
@@ -481,6 +532,7 @@ namespace com.sp.rmmc.foreclosures.models
                 es.AddRange(foreclosure_mortgage_status_events.events);
                 es.AddRange(foreclosure_rfs_gnma_foreclosure_status_events.events);
                 es.AddRange(foreclosure_appraisal_bpo_events.events);
+                es.AddRange(foreclosure_probate_events.events);
                 es.AddRange(fannie_mae_calls_events.events);
             }
             else if (this.type == FORECLOSED_TYPE)
@@ -512,6 +564,7 @@ namespace com.sp.rmmc.foreclosures.models
                 es.AddRange(foreclosure_mortgage_status_events.events);
                 es.AddRange(foreclosure_rfs_gnma_foreclosure_status_events.events);
                 es.AddRange(foreclosure_appraisal_bpo_events.events);
+                es.AddRange(foreclosure_probate_events.events);
                 es.AddRange(sale_inspection.events);
                 es.AddRange(sale_conveyance.events);
                 es.AddRange(sale_hud_advice.events);
@@ -592,6 +645,8 @@ namespace com.sp.rmmc.foreclosures.models
                 event_types.Add(foreclosure_mortgage_status_events);
                 if (foreclosure_rfs_gnma_foreclosure_status_events == null) foreclosure_rfs_gnma_foreclosure_status_events = new ForeclosureRfsGnmaForeclosureStatusEvents();
                 event_types.Add(foreclosure_rfs_gnma_foreclosure_status_events);
+                if (foreclosure_probate_events == null) foreclosure_probate_events = new ForeclosureProbateEvents();
+                event_types.Add(foreclosure_probate_events);
                 if (fannie_mae_calls_events == null) fannie_mae_calls_events = new FannieMaeCallsEvents();
                 event_types.Add(fannie_mae_calls_events);
             }
@@ -648,6 +703,8 @@ namespace com.sp.rmmc.foreclosures.models
                 event_types.Add(foreclosure_mortgage_status_events);
                 if (foreclosure_rfs_gnma_foreclosure_status_events == null) foreclosure_rfs_gnma_foreclosure_status_events = new ForeclosureRfsGnmaForeclosureStatusEvents();
                 event_types.Add(foreclosure_rfs_gnma_foreclosure_status_events);
+                if (foreclosure_probate_events == null) foreclosure_probate_events = new ForeclosureProbateEvents();
+                event_types.Add(foreclosure_probate_events);
                 if (sale_inspection == null) sale_inspection = new SaleInspectionEvents();
                 event_types.Add(sale_inspection);
                 if (sale_conveyance == null) sale_conveyance = new SaleConveyanceEvents();

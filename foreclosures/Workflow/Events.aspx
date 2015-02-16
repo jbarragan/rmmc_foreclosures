@@ -43,6 +43,13 @@
             </div>
             <p class="text-error"><asp:Label ID="lblError" runat="server" Text="" ></asp:Label></p>        
         </div>
+    </div>    
+    <div class="row">
+        <div class="span4">
+            Event Type:&nbsp;&nbsp; 
+            <asp:DropDownList ID="ddlEventType" runat="server" AutoPostBack="true" 
+                onselectedindexchanged="ddlEventType_SelectedIndexChanged"></asp:DropDownList>
+        </div>
     </div>
     
     <div class="row">
@@ -51,6 +58,7 @@
         <table class="table table-striped">
             <tr>
                 <th>Loan#</th>
+                <th>Foreclosure Stage</th>
                 <!--<th>Officer(s)</th>-->
                 <th>Event Name</th>
                 <th>Event Type</th>
@@ -61,6 +69,7 @@
             %>
             <tr class="<%= e.getEventStatusColor() %>">
                 <td><%= e.loan.loan_id.ToString()%></td>
+                <td><%= e.parent_type %></td>
                 <!-- Foreclosure Officer<td></td> -->
                 <td><%= e.name %> 
                     <% if (e.name == "Different Reason Codes" ||
@@ -74,8 +83,8 @@
                        &nbsp;<a href="../events/<%=e.name %>.aspx">Description</a>
                     <% } %>
                 </td>
-                <td><%= e.type %></td>
-                <td><%= e.description %></td>                
+                <td><%= (e.type == 0 ? "Warning" : "Alert") %></td>
+                <td><%= e.description %></td>
              </tr>
             <%
                 }

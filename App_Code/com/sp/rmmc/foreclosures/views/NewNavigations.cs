@@ -274,6 +274,25 @@ namespace com.sp.rmmc.foreclosures.views
             return s + nav_end;
         }
 
+        public static string workflow_sublist_nav_select(string workflow, string active, string version)
+        {
+            string s = nav_start;
+            List<Nav> navs = new List<Nav>();
+            if (workflow == "Foreclosures")
+            {
+                Nav nav = new Nav(); nav.link = "Default.aspx?workflow=Foreclosures&version=" + version + "&sublist=ALL"; nav.text = "All"; navs.Add(nav);
+                nav = new Nav(); nav.link = "Default.aspx?workflow=Foreclosures&version=" + version + "&sublist=Probates"; nav.text = "Probates"; navs.Add(nav);
+            }
+            string active_class = "";
+            foreach (Nav n in navs)
+            {
+                if (active.ToUpper() == n.text.ToUpper()) active_class = @" class=""active"""; else active_class = "";
+                s += @"<li" + active_class + @"><a href=""" + n.link + @""">" + n.text + "</a></li>";
+            }
+            if (navs.Count == 0) return "";
+            return s + nav_end;
+        }
+
 
         public static string utilities_nav =
     @"<div class=""navbar"">

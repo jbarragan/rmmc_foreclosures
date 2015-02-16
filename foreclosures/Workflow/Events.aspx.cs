@@ -12,8 +12,9 @@ using com.sp.rmmc.common.models.events;
 public partial class lossmitigation_Default : System.Web.UI.Page
 {
     protected string loan_officer = "ALL";
-    protected string workflow = "Demands";
+    protected string workflow = "ALL";
     protected string loan_type = "ALL";
+    protected string event_type = "ALL";
     protected string loan_id = "ALL";
     protected string version = "current";
     protected decimal decimal_loan_id = 0M;
@@ -26,16 +27,17 @@ public partial class lossmitigation_Default : System.Web.UI.Page
 
     protected void Page_Load(object sender, EventArgs e)
     {
-        if (Page.IsPostBack) return;
+        //
         this.loan_officer = getArg("loan_officer", "ALL");
-        this.workflow = getArg("workflow", "Demands");
+        this.workflow = getArg("workflow", "ALL");
         this.loan_type = getArg("loan_type", "ALL");
+        this.event_type = getArg("event_type", "ALL");
         this.loan_id = stringDecimal(getArg("loan_id", "ALL"), "ALL");
         this.decimal_loan_id = stringToDecimal(this.loan_id, 0M);
         this.version = getArg("version", "current");
 
         int iverstion = stringToInt(version, 0);
-
+        if (Page.IsPostBack) return;
         BaseForeclosure query_foreclosure = new CurrentForeclosure();
         if (iverstion > 0)
         {
@@ -45,32 +47,74 @@ public partial class lossmitigation_Default : System.Web.UI.Page
 
         if (this.decimal_loan_id != 0M)
         {
-            if (workflow == "Demands")
+            if (workflow == "Demands" || workflow == "ALL")
+            {
                 query_foreclosure.getForeclosureLoan(this.decimal_loan_id, accepted_bfs, removed_bfs, BaseForeclosure.DEMAND_TYPE);
-            else if (workflow == "Demands that Became Current")
+            }
+            if (workflow == "Demands that Became Current" || workflow == "ALL")
+            {
                 query_foreclosure.getForeclosureLoan(this.decimal_loan_id, removed_bfs, accepted_bfs, BaseForeclosure.CURRENTXDEMAND_TYPE);
-            else if (workflow == "Removed Demands")
-                query_foreclosure.getForeclosureLoan(this.decimal_loan_id, removed_bfs, accepted_bfs, BaseForeclosure.XDEMAND_TYPE);
-            else if (workflow == "PreForeclosures")
+            }
+            if (workflow == "PreForeclosures" || workflow == "ALL")
+            {
                 query_foreclosure.getForeclosureLoan(this.decimal_loan_id, accepted_bfs, removed_bfs, BaseForeclosure.PREFORECLOSURE_TYPE);
-            else if (workflow == "Foreclosures")
+            }
+            if (workflow == "Foreclosures" || workflow == "ALL")
+            {
                 query_foreclosure.getForeclosureLoan(this.decimal_loan_id, accepted_bfs, removed_bfs, BaseForeclosure.FORECLOSURE_TYPE);
-            else if (workflow == "Foreclosed")
+            }
+            if (workflow == "Foreclosed" || workflow == "ALL")
+            {
                 query_foreclosure.getForeclosureLoan(this.decimal_loan_id, accepted_bfs, removed_bfs, BaseForeclosure.FORECLOSED_TYPE);
+            }
         }
-        else if (workflow == "Demands")
+        else
         {
-            query_foreclosure.getDemands(accepted_bfs, removed_bfs);
+            if (workflow == "Demands" || workflow == "ALL")
+            {
+                List<BaseForeclosure> abfs = new List<BaseForeclosure>();
+                List<BaseForeclosure> rbfs = new List<BaseForeclosure>();
+                query_foreclosure.getDemands(abfs, rbfs);
+                accepted_bfs.AddRange(abfs);// removed_bfs.AddRange(rbfs);
+            }
+            if (workflow == "Demands that Became Current" || workflow == "ALL")
+            {
+                List<BaseForeclosure> abfs = new List<BaseForeclosure>();
+                List<BaseForeclosure> rbfs = new List<BaseForeclosure>();
+                query_foreclosure.getCurrentXDemands(abfs, rbfs);
+                accepted_bfs.AddRange(abfs);// removed_bfs.AddRange(rbfs);
+            }
+            if (workflow == "PreForeclosures" || workflow == "ALL")
+            {
+                List<BaseForeclosure> abfs = new List<BaseForeclosure>();
+                List<BaseForeclosure> rbfs = new List<BaseForeclosure>();
+                query_foreclosure.getPreForeclosures(abfs, rbfs);
+                accepted_bfs.AddRange(abfs);// removed_bfs.AddRange(rbfs);
+            }
+            if (workflow == "Foreclosures" || workflow == "ALL")
+            {
+                List<BaseForeclosure> abfs = new List<BaseForeclosure>();
+                List<BaseForeclosure> rbfs = new List<BaseForeclosure>();
+                query_foreclosure.getForeclosures(abfs, rbfs);
+                accepted_bfs.AddRange(abfs);// removed_bfs.AddRange(rbfs);
+            }
+            if (workflow == "Foreclosed" || workflow == "ALL")
+            {
+                List<BaseForeclosure> abfs = new List<BaseForeclosure>();
+                List<BaseForeclosure> rbfs = new List<BaseForeclosure>();
+                query_foreclosure.getForeclosed(abfs, rbfs);
+                accepted_bfs.AddRange(abfs);// removed_bfs.AddRange(rbfs);
+            }
         }
         all_bfs.AddRange(accepted_bfs);
-        all_bfs.AddRange(removed_bfs);
+        //all_bfs.AddRange(removed_bfs);
 
         populateddlLoanTypes();
         populateddlLoanOfficer();
+        populateddlEventTypes();
         this.txtLoanId.Text = this.loan_id;
 
         filter();
-        setEvents();
     }
 
     protected void filter()
@@ -79,7 +123,13 @@ public partial class lossmitigation_Default : System.Web.UI.Page
         foreach (BaseForeclosure bf in accepted_bfs)
         {
             if ((loan_officer == "ALL" || loan_officer == bf.foreclosure_officers) &&
-                (loan_type == "ALL" || loan_type == bf.loan.loan_type) ) bfs.Add(bf);
+                (loan_type == "ALL" || loan_type == bf.loan.loan_type)) bfs.Add(bf);
+            else continue;
+            foreach (Event e in bf.getEvents())
+            {
+                e.parent_type = bf.type;
+                if (event_type == "ALL" || e.type.ToString() == event_type) events.Add(e);
+            }
         }
     }
 
@@ -87,7 +137,11 @@ public partial class lossmitigation_Default : System.Web.UI.Page
     {
         foreach (BaseForeclosure bf in bfs)
         {
-            events.AddRange(bf.getEvents());
+            foreach (Event e in bf.getEvents())
+            {
+                e.parent_type = bf.type;
+                if( event_type == "ALL" || e.type.ToString() == event_type ) events.Add(e);
+            }
         }
     }
 
@@ -100,11 +154,26 @@ public partial class lossmitigation_Default : System.Web.UI.Page
 
     protected void populateddlLoanTypes()
     {
-        string[] loan_types = {"ALL", "FHA", "CNV", "VA"};
-        foreach(string lt in loan_types){
+        string[] loan_types = { "ALL", "FHA", "CNV", "VA" };
+        foreach (string lt in loan_types)
+        {
             ListItem new_li = new ListItem(lt.Trim().ToUpper());
             if (this.loan_type == lt.Trim().ToUpper()) new_li.Selected = true;
             ddlLoanType.Items.Add(new_li);
+        }
+    }
+
+    protected void populateddlEventTypes()
+    {
+        string[] event_types = { "ALL", "Warnings", "Alerts" };
+        string[] event_type_values = { "ALL", "0", "1" };
+        int i = 0;
+        foreach (string et in event_types)
+        {
+            ListItem new_li = new ListItem(et,  event_type_values[i]);
+            if (this.event_type == event_type_values[i]) new_li.Selected = true;
+            ddlEventType.Items.Add(new_li);
+            i++;
         }
     }
 
@@ -217,6 +286,12 @@ public partial class lossmitigation_Default : System.Web.UI.Page
             "&loan_officer=" + loan_officer +
             "&loan_id=" + loan_id +
             "&loan_type=" + loan_type +
+            "&event_type=" + event_type +
             "&version=" + version;
+    }
+    protected void ddlEventType_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        this.event_type = ddlEventType.SelectedValue.ToUpper();
+        Response.Redirect(generate_url());
     }
 }

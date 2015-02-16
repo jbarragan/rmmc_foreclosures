@@ -14,6 +14,7 @@ public partial class lossmitigation_Default : System.Web.UI.Page
     protected string loan_type = "ALL";
     protected string event_type = "ALL";
     protected string version = "current";
+    protected string sublist = "ALL";
     protected List<BaseForeclosure> bfs = new List<BaseForeclosure>();
     protected List<BaseForeclosure> all_bfs = new List<BaseForeclosure>();
     protected List<BaseForeclosure> accepted_bfs = new List<BaseForeclosure>();
@@ -27,6 +28,7 @@ public partial class lossmitigation_Default : System.Web.UI.Page
         this.workflow = getArg("workflow", "Demands");
         this.loan_type = getArg("loan_type", "ALL");
         this.event_type = getArg("event_type", "ALL");
+        this.sublist = getArg("sublist", "ALL");
         this.version = getArg("version", "current");
         int iverstion = stringToInt(version, 0);
 
@@ -49,12 +51,14 @@ public partial class lossmitigation_Default : System.Web.UI.Page
             query_foreclosure.getForeclosures(accepted_bfs, removed_bfs);
         else if (workflow == "Foreclosed")
             query_foreclosure.getForeclosed(accepted_bfs, removed_bfs);
+
         all_bfs.AddRange(accepted_bfs);
         all_bfs.AddRange(removed_bfs);
 
         populateddlLoanTypes();
         populateddlLoanOfficer();
         populateddlEventType();
+
 
         filter();
         getCompletedChecklists();
@@ -68,6 +72,7 @@ public partial class lossmitigation_Default : System.Web.UI.Page
             if ((loan_officer == "ALL" || loan_officer == bf.foreclosure_officers) &&
                 (loan_type == "ALL" || loan_type == bf.loan.loan_type))
             {
+                if (belongToSublist(bf) == false) continue;
                 if (this.event_type == "ALL")
                 {
                     bfs.Add(bf);
@@ -86,6 +91,19 @@ public partial class lossmitigation_Default : System.Web.UI.Page
                 
             }
         }
+    }
+
+    protected bool belongToSublist(BaseForeclosure bf)
+    {
+        if (sublist == "ALL") return true;
+        if (sublist == "Probates")
+        {
+            if (workflow != "Foreclosures") return true;
+            if (bf.foreclosure_probate_events == null ||
+                bf.foreclosure_probate_events.probate_start_date.isNull) return false;
+        }
+        return true;
+
     }
 
     protected string getArg(string arg, string default_value)
@@ -187,6 +205,7 @@ public partial class lossmitigation_Default : System.Web.UI.Page
     {
         return "Default.aspx" +
             "?workflow=" + workflow +
+            "&sublist=" + sublist +
             "&loan_officer=" + loan_officer +
             "&loan_type=" + loan_type +
             "&event_type=" + event_type +

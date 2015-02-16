@@ -1,0 +1,4 @@
+alter table history_loan_details add	
+	foreclosure_probate_events_loan_id decimal(18,0),
+	foreclosure_probate_events_probate_start_date datetime,
+	foreclosure_probate_events_probate_end_date datetime;
