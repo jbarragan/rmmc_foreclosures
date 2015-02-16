@@ -754,7 +754,7 @@ namespace com.sp.rmmc.foreclosures.models
                     Event e = new Event();
                     e.loan = this.loan;
                     e.type = Event.WARNING;
-                    e.name = "Demanded after " + this.max_months_waits().ToString() + "-months of delinquent.";
+                    e.name = "Demanded after " + this.max_months_waits().ToString() + "-months of delinquent";
                     e.description = "Demand due date(" + this.demand_letter_due_date.ToShortDateString() + ") is more than " + 
                         this.max_months_waits().ToString() + 
                         "-months after delinquent date(" + this.loan.due_date_next_payment.ToShortDateString() + ")";

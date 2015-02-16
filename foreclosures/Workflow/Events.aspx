@@ -78,6 +78,7 @@
                            e.name == "No Claim Part B Warning" ||
                            e.name == "Eviction Process Alert" ||
                            e.name == "Eviction Process Warning" ||
+                           e.name == "Demanded after 5-months of delinquent" ||                           
                            e.name == "FANNIE MAE loan last call Warning")
                        {%>
                        &nbsp;<a href="../events/<%=e.name %>.aspx">Description</a>
