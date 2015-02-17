@@ -1,0 +1,290 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<diagram program="umlet" version="13.0">
+  <zoom_level>10</zoom_level>
+  <element>
+    <id>UMLState</id>
+    <coordinates>
+      <x>30</x>
+      <y>90</y>
+      <w>310</w>
+      <h>100</h>
+    </coordinates>
+    <panel_attributes>Last Inspection Ordered Date
+memo.memo_create_dt with subject 
+property inspection report
+type=receiver</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLState</id>
+    <coordinates>
+      <x>20</x>
+      <y>240</y>
+      <w>320</w>
+      <h>90</h>
+    </coordinates>
+    <panel_attributes>Last Inspection Received Date
+memo.notify_date with memo type 
+starting with 'PI'
+type=receiver</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLSpecialState</id>
+    <coordinates>
+      <x>450</x>
+      <y>110</y>
+      <w>60</w>
+      <h>60</h>
+    </coordinates>
+    <panel_attributes>bg=yellow
+type=decision</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLSyncBarVertical</id>
+    <coordinates>
+      <x>600</x>
+      <y>90</y>
+      <w>20</w>
+      <h>240</h>
+    </coordinates>
+    <panel_attributes>template=txt
+title=titletext
+bg=red</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>330</x>
+      <y>120</y>
+      <w>140</w>
+      <h>40</h>
+    </coordinates>
+    <panel_attributes>Does it exist?
+lt=&lt;-</panel_attributes>
+    <additional_attributes>120.0;20.0;10.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLSpecialState</id>
+    <coordinates>
+      <x>1010</x>
+      <y>230</y>
+      <w>60</w>
+      <h>60</h>
+    </coordinates>
+    <panel_attributes>bg=yellow
+type=decision</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLState</id>
+    <coordinates>
+      <x>950</x>
+      <y>340</y>
+      <w>200</w>
+      <h>40</h>
+    </coordinates>
+    <panel_attributes>Raise Alert
+No Inspection Received Alert
+bg=red</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLState</id>
+    <coordinates>
+      <x>770</x>
+      <y>20</y>
+      <w>120</w>
+      <h>40</h>
+    </coordinates>
+    <panel_attributes>No Alert
+bg=green</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLSpecialState</id>
+    <coordinates>
+      <x>800</x>
+      <y>110</y>
+      <w>60</w>
+      <h>60</h>
+    </coordinates>
+    <panel_attributes>bg=yellow
+type=decision</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>810</x>
+      <y>50</y>
+      <w>50</w>
+      <h>80</h>
+    </coordinates>
+    <panel_attributes>Yes
+lt=&lt;-</panel_attributes>
+    <additional_attributes>20.0;10.0;20.0;60.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLState</id>
+    <coordinates>
+      <x>390</x>
+      <y>20</y>
+      <w>180</w>
+      <h>40</h>
+    </coordinates>
+    <panel_attributes>Raise Alert
+No Inspection Ordered
+bg=red</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>470</x>
+      <y>50</y>
+      <w>30</w>
+      <h>80</h>
+    </coordinates>
+    <panel_attributes>No
+lt=&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;60.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>500</x>
+      <y>120</y>
+      <w>130</w>
+      <h>40</h>
+    </coordinates>
+    <panel_attributes>Yes
+lt=&lt;-</panel_attributes>
+    <additional_attributes>110.0;20.0;10.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>330</x>
+      <y>260</y>
+      <w>300</w>
+      <h>40</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-</panel_attributes>
+    <additional_attributes>280.0;20.0;10.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>600</x>
+      <y>120</y>
+      <w>220</w>
+      <h>50</h>
+    </coordinates>
+    <panel_attributes>Is Received Date greater 
+than Ordered Date?
+lt=&lt;-</panel_attributes>
+    <additional_attributes>200.0;20.0;10.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLSpecialState</id>
+    <coordinates>
+      <x>1010</x>
+      <y>110</y>
+      <w>60</w>
+      <h>60</h>
+    </coordinates>
+    <panel_attributes>bg=yellow
+type=decision</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>850</x>
+      <y>120</y>
+      <w>180</w>
+      <h>50</h>
+    </coordinates>
+    <panel_attributes>Is Ordered Date 
+less than 19 days?
+lt=&lt;-</panel_attributes>
+    <additional_attributes>160.0;20.0;10.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLState</id>
+    <coordinates>
+      <x>980</x>
+      <y>20</y>
+      <w>120</w>
+      <h>40</h>
+    </coordinates>
+    <panel_attributes>No Alert
+bg=green</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1020</x>
+      <y>50</y>
+      <w>50</w>
+      <h>80</h>
+    </coordinates>
+    <panel_attributes>Yes
+lt=&lt;-</panel_attributes>
+    <additional_attributes>20.0;10.0;20.0;60.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>980</x>
+      <y>160</y>
+      <w>130</w>
+      <h>90</h>
+    </coordinates>
+    <panel_attributes>Is Ordered Date 
+less than 26 days?
+lt=&lt;-</panel_attributes>
+    <additional_attributes>60.0;70.0;60.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1030</x>
+      <y>280</y>
+      <w>30</w>
+      <h>80</h>
+    </coordinates>
+    <panel_attributes>No
+lt=&lt;-</panel_attributes>
+    <additional_attributes>10.0;60.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLState</id>
+    <coordinates>
+      <x>710</x>
+      <y>240</y>
+      <w>220</w>
+      <h>40</h>
+    </coordinates>
+    <panel_attributes>Raise Warning
+No Inspection Received Warning
+bg=yellow</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>920</x>
+      <y>240</y>
+      <w>110</w>
+      <h>40</h>
+    </coordinates>
+    <panel_attributes>Yes
+lt=&lt;-</panel_attributes>
+    <additional_attributes>10.0;20.0;90.0;20.0</additional_attributes>
+  </element>
+</diagram>
