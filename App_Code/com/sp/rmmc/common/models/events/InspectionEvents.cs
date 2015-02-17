@@ -39,15 +39,15 @@ namespace com.sp.rmmc.common.models.events
                 e.name = "No Inspection Ordered";
                 e.description = "No Inspection Ordered";
                 this.events.Add(e);
-                /* TODO: Inspection non ordered in the last 30 days.
-                }else if(this.last_ordered_date.date < DateTime.Now.AddDays(-31)){
-                    Event e = new Event();
-                    e.loan = this.loan;
-                    e.type = Event.ALERT;
-                    e.name = "No Inspection Ordered";
-                    e.description = "No Inspection Ordered in the last 30 days, last ordered on " + this.last_ordered_date.ToShortDateString();
-                    this.events.Add(e);
-                */
+            /* TODO: Inspection non ordered in the last 30 days.
+            }else if(this.last_ordered_date.date < DateTime.Now.AddDays(-31)){
+                Event e = new Event();
+                e.loan = this.loan;
+                e.type = Event.ALERT;
+                e.name = "No Inspection Ordered";
+                e.description = "No Inspection Ordered in the last 30 days, last ordered on " + this.last_ordered_date.ToShortDateString();
+                this.events.Add(e);
+            */
             }
             else if (this.last_received_notify_date.isNull || this.last_received_notify_date.date < this.last_ordered_date.date.AddDays(-1))
             {
