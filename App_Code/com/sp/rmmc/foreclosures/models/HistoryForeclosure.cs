@@ -28,7 +28,10 @@ namespace com.sp.rmmc.foreclosures.models
             "( " +
             " select * " +
             " from history_loan_details  " +
-            " where demand_letter_due_date is not null and history_id = " + this.history_id + " " +
+            " where demand_letter_due_date is not null " +
+            " and (foreclosure_stopped_memo_date is null " +
+            "     or demand_letter_due_date >= foreclosure_stopped_memo_date ) " +
+            " and history_id = " + this.history_id + " " +
             ") ";
             }
         }
@@ -41,7 +44,23 @@ namespace com.sp.rmmc.foreclosures.models
             "( " +
             " select * " +
             " from history_loan_details  " +
-            " where fcl_type = 'A' and history_id = " + this.history_id + " " +
+            " where demand_letter_due_date is not null " +
+            " and (foreclosure_stopped_memo_date is null " +
+            "     or demand_letter_due_date < foreclosure_stopped_memo_date ) " +
+            " and history_id = " + this.history_id + " " +
+            ") ";
+            }
+        }
+
+        protected override string deed_in_lieu_query
+        {
+            get
+            {
+                return
+            "( " +
+            " select * " +
+            " from history_loan_details  " +
+            " where fcl_deed_in_lieu = 'Y' and history_id = " + this.history_id + " " +
             ") ";
             }
         }
@@ -82,6 +101,12 @@ namespace com.sp.rmmc.foreclosures.models
             " select * " +
             " from history_loan_details  " +
             " where fcl_type = 'A' and history_id = " + this.history_id + " " +
+            ") " +
+            "UNION " +
+            "( " +
+            " select * " +
+            " from history_loan_details  " +
+            " where fcl_deed_in_lieu = 'Y' and history_id = " + this.history_id + " " +
             ") " +
             " ";
             }

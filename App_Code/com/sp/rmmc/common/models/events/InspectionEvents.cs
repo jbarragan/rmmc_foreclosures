@@ -39,15 +39,33 @@ namespace com.sp.rmmc.common.models.events
                 e.name = "No Inspection Ordered";
                 e.description = "No Inspection Ordered";
                 this.events.Add(e);
-            /* TODO: Inspection non ordered in the last 30 days.
-            }else if(this.last_ordered_date.date < DateTime.Now.AddDays(-31)){
+            }
+            else if (this.last_received_notify_date.isNull == false && 
+                     this.last_received_notify_date.date > this.last_ordered_date.date &&
+                     this.last_received_notify_date.date < DateTime.Now.AddDays(-25))
+            {
                 Event e = new Event();
                 e.loan = this.loan;
                 e.type = Event.ALERT;
-                e.name = "No Inspection Ordered";
-                e.description = "No Inspection Ordered in the last 30 days, last ordered on " + this.last_ordered_date.ToShortDateString();
+                e.name = "Inspection Expired";
+                e.description = "Inspection Expired, last received on " + this.last_received_notify_date.ToString() + "; last ordered on " + this.last_ordered_date.ToShortDateString();
                 this.events.Add(e);
-            */
+            }
+            else if (this.last_received_notify_date.isNull == false &&
+                     this.last_received_notify_date.date > this.last_ordered_date.date &&
+                     this.last_received_notify_date.date < DateTime.Now.AddDays(-20) && 
+                      ( this.last_received_description != "PI-Initial Vacant Inspection" &&
+                        this.last_received_description != "PI-Ongoing Int./Ext. Vacant Inspection" &&
+                        this.last_received_description != "PI-No Inspection Ordered"
+                      )
+                    )
+            {
+                Event e = new Event();
+                e.loan = this.loan;
+                e.type = Event.ALERT;
+                e.name = "Inspection Expired";
+                e.description = "Inspection Expired, last received on " + this.last_received_notify_date.ToString() + "; last ordered on " + this.last_ordered_date.ToShortDateString();
+                this.events.Add(e);
             }
             else if (this.last_received_notify_date.isNull || this.last_received_notify_date.date < this.last_ordered_date.date.AddDays(-1))
             {

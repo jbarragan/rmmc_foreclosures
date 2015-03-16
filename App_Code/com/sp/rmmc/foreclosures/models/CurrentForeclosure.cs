@@ -32,6 +32,7 @@ namespace com.sp.rmmc.foreclosures.models
 "(select top 1 mfia1.fcl_item_date from ms_fcl_item_amts_1 mfia1 where mfia1.item_id = 1600 and mfia1.loan_id = base.loan_id order by mfia1.fcl_item_date ) as sale_date, " +
 "(select top 1 ms_loan_balances.ytd_prin_paid_amt from ms_loan_balances where ms_loan_balances.loan_id = base.loan_id order by ms_loan_balances.ytd_prin_paid_amt) as ytd_prin_paid_amt, " +
 "(select top 1 abs(ms_loan_history.prin_amt) from ms_loan_history where ms_loan_history.loan_id = base.loan_id and ms_loan_history.trans_type_cd = 'PIF'  order by ms_loan_history.paid_dt desc) as principal_amt_from_history, " +
+"(select top 1 abs(convert(numeric, uad_audit_data_bf_chg)) from ms_user_audit_history_data where uad_audit_field_name = 'prin_bal' and loan_id = base.loan_id and isnumeric(uad_audit_data_bf_chg) = 1 order by uad_audit_chg_dt desc) as audit_prin_bal, " +
 "(select top 1 memo.memo_create_dt from ms_loan_memo memo where memo.loan_id = base.loan_id and memo.memo_type_id = 139 order by memo_id desc) as fc_foreclosure_referral_date, " +
 "(select top 1 memo.memo_create_dt from ms_loan_memo memo where memo.loan_id = base.loan_id and memo.memo_type_id = 148 order by memo_id desc) as fc_payoff_date, " +
 "(select top 1 ms_fcl.fcl_item_date from ms_fcl_item_amts_1 ms_fcl where ms_fcl.item_id = 1100 and ms_fcl.loan_id = base.loan_id order by ms_fcl.fcl_item_date )  as appraisal_ordered_date, " +
@@ -39,6 +40,11 @@ namespace com.sp.rmmc.foreclosures.models
 "(select top 1 mlsc.stop_code_id from ms_loan_stop_code mlsc where mlsc.stop_code_id = 153 and mlsc.loan_id = base.loan_id order by mlsc.stop_code_id ) as lm_stop_code_id, " +
 "(select top 1 memo.memo_create_dt  from ms_loan_memo memo join ms_memo_types on memo.memo_type_id = ms_memo_types.memo_type_id where memo.loan_id = base.loan_id and ms_memo_types.memo_type_desc like 'FC-3rd%' order by memo.memo_create_dt desc ) as memo_fc_third_party_sale_date, " +
 "(select top 1 ms_fcl.fcl_item_ord_req from ms_fcl_item_amts_2 ms_fcl where ms_fcl.item_id = 10800 and ms_fcl.loan_id = base.loan_id order by ms_fcl.fcl_item_ord_req )  as extension_ordered_date, " +
+"(select top 1 ms_fcl_info.fcl_deed_in_lieu from ms_fcl_info where ms_fcl_info.fcl_deed_in_lieu = 'Y' and ms_fcl_info.loan_id = base.loan_id order by ms_fcl_info.fcl_deed_in_lieu )  as fcl_deed_in_lieu, " +
+"(null)  as lm_date, " +
+"(select top 1 ms_fcl.fcl_item_date from ms_fcl_item_amts_1 ms_fcl where ms_fcl.item_id = 1900 and ms_fcl.loan_id = base.loan_id order by ms_fcl.fcl_item_date )  as possession_date, " +
+"(select top 1 ms_fcl.fcl_item_date from ms_fcl_item_amts_1 ms_fcl where ms_fcl.item_id = 3900 and ms_fcl.loan_id = base.loan_id order by ms_fcl.fcl_item_date )  as deed_from_borrower_received_date, " +
+"(select top 1 memo.memo_notify_dt  from ms_loan_memo memo join ms_memo_types on memo.memo_type_id = ms_memo_types.memo_type_id where memo.loan_id = base.loan_id and ms_memo_types.memo_type_desc like 'FC-Foreclosure Stopped%' order by memo.memo_notify_dt desc ) as foreclosure_stopped_memo_date, " +
 com.sp.rmmc.common.models.MsLoan.columns("base.loan_id") + " ";
             }
         }
@@ -52,6 +58,8 @@ com.sp.rmmc.common.models.MsLoan.columns("base.loan_id") + " ";
                     " select base.loan_id " +
                     " from ms_loan_misc_fields as base " +
                     " where base.misc_field_id = 10020 " +
+                    " and ( (select top 1 memo.memo_notify_dt from ms_loan_memo memo join ms_memo_types on memo.memo_type_id = ms_memo_types.memo_type_id where memo.loan_id = base.loan_id and ms_memo_types.memo_type_desc like 'FC-Foreclosure Stopped%' order by memo.memo_notify_dt desc ) is null " +
+                    "       or base.misc_dt_value >=  (select top 1 memo.memo_notify_dt from ms_loan_memo memo join ms_memo_types on memo.memo_type_id = ms_memo_types.memo_type_id where memo.loan_id = base.loan_id and ms_memo_types.memo_type_desc like 'FC-Foreclosure Stopped%' order by memo.memo_notify_dt desc ) ) " +
                     ") ";
             }
         }
@@ -61,14 +69,17 @@ com.sp.rmmc.common.models.MsLoan.columns("base.loan_id") + " ";
             get
             {
                 return
-            "( " +
-            " select base.loan_id " +
-            " from  ms_fcl_info as base " +
-            " where base.fcl_type = 'A' " +
-            ") ";
+                    "( " +
+                    " select base.loan_id \n" +
+                    " from ms_loan_misc_fields as base \n" +
+                    " where base.misc_field_id = 10020 \n" +
+                    " and ( (select top 1 memo.memo_notify_dt  from ms_loan_memo memo join ms_memo_types on memo.memo_type_id = ms_memo_types.memo_type_id where memo.loan_id = base.loan_id and ms_memo_types.memo_type_desc like 'FC-Foreclosure Stopped%' order by memo.memo_notify_dt desc ) is null \n" +
+                    "       or base.misc_dt_value <  (select top 1 memo.memo_notify_dt  from ms_loan_memo memo join ms_memo_types on memo.memo_type_id = ms_memo_types.memo_type_id where memo.loan_id = base.loan_id and ms_memo_types.memo_type_desc like 'FC-Foreclosure Stopped%' order by memo.memo_notify_dt desc ) \n" +
+                    "       or (select top 1 ms_fcl_info.fcl_type from ms_fcl_info where ms_fcl_info.loan_id = base.loan_id order by ms_fcl_info.fcl_type) = 'A' \n" +
+                    "     ) \n" +
+                    ") ";
             }
         }
-
 
         protected override string foreclosed_query
         {
@@ -84,30 +95,32 @@ com.sp.rmmc.common.models.MsLoan.columns("base.loan_id") + " ";
             }
         }
 
-        protected override string all_types_query
+        protected override string deed_in_lieu_query
         {
             get
             {
                 return
             "( " +
             " select base.loan_id " +
-            " from ms_loan_misc_fields as base " +
-            " where base.misc_field_id = 10020 " +
-            ") " +
-            "UNION " +
-            "( " +
-            " select base.loan_id " +
-            " from ms_fcl_item_amts_1 as base " +
-            " where base.item_id = 1600 " +
-            " and base.fcl_item_date > '2014-01-01' " +
-            ") " +
-            "UNION " +
-            "( " +
-            " select base.loan_id " +
-            " from  ms_fcl_info as base " +
-            " where base.fcl_type = 'A' " +
-            ") " +
-            " ";
+            " from ms_fcl_info as base " +
+            " where base.fcl_deed_in_lieu = 'Y' " +
+            ") ";
+            }
+        }
+
+        protected override string all_types_query
+        {
+            get
+            {
+                return
+                    demands_query +
+                    " UNION " + 
+                    foreclosures_query +
+                    " UNION " +
+                    foreclosed_query +
+                    " UNION " +
+                    deed_in_lieu_query +
+                    " ";
             }
         }
 
@@ -144,6 +157,28 @@ com.sp.rmmc.common.models.MsLoan.columns("base.loan_id") + " ";
             }
             if (this.review_checklist != null) s += ", \n" + ReviewChecklist.columns("base.loan_id");
             return s;
+        }
+
+        protected override void get_lm_date(List<BaseForeclosure> accepted)
+        {
+            foreach (BaseForeclosure f in accepted)
+            {
+                if (f.lm_stop_code_id > 0)
+                {
+                    f.lm_date.set_date(DateTime.Today);
+                }
+            }
+            List<LMReception> all_lm_receptions = LMReception.getLMReceptions(accepted);
+            Dictionary<decimal, LMReception> loan_lm_receptions = new Dictionary<decimal, LMReception>();
+            foreach (LMReception lm_reception in all_lm_receptions)
+                loan_lm_receptions.Add(lm_reception.loan_id, lm_reception);
+            foreach (BaseForeclosure f in accepted)
+            {
+                if (loan_lm_receptions.ContainsKey(f.loan_id))
+                {
+                    f.lm_date = loan_lm_receptions[f.loan_id].date;
+                }
+            }
         }
     }
 }

@@ -83,12 +83,28 @@
                            e.name == "Demanded after 6-months of delinquent" ||
                            e.name == "Demand File Expired Alert" ||
                            e.name == "Demand File Expiring Warning" ||
+                           e.name == "Demand Request for Extension of Time Alert" ||
+                           e.name == "No Acquisition Payment Date Warning" ||
+                           e.name == "No Acquisition Payment Date Alert" ||
+                           e.name == "Acquisition Payment Date Alert" ||
                            e.name == "No Inspection Received Alert" ||
                            e.name == "No Inspection Received Warning" ||
                            e.name == "No Inspection Ordered" ||
+                           e.name == "No Sale Inspection Ordered Alert" ||
+                           e.name == "No Title Approval Warning" ||
+                           e.name == "No Title Approval Date Alert" ||
+                           e.name == "No Title Package Warning" ||
+                           e.name == "No Title Package Date Alert" ||
+                           e.name == "No Transfer of Custody Date Warning" ||
+                           e.name == "No Transfer of Custody Date Alert" ||
+                           e.name == "Transfer of Custody Date Alert" ||
+                           e.name == "Inspection Expired" ||
+                           e.name == "Papers Not Receive    d From Attorney Alert" ||
                            e.name == "No Conveyance Date Alert" ||
                            e.name == "No Conveyance Date Warning" ||
-                           e.name == "FANNIE MAE loan last call Warning")
+                           e.name == "FANNIE MAE loan last call Warning"||
+                           e.name == "Removed Demand Mortgage Status not 20 Warning" ||
+                           e.name == "Removed Demand Current Occupancy Letter Warning" )
                        {%>
                        &nbsp;<a href="../events/<%=e.name %>.aspx">Description</a>
                     <% } %>

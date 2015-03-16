@@ -259,11 +259,13 @@ namespace com.sp.rmmc.foreclosures.views
             string s = nav_start;
             List<Nav> navs = new List<Nav>();
             Nav nav = new Nav(); nav.link = "Default.aspx?workflow=Demands&version=" + version; nav.text = "Demands"; navs.Add(nav);
-            nav = new Nav(); nav.link = "Default.aspx?workflow=Demands that Became Current&version=" + version; nav.text = "Demands that Became Current"; navs.Add(nav);
+            nav = new Nav(); nav.link = "Default.aspx?workflow=FHA Demands Daily Status&version=" + version; nav.text = "FHA Demands Daily Status"; navs.Add(nav);
             nav = new Nav(); nav.link = "Default.aspx?workflow=Removed Demands&version=" + version; nav.text = "Removed Demands"; navs.Add(nav);
             nav = new Nav(); nav.link = "Default.aspx?workflow=PreForeclosures&version=" + version; nav.text = "PreForeclosures"; navs.Add(nav);
             nav = new Nav(); nav.link = "Default.aspx?workflow=Foreclosures&version=" + version; nav.text = "Foreclosures"; navs.Add(nav);
+            nav = new Nav(); nav.link = "Default.aspx?workflow=Removed Foreclosures&version=" + version; nav.text = "Removed Foreclosures"; navs.Add(nav);
             nav = new Nav(); nav.link = "Default.aspx?workflow=Foreclosed&version=" + version; nav.text = "Foreclosed"; navs.Add(nav);
+            nav = new Nav(); nav.link = "Default.aspx?workflow=Deed In Lieu&sublist=In Process&version=" + version; nav.text = "Deed In Lieu"; navs.Add(nav);
             nav = new Nav(); nav.link = "History.aspx?version=" + version; nav.text = "History"; navs.Add(nav);
             string active_class = "";
             foreach (Nav n in navs)
@@ -282,6 +284,17 @@ namespace com.sp.rmmc.foreclosures.views
             {
                 Nav nav = new Nav(); nav.link = "Default.aspx?workflow=Foreclosures&version=" + version + "&sublist=ALL"; nav.text = "All"; navs.Add(nav);
                 nav = new Nav(); nav.link = "Default.aspx?workflow=Foreclosures&version=" + version + "&sublist=Probates"; nav.text = "Probates"; navs.Add(nav);
+            }
+            if (workflow == "Foreclosed")
+            {
+                Nav nav = new Nav(); nav.link = "Default.aspx?workflow=Foreclosed&version=" + version + "&sublist=ALL"; nav.text = "All"; navs.Add(nav);
+                nav = new Nav(); nav.link = "Default.aspx?workflow=Foreclosed&version=" + version + "&sublist=REO Properties"; nav.text = "REO Properties"; navs.Add(nav);
+                nav = new Nav(); nav.link = "Default.aspx?workflow=Foreclosed&version=" + version + "&sublist=Third Party Sales"; nav.text = "Third Party Sales"; navs.Add(nav);
+            }
+            if (workflow == "Deed In Lieu")
+            {
+                Nav nav = new Nav(); nav.link = "Default.aspx?workflow=Deed In Lieu&version=" + version + "&sublist=In Process"; nav.text = "In Process"; navs.Add(nav);
+                nav = new Nav(); nav.link = "Default.aspx?workflow=Deed In Lieu&version=" + version + "&sublist=Final"; nav.text = "Final"; navs.Add(nav);
             }
             string active_class = "";
             foreach (Nav n in navs)

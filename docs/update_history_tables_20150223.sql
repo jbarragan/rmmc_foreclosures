@@ -1,0 +1,6 @@
+alter table history_loan_details add
+	sale_conveyance_events_reo_date datetime,
+	foreclosure_papers_to_attorney_events_loan_id decimal(18,0),
+	foreclosure_papers_to_attorney_events_papers_to_attorney_date datetime,
+    foreclosure_papers_to_attorney_events_received_from_attorney_date datetime,
+    foreclosure_papers_to_attorney_events_received_from_attorney_desc varchar(255)

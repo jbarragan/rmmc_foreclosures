@@ -42,6 +42,8 @@
             <b>Conveyance Date</b><br />
             DB: (select top 1 ms_fcl.fcl_item_ord_req from ms_fcl_item_amts_2 ms_fcl where ms_fcl.item_id = 11200 and ms_fcl.loan_id = loan_id_column order by ms_fcl.fcl_item_ord_req ) as sale_conveyance_events_conveyance_date<br />
             <img src="images/conveyance_date.png" alt="conveyance_date"></img><br />
+            <b>FC-REO PROPERTY Date</b><br />
+            DB: (select top 1 memo.memo_create_dt from ms_loan_memo memo, ms_memo_types where memo.loan_id = loan_id_column and memo.memo_type_id = ms_memo_types.memo_type_id and ms_memo_types.memo_type_desc like 'FC-REO%' order by memo_create_dt desc ) as sale_conveyance_events_reo_date<br />
         </p>
         </div>
     </div>

@@ -384,6 +384,7 @@ MsLoan.columns("base.loan_id") +
             {
                 foreclosure.loan = MsLoan.read(reader, pos);
                 foreclosure.preforeclosure_events = PreforeclosureEvent.get(foreclosure);
+                foreclosure.preforeclosure_events.updateFlags(foreclosure.demand_letter_due_date);
             }
             return foreclosure;
         }

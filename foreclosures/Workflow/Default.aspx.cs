@@ -21,6 +21,7 @@ public partial class lossmitigation_Default : System.Web.UI.Page
     protected List<BaseForeclosure> removed_bfs = new List<BaseForeclosure>();
     protected History history = null;
     protected decimal[] array_completed_checklists_loan_ids;
+    protected string debug_msg = "";
 
     protected void Page_Load(object sender, EventArgs e)
     {
@@ -41,7 +42,7 @@ public partial class lossmitigation_Default : System.Web.UI.Page
 
         if (workflow == "Demands")
             query_foreclosure.getDemands(accepted_bfs, removed_bfs);
-        if (workflow == "Demands that Became Current")
+        if (workflow == "FHA Demands Daily Status")
             query_foreclosure.getCurrentXDemands(accepted_bfs, removed_bfs);
         if (workflow == "Removed Demands")
             query_foreclosure.getXDemands(accepted_bfs, removed_bfs);
@@ -49,8 +50,20 @@ public partial class lossmitigation_Default : System.Web.UI.Page
             query_foreclosure.getPreForeclosures(accepted_bfs, removed_bfs);
         else if (workflow == "Foreclosures")
             query_foreclosure.getForeclosures(accepted_bfs, removed_bfs);
+        if (workflow == "Removed Foreclosures")
+            query_foreclosure.getXForeclosure(accepted_bfs, removed_bfs);
         else if (workflow == "Foreclosed")
-            query_foreclosure.getForeclosed(accepted_bfs, removed_bfs);
+        {
+            if (sublist == "Third Party Sales") query_foreclosure.getForeclosedThirdPartySale(accepted_bfs, removed_bfs);
+            else query_foreclosure.getForeclosed(accepted_bfs, removed_bfs);
+        }
+        else if (workflow == "Deed In Lieu")
+        {
+            if (sublist == "In Process") query_foreclosure.getInProcessDeedInLieu(accepted_bfs, removed_bfs);
+            else query_foreclosure.getDeedInLieu(accepted_bfs, removed_bfs);
+        }
+
+        //debug_msg = query_foreclosure.getQuery();
 
         all_bfs.AddRange(accepted_bfs);
         all_bfs.AddRange(removed_bfs);
@@ -102,6 +115,17 @@ public partial class lossmitigation_Default : System.Web.UI.Page
             if (bf.foreclosure_probate_events == null ||
                 bf.foreclosure_probate_events.probate_start_date.isNull) return false;
         }
+        if (sublist == "REO Properties")
+        {
+            if (workflow != "Foreclosed") return true;
+            if (bf.sale_conveyance == null ||
+                bf.sale_conveyance.reo_date.isNull) return false;
+        }
+        if (sublist == "Final")
+        {
+            if (workflow != "Deed In Lieu") return true;
+            if (bf.possession_date.isNull == true && bf.deed_from_borrower_received_date.isNull == true) return false;
+        } 
         return true;
 
     }

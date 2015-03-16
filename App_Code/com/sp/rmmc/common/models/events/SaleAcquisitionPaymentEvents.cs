@@ -44,7 +44,7 @@ namespace com.sp.rmmc.common.models.events
                 }
                 else
                 {
-                    e.name = "No Acquisition Payment  Date Alert";
+                    e.name = "No Acquisition Payment Date Alert";
                     e.type = Event.ALERT;
                 }
                 e.description = "No Acquisition Payment  Date with Transfer of Custody Date " + this.transfer_of_custody_date.ToShortDateString();
@@ -58,11 +58,11 @@ namespace com.sp.rmmc.common.models.events
                 if (transfer_of_custody_date.date > this.acquisition_payment_date.date.AddDays(-3))
                 {
                     e.type = Event.WARNING;
-                    e.name = "Acquisition Payment  Date Warning";
+                    e.name = "Acquisition Payment Date Warning";
                 }
                 else
                 {
-                    e.name = "Acquisition Payment  Date Alert";
+                    e.name = "Acquisition Payment Date Alert";
                     e.type = Event.ALERT;
                 }
                 e.description = "Acquisition Payment  Date on " + this.acquisition_payment_date.ToShortDateString() + " with Transfer of Custody Date " + this.transfer_of_custody_date.ToShortDateString();

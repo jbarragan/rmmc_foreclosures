@@ -48,6 +48,16 @@ namespace com.sp.rmmc.foreclosures.models
         {
         }
 
+        public void updateFlags(DateTimeObject demand_date)
+        {
+            if (this.copy_demand_letters_date.date < demand_date.date) this.is_copy_demand_letters = false;
+            if (this.copy_notes_date.date < demand_date.date) this.is_copy_notes = false;
+            if (this.copy_deed_of_trust_date.date < demand_date.date) this.is_copy_deed_of_trust_notes = false;
+            if (this.copy_bankruptcy_date.date < demand_date.date) this.is_copy_bankruptcy = false;
+            if (this.copy_title_policy_date.date < demand_date.date) this.is_copy_title_policy = false;
+            if (this.notify_appraisal_date.date < demand_date.date) this.is_notify_appraisal = false;
+        }
+
         public static string create(PreforeclosureEvent preforeclosure_event)
         {
             string query = "insert into preforeclosure_events "

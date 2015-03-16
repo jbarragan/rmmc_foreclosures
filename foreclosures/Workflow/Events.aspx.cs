@@ -51,7 +51,7 @@ public partial class lossmitigation_Default : System.Web.UI.Page
             {
                 query_foreclosure.getForeclosureLoan(this.decimal_loan_id, accepted_bfs, removed_bfs, BaseForeclosure.DEMAND_TYPE);
             }
-            if (workflow == "Demands that Became Current" || workflow == "ALL")
+            if (workflow == "FHA Demands Daily Status" || workflow == "ALL")
             {
                 query_foreclosure.getForeclosureLoan(this.decimal_loan_id, removed_bfs, accepted_bfs, BaseForeclosure.CURRENTXDEMAND_TYPE);
             }
@@ -67,6 +67,10 @@ public partial class lossmitigation_Default : System.Web.UI.Page
             {
                 query_foreclosure.getForeclosureLoan(this.decimal_loan_id, accepted_bfs, removed_bfs, BaseForeclosure.FORECLOSED_TYPE);
             }
+            if (workflow == "Deed In Lieu" || workflow == "ALL")
+            {
+                query_foreclosure.getForeclosureLoan(this.decimal_loan_id, accepted_bfs, removed_bfs, BaseForeclosure.IN_PROCESS_DEEDINLIEU_TYPE);
+            }
         }
         else
         {
@@ -77,7 +81,7 @@ public partial class lossmitigation_Default : System.Web.UI.Page
                 query_foreclosure.getDemands(abfs, rbfs);
                 accepted_bfs.AddRange(abfs);// removed_bfs.AddRange(rbfs);
             }
-            if (workflow == "Demands that Became Current" || workflow == "ALL")
+            if (workflow == "FHA Demands Daily Status" || workflow == "ALL")
             {
                 List<BaseForeclosure> abfs = new List<BaseForeclosure>();
                 List<BaseForeclosure> rbfs = new List<BaseForeclosure>();

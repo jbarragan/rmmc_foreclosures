@@ -53,7 +53,7 @@ public partial class lossmitigation_Default : System.Web.UI.Page
             query_foreclosure.getDemands(abfs, rbfs);
             accepted_bfs.AddRange(abfs);// removed_bfs.AddRange(rbfs);
         }
-        if (workflow == "Demands that Became Current" || workflow == "ALL")
+        if (workflow == "FHA Demands Daily Status" || workflow == "ALL")
         {
             List<BaseForeclosure> abfs = new List<BaseForeclosure>();
             List<BaseForeclosure> rbfs = new List<BaseForeclosure>();

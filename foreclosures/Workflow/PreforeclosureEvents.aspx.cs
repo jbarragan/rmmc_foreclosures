@@ -29,15 +29,15 @@ public partial class lossmitigation_Collections_Default : System.Web.UI.Page
 
     private void display_gui()
     {
-        this.chkFcForeclosureReferral.Checked = !foreclosure.fc_foreclosure_referral_date.isNull;
-        this.chkPapersToAttorney.Checked = !foreclosure.papers_to_attorney_date.isNull;
-        this.chkFcPayoff.Checked = !foreclosure.fc_payoff_date.isNull;
+        this.chkFcForeclosureReferral.Checked = (foreclosure.fc_foreclosure_referral_date.isNull == false && foreclosure.demand_letter_due_date.date < foreclosure.fc_foreclosure_referral_date.date);
+        this.chkPapersToAttorney.Checked = (foreclosure.papers_to_attorney_date.isNull == false && foreclosure.demand_letter_due_date.date < foreclosure.papers_to_attorney_date.date);
+        this.chkFcPayoff.Checked = (foreclosure.fc_payoff_date.isNull == false && foreclosure.demand_letter_due_date.date < foreclosure.fc_payoff_date.date);
         this.chkCopyDemandLetters.Checked = foreclosure.preforeclosure_events.is_copy_demand_letters;
         this.chkCopyNotes.Checked = foreclosure.preforeclosure_events.is_copy_notes;
         this.chkCopyDeedOfTrust.Checked = foreclosure.preforeclosure_events.is_copy_deed_of_trust_notes;
         this.chkCopyBankruptcy.Checked = foreclosure.preforeclosure_events.is_copy_bankruptcy;
         this.chkCopyTitlePolicy.Checked = foreclosure.preforeclosure_events.is_copy_title_policy;
-        this.chkAppraisalOrdered.Checked = !foreclosure.appraisal_ordered_date.isNull;
+        this.chkAppraisalOrdered.Checked = (foreclosure.appraisal_ordered_date.isNull == false && foreclosure.demand_letter_due_date.date < foreclosure.appraisal_ordered_date.date); ;
         this.chkNotifyAppraisal.Checked = foreclosure.preforeclosure_events.is_notify_appraisal;
     }
 

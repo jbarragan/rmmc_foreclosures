@@ -32,10 +32,16 @@ namespace com.sp.rmmc.foreclosures.models
         public int lm_stop_code_id = 0;
         public DateTimeObject memo_fc_third_party_sale_date = new DateTimeObject();
         public DateTimeObject extension_ordered_date = new DateTimeObject();
+        public string fcl_deed_in_lieu = "";
+        public DateTimeObject lm_date = new DateTimeObject();
+        public DateTimeObject possession_date = new DateTimeObject();
+        public DateTimeObject deed_from_borrower_received_date = new DateTimeObject();
+        public DateTimeObject foreclosure_stopped_memo_date = new DateTimeObject();
 
         public DateTimeObject sale_date = new DateTimeObject();
         public decimal ytd_prin_paid_amt = 0M;
         public decimal principal_amt_from_history = 0M;
+        public decimal audit_prin_bal = 0M;
 
         public com.sp.rmmc.common.models.MsLoan loan = new com.sp.rmmc.common.models.MsLoan();
         public PreforeclosureEvent preforeclosure_events = new PreforeclosureEvent();
@@ -55,6 +61,7 @@ namespace com.sp.rmmc.foreclosures.models
         public SaleREONoticeEvents sale_reo_notice_events = null;
         public SaleFannieMaeClaim571Events sale_fannie_mae_claim_571_events = null;
         public ForeclosureMortgageStatusEvents foreclosure_mortgage_status_events = null;
+        public ForeclosurePapersToAttorneyEvents foreclosure_papers_to_attorney_events = null;
         public ForeclosureAppraisalBPOEvents foreclosure_appraisal_bpo_events = null;
         public ForeclosureProbateEvents foreclosure_probate_events = null;
         public ForeclosureRfsGnmaForeclosureStatusEvents foreclosure_rfs_gnma_foreclosure_status_events = null;
@@ -62,6 +69,7 @@ namespace com.sp.rmmc.foreclosures.models
         public SaleOriginalDocumentsOrderedEvents sale_original_documents_ordered_events = null;
         public DemandFileExpireEvents demand_expire_events = null;
         public DemandOccupancyEvents demand_occupancy_events = null;
+        public DemandRequestForExtensionEvents demand_request_extension_events = null;
         public XdemandMortgageStatusEvents xdemand_mortgage_status_events = null;
         public XdemandOccupancyLetterEvents xdemand_occupancy_letter_events = null;
         public FannieMaeCallsEvents fannie_mae_calls_events = null;
@@ -75,7 +83,11 @@ namespace com.sp.rmmc.foreclosures.models
         public const string XDEMAND_TYPE = "Xdemand";
         public const string CURRENTXDEMAND_TYPE = "CurrentXdemand";
         public const string FORECLOSED_TYPE = "Foreclosed";
+        public const string XFORECLOSED_TYPE = "XForeclosed";
         public const string FORECLOSURE_TYPE = "Foreclosure";
+        public const string XFORECLOSURE_TYPE = "XForeclosure";
+        public const string DEEDINLIEU_TYPE = "DeedInLieu";
+        public const string IN_PROCESS_DEEDINLIEU_TYPE = "In Process Deed In Lieu";
         public const string PREFORECLOSURE_TYPE = "PreForeclosure";
         public const string ALL_TYPE = "All";
 
@@ -83,6 +95,7 @@ namespace com.sp.rmmc.foreclosures.models
         protected virtual string demands_query { get { return ""; } }
         protected virtual string foreclosures_query { get { return ""; } }
         protected virtual string foreclosed_query { get { return ""; } }
+        protected virtual string deed_in_lieu_query { get { return ""; } }
         protected virtual string all_types_query { get { return ""; } }
 
         public void getDemands(List<BaseForeclosure> demands, List<BaseForeclosure> removed_demands)
@@ -105,6 +118,17 @@ namespace com.sp.rmmc.foreclosures.models
             List<BaseForeclosure> all = get_loan_list(query);
             foreach (BaseForeclosure f in all) { f.type = XDEMAND_TYPE; demands.Add(f); }
             commonFilters(demands, xdemands);
+        }
+
+        public void getXForeclosure(List<BaseForeclosure> xforeclosures, List<BaseForeclosure> foreclosures)
+        {
+            this.type = XFORECLOSURE_TYPE;
+            string columns = this.default_columns + getEventsColumns();
+            string query = "select " + columns + " from " + "( " + foreclosures_query + ")base where 1=1 " + foreclosures_conditions();
+            query = query + " order by foreclosure_date asc, ms_loan_type, demand_letter_due_date asc";
+            List<BaseForeclosure> all = get_loan_list(query);
+            foreach (BaseForeclosure f in all) { f.type = XFORECLOSURE_TYPE; foreclosures.Add(f); }
+            foreclosureFilters(foreclosures, xforeclosures);
         }
 
         public void getCurrentXDemands(List<BaseForeclosure> xdemands, List<BaseForeclosure> demands)
@@ -130,6 +154,42 @@ namespace com.sp.rmmc.foreclosures.models
             commonFilters(foreclosed, removed_foreclosed);
         }
 
+        public void getForeclosedThirdPartySale(List<BaseForeclosure> foreclosed, List<BaseForeclosure> removed_foreclosed)
+        {
+            getForeclosed(foreclosed, removed_foreclosed);
+            List<BaseForeclosure> all = new List<BaseForeclosure>();
+            all.AddRange(foreclosed);
+            foreach (BaseForeclosure bf in all)
+            {
+                bf.type = FORECLOSED_TYPE;
+                if (bf.isThirdPartySale() == false ) foreclosed.Remove(bf);
+            }
+
+        }
+
+        public void getDeedInLieu(List<BaseForeclosure> on_deed_in_lieu, List<BaseForeclosure> removed_deed_in_lieu)
+        {
+            this.type = DEEDINLIEU_TYPE;
+            string columns = this.default_columns + getEventsColumns();
+            string query = "select " + columns + " from " + "( " + deed_in_lieu_query + ")base where 1=1 " + deed_in_lieu_conditions();
+            query = query + " order by ms_loan_due_date_next_payment asc";
+            List<BaseForeclosure> all = get_loan_list(query);
+            foreach (BaseForeclosure f in all) { f.type = DEEDINLIEU_TYPE; on_deed_in_lieu.Add(f); }
+            deed_in_lieu_filters(on_deed_in_lieu, removed_deed_in_lieu);
+        }
+
+        public void getInProcessDeedInLieu(List<BaseForeclosure> on_deed_in_lieu, List<BaseForeclosure> removed_deed_in_lieu)
+        {
+            this.type = IN_PROCESS_DEEDINLIEU_TYPE;
+            string columns = this.default_columns + getEventsColumns();
+            string query = "select " + columns + " from " + "( " + deed_in_lieu_query + ")base where 1=1 " + deed_in_lieu_conditions();
+            query = query + " order by ms_loan_due_date_next_payment asc";
+            List<BaseForeclosure> all = get_loan_list(query);
+            foreach (BaseForeclosure f in all) { f.type = IN_PROCESS_DEEDINLIEU_TYPE; on_deed_in_lieu.Add(f); }
+            in_process_deed_in_lieu_filters(on_deed_in_lieu, removed_deed_in_lieu);
+        }
+        
+
         private void commonPreAndForeclosures(List<BaseForeclosure> foreclosures, List<BaseForeclosure> removed_foreclosures)
         {
             this.type = FORECLOSURE_TYPE;
@@ -138,7 +198,16 @@ namespace com.sp.rmmc.foreclosures.models
             query = query + " order by foreclosure_date asc, ms_loan_type, demand_letter_due_date asc";
             List<BaseForeclosure> all = get_loan_list(query);
             foreach (BaseForeclosure f in all) { f.type = FORECLOSURE_TYPE; foreclosures.Add(f); }
-            commonFilters(foreclosures, removed_foreclosures);
+            foreclosureFilters(foreclosures, removed_foreclosures);
+        }
+
+        public string getQuery()
+        {
+            this.type = FORECLOSURE_TYPE;
+            string columns = this.default_columns + getEventsColumns();
+            string query = "select " + columns + " from " + "( " + foreclosures_query + ")base where 1=1 " + foreclosures_conditions();
+            query = query + " order by foreclosure_date asc, ms_loan_type, demand_letter_due_date asc";
+            return query;
         }
 
         public void getForeclosures(List<BaseForeclosure> foreclosures, List<BaseForeclosure> removed_foreclosures)
@@ -148,6 +217,7 @@ namespace com.sp.rmmc.foreclosures.models
             foreach (BaseForeclosure bf in both)
             {
                 bf.preforeclosure_events = PreforeclosureEvent.getFromBaseForeclosure(bf);
+                bf.preforeclosure_events.updateFlags(bf.demand_letter_due_date);
                 if (bf.is_preforeclosure_complete() == true)
                 {
                     bf.type = FORECLOSURE_TYPE;
@@ -164,6 +234,7 @@ namespace com.sp.rmmc.foreclosures.models
             query = query + " order by loan_id";
             List<BaseForeclosure> all_bfs = get_loan_list(query);
             foreach (BaseForeclosure f in all_bfs) { f.type = ALL_TYPE; all.Add(f); }
+            this.get_lm_date(all);
         }
 
         public void getAllWithType(List<BaseForeclosure> all, List<BaseForeclosure> none)
@@ -198,6 +269,7 @@ namespace com.sp.rmmc.foreclosures.models
             foreach (BaseForeclosure bf in both)
             {
                 bf.preforeclosure_events = PreforeclosureEvent.getFromBaseForeclosure(bf);
+                bf.preforeclosure_events.updateFlags(bf.demand_letter_due_date);
                 if (bf.is_preforeclosure_complete() == false)
                 {
                     bf.type = PREFORECLOSURE_TYPE;
@@ -214,7 +286,12 @@ namespace com.sp.rmmc.foreclosures.models
             query = query + " order by ms_loan_type, demand_letter_due_date asc";
             List<BaseForeclosure> all = get_loan_list(query);
             foreach (BaseForeclosure f in all) { f.type = type; accepted.Add(f); }
-            commonFilters(accepted, removed);
+            if (type == IN_PROCESS_DEEDINLIEU_TYPE)
+                in_process_deed_in_lieu_filters(accepted, removed);
+            else if(type == FORECLOSURE_TYPE || type == PREFORECLOSURE_TYPE || type == XFORECLOSURE_TYPE )
+                foreclosureFilters(accepted, removed);
+            else
+                commonFilters(accepted, removed);
         }
 
         public List<string> columns_list()
@@ -257,6 +334,7 @@ namespace com.sp.rmmc.foreclosures.models
             cmd.Parameters.AddWithValue("@sale_date", this.sale_date.toDBInsert());
             cmd.Parameters.AddWithValue("@ytd_prin_paid_amt", this.ytd_prin_paid_amt);
             cmd.Parameters.AddWithValue("@principal_amt_from_history", this.principal_amt_from_history);
+            cmd.Parameters.AddWithValue("@audit_prin_bal", this.audit_prin_bal);
             cmd.Parameters.AddWithValue("@fc_foreclosure_referral_date", this.fc_foreclosure_referral_date.toDBInsert());
             cmd.Parameters.AddWithValue("@fc_payoff_date", this.fc_payoff_date.toDBInsert());
             cmd.Parameters.AddWithValue("@appraisal_ordered_date", this.appraisal_ordered_date.toDBInsert());
@@ -264,7 +342,12 @@ namespace com.sp.rmmc.foreclosures.models
             cmd.Parameters.AddWithValue("@lm_stop_code_id", this.lm_stop_code_id);
             cmd.Parameters.AddWithValue("@memo_fc_third_party_sale_date", this.memo_fc_third_party_sale_date.toDBInsert());
             cmd.Parameters.AddWithValue("@extension_ordered_date", this.extension_ordered_date.toDBInsert());
-
+            cmd.Parameters.AddWithValue("@fcl_deed_in_lieu", this.fcl_deed_in_lieu);
+            cmd.Parameters.AddWithValue("@lm_date", this.lm_date.toDBInsert());
+            cmd.Parameters.AddWithValue("@possession_date", this.possession_date.toDBInsert());
+            cmd.Parameters.AddWithValue("@deed_from_borrower_received_date", this.deed_from_borrower_received_date.toDBInsert());
+            cmd.Parameters.AddWithValue("@foreclosure_stopped_memo_date", this.foreclosure_stopped_memo_date.toDBInsert());
+            
             this.loan.addInsertParameters(cmd);
 
             this.type = ALL_TYPE;
@@ -272,27 +355,70 @@ namespace com.sp.rmmc.foreclosures.models
             if (this.review_checklist != null) review_checklist.addInsertParameters(cmd);
         }
 
-        private static void commonFilters(List<BaseForeclosure> accepted, List<BaseForeclosure> removed){
+        private void commonFilters(List<BaseForeclosure> accepted, List<BaseForeclosure> removed)
+        {
             List<BaseForeclosure> all_accepted = new List<BaseForeclosure>();
             foreach (BaseForeclosure f in accepted) all_accepted.Add(f);
             remove_received_payment(all_accepted, removed);
             remove_bankruptcy(all_accepted, removed);
-            remove_third_party_sale(all_accepted, removed);
+            get_lm_date(all_accepted);
             remove_lm(all_accepted, removed);
-            foreach(BaseForeclosure f in all_accepted)
+            foreach (BaseForeclosure f in all_accepted)
+            {
                 if (f.filter_reason != "") accepted.Remove(f);
+            }
         }
 
-        private static void remove_third_party_sale(List<BaseForeclosure> accepted, List<BaseForeclosure> removed)
+        private void foreclosureFilters(List<BaseForeclosure> accepted, List<BaseForeclosure> removed)
         {
-            foreach (BaseForeclosure f in accepted)
+            commonFilters(accepted, removed);
+            List<BaseForeclosure> all_accepted = new List<BaseForeclosure>();
+            all_accepted.AddRange(accepted);
+            foreach (BaseForeclosure bf in accepted)
             {
-                if (removed.Contains(f)) continue;
-                if (f.memo_fc_third_party_sale_date.isNull == false)
+                if (bf.fcl_type != "A")
                 {
-                    f.filter_reason = "Third Party Sale";
+                    removed.Add(bf);
+                    bf.filter_reason = "Foreclosure Cancelled";
+                }
+                else if (bf.foreclosure_stopped_memo_date.isNull == false && bf.foreclosure_stopped_memo_date.date > bf.demand_letter_due_date.date)
+                {
+                    removed.Add(bf);
+                    bf.filter_reason = "Foreclosure Stopped";
+                }
+            }
+
+            foreach (BaseForeclosure f in all_accepted)
+            {
+                if (f.filter_reason != "") accepted.Remove(f);
+            }
+        }
+
+        protected void in_process_deed_in_lieu_filters(List<BaseForeclosure> accepted, List<BaseForeclosure> removed)
+        {
+            deed_in_lieu_filters(accepted, removed);
+            List<BaseForeclosure> all_accepted = new List<BaseForeclosure>();
+            all_accepted.AddRange(accepted);
+            foreach (BaseForeclosure f in all_accepted)
+            {
+                if (f.possession_date.isNull == false || f.deed_from_borrower_received_date.isNull == false)
+                {
+                    accepted.Remove(f);
                     removed.Add(f);
                 }
+            }
+        }
+
+        protected void deed_in_lieu_filters(List<BaseForeclosure> accepted, List<BaseForeclosure> removed)
+        {
+            List<BaseForeclosure> all_accepted = new List<BaseForeclosure>();
+            all_accepted.AddRange(accepted);
+
+            get_lm_date(accepted);
+
+            foreach (BaseForeclosure f in all_accepted)
+            {
+                //if (f.lm_date.isNull) accepted.Remove(f);
             }
         }
 
@@ -375,9 +501,17 @@ namespace com.sp.rmmc.foreclosures.models
             return query;
         }
 
+        public static string deed_in_lieu_conditions()
+        {
+            string query = "  \n" +
+                           "";
+            return query;
+        }
+
         public static string foreclosures_conditions()
         {
-            string query = " and ( fcl_type = 'A' ) \n" +
+            string query = " and ( fcl_type is not null ) \n" +
+                           " and ( fcl_type != '' ) \n" +
                            " and ( sale_date is null ) \n ";
             return query;
         }
@@ -388,32 +522,21 @@ namespace com.sp.rmmc.foreclosures.models
             return query;
         }
 
-        public static void remove_lm(List<BaseForeclosure> accepted, List<BaseForeclosure> removed)
+        public void remove_lm(List<BaseForeclosure> accepted, List<BaseForeclosure> removed)
         {
             foreach (BaseForeclosure f in accepted)
             {
                 if (removed.Contains(f)) continue;
-                if (f.lm_stop_code_id > 0)
+                if ( f.lm_date.isNull == false )
                 {
                     f.filter_reason = "Loss Mitigation";
                     removed.Add(f);
                 }
             }
-            List<LMReception> demand_letters_lm_receptions = LMReception.getLMReceptions(accepted);
-            List<decimal> list_lm_reception_loan_ids = new List<decimal>();
-            decimal[] array_lm_reception_loan_ids;
-            foreach (LMReception lm_reception in demand_letters_lm_receptions)
-                list_lm_reception_loan_ids.Add(lm_reception.loan_id);
-            array_lm_reception_loan_ids = list_lm_reception_loan_ids.ToArray();
-            foreach (BaseForeclosure f in accepted)
-            {
-                if (removed.Contains(f)) continue;
-                if (Array.IndexOf(array_lm_reception_loan_ids, f.loan_id) >= 0)
-                {
-                    f.filter_reason = "Loss Mitigation";
-                    removed.Add(f);
-                }
-            }
+        }
+
+        protected virtual void get_lm_date(List<BaseForeclosure> accepted)
+        {   
         }
 
         protected virtual List<BaseForeclosure> get_loan_list(String query)
@@ -442,6 +565,7 @@ namespace com.sp.rmmc.foreclosures.models
             f.sale_date = readDBDateObject(reader, pos++);
             f.ytd_prin_paid_amt = readDBDecimal(reader, pos++);
             f.principal_amt_from_history = readDBDecimal(reader, pos++);
+            f.audit_prin_bal = readDBDecimal(reader, pos++);
             f.fc_foreclosure_referral_date = readDBDateObject(reader, pos++);
             f.fc_payoff_date = readDBDateObject(reader, pos++);
             f.appraisal_ordered_date = readDBDateObject(reader, pos++);
@@ -449,7 +573,11 @@ namespace com.sp.rmmc.foreclosures.models
             f.lm_stop_code_id = readDBInt(reader, pos++);
             f.memo_fc_third_party_sale_date = readDBDateObject(reader, pos++);
             f.extension_ordered_date = readDBDateObject(reader, pos++);
-
+            f.fcl_deed_in_lieu = readDBString(reader, pos++);
+            f.lm_date = readDBDateObject(reader, pos++);
+            f.possession_date = readDBDateObject(reader, pos++);
+            f.deed_from_borrower_received_date = readDBDateObject(reader, pos++);
+            f.foreclosure_stopped_memo_date = readDBDateObject(reader, pos++);
             if (f.loan_id > 0)
             {
                 f.loan = com.sp.rmmc.common.models.MsLoan.read(reader, pos);
@@ -504,6 +632,13 @@ namespace com.sp.rmmc.foreclosures.models
         {
             List<Event> es = new List<Event>();
             es.AddRange(internalEvents());
+
+            if (this.type == IN_PROCESS_DEEDINLIEU_TYPE)
+            {
+                es.AddRange(reason_code.events);
+                es.AddRange(demand_occupancy_events.events);
+                es.AddRange(foreclosure_papers_to_attorney_events.events);
+            }
             if (this.type == DEMAND_TYPE)
             {
                 es.AddRange(inspection.events);
@@ -511,6 +646,7 @@ namespace com.sp.rmmc.foreclosures.models
                 es.AddRange(foreclosure_mortgage_status_events.events);
                 es.AddRange(demand_expire_events.events);
                 es.AddRange(demand_occupancy_events.events);
+                es.AddRange(demand_request_extension_events.events);
                 es.AddRange(fannie_mae_calls_events.events);
             }
             if (this.type == CURRENTXDEMAND_TYPE)
@@ -520,6 +656,7 @@ namespace com.sp.rmmc.foreclosures.models
             }
             if (this.type == PREFORECLOSURE_TYPE)
             {
+                es.AddRange(demand_request_extension_events.events);
                 es.AddRange(inspection.events);
                 es.AddRange(reason_code.events);
                 es.AddRange(foreclosure_appraisal_bpo_events.events);
@@ -527,15 +664,17 @@ namespace com.sp.rmmc.foreclosures.models
             }
             if (this.type == FORECLOSURE_TYPE)
             {
+                es.AddRange(demand_request_extension_events.events);
                 es.AddRange(inspection.events);
                 es.AddRange(reason_code.events);
                 es.AddRange(foreclosure_mortgage_status_events.events);
+                es.AddRange(foreclosure_papers_to_attorney_events.events);
                 es.AddRange(foreclosure_rfs_gnma_foreclosure_status_events.events);
                 es.AddRange(foreclosure_appraisal_bpo_events.events);
                 es.AddRange(foreclosure_probate_events.events);
                 es.AddRange(fannie_mae_calls_events.events);
             }
-            else if (this.type == FORECLOSED_TYPE)
+            else if (this.type == FORECLOSED_TYPE && this.isThirdPartySale() == false)
             {
                 es.AddRange(sale_inspection.events);
                 es.AddRange(sale_conveyance.events);
@@ -559,9 +698,11 @@ namespace com.sp.rmmc.foreclosures.models
                 es.AddRange(reason_code.events);
                 es.AddRange(demand_expire_events.events);
                 es.AddRange(demand_occupancy_events.events);
+                es.AddRange(demand_request_extension_events.events);
                 es.AddRange(xdemand_mortgage_status_events.events);
                 es.AddRange(xdemand_occupancy_letter_events.events);
                 es.AddRange(foreclosure_mortgage_status_events.events);
+                es.AddRange(foreclosure_papers_to_attorney_events.events);
                 es.AddRange(foreclosure_rfs_gnma_foreclosure_status_events.events);
                 es.AddRange(foreclosure_appraisal_bpo_events.events);
                 es.AddRange(foreclosure_probate_events.events);
@@ -599,6 +740,15 @@ namespace com.sp.rmmc.foreclosures.models
         protected List<BaseEvents> getEventsTypes()
         {
             List<BaseEvents> event_types = new List<BaseEvents>();
+            if (this.type == IN_PROCESS_DEEDINLIEU_TYPE)
+            {
+                if (reason_code == null) reason_code = new ReasonCodeEvents();
+                event_types.Add(reason_code);
+                if (demand_occupancy_events == null) demand_occupancy_events = new DemandOccupancyEvents();
+                event_types.Add(demand_occupancy_events);
+                if (foreclosure_papers_to_attorney_events == null) foreclosure_papers_to_attorney_events = new ForeclosurePapersToAttorneyEvents();
+                event_types.Add(foreclosure_papers_to_attorney_events);
+            }
             if (this.type == DEMAND_TYPE)
             {
                 if (inspection == null) inspection = new InspectionEvents();
@@ -611,6 +761,8 @@ namespace com.sp.rmmc.foreclosures.models
                 event_types.Add(demand_expire_events);
                 if (demand_occupancy_events == null) demand_occupancy_events = new DemandOccupancyEvents();
                 event_types.Add(demand_occupancy_events);
+                if (demand_request_extension_events == null) demand_request_extension_events = new DemandRequestForExtensionEvents();
+                event_types.Add(demand_request_extension_events);
                 if (fannie_mae_calls_events == null) fannie_mae_calls_events = new FannieMaeCallsEvents();
                 event_types.Add(fannie_mae_calls_events);
                 this.review_checklist = new ReviewChecklist();
@@ -624,6 +776,8 @@ namespace com.sp.rmmc.foreclosures.models
             }
             if (this.type == PREFORECLOSURE_TYPE)
             {
+                if (demand_request_extension_events == null) demand_request_extension_events = new DemandRequestForExtensionEvents();
+                event_types.Add(demand_request_extension_events);
                 if (inspection == null) inspection = new InspectionEvents();
                 event_types.Add(inspection);
                 if (reason_code == null) reason_code = new ReasonCodeEvents();
@@ -635,6 +789,8 @@ namespace com.sp.rmmc.foreclosures.models
             }
             if (this.type == FORECLOSURE_TYPE)
             {
+                if (demand_request_extension_events == null) demand_request_extension_events = new DemandRequestForExtensionEvents();
+                event_types.Add(demand_request_extension_events);
                 if (inspection == null) inspection = new InspectionEvents();
                 event_types.Add(inspection);
                 if (reason_code == null) reason_code = new ReasonCodeEvents();
@@ -643,6 +799,8 @@ namespace com.sp.rmmc.foreclosures.models
                 event_types.Add(foreclosure_appraisal_bpo_events);
                 if (foreclosure_mortgage_status_events == null) foreclosure_mortgage_status_events = new ForeclosureMortgageStatusEvents();
                 event_types.Add(foreclosure_mortgage_status_events);
+                if (foreclosure_papers_to_attorney_events == null) foreclosure_papers_to_attorney_events = new ForeclosurePapersToAttorneyEvents();
+                event_types.Add(foreclosure_papers_to_attorney_events);
                 if (foreclosure_rfs_gnma_foreclosure_status_events == null) foreclosure_rfs_gnma_foreclosure_status_events = new ForeclosureRfsGnmaForeclosureStatusEvents();
                 event_types.Add(foreclosure_rfs_gnma_foreclosure_status_events);
                 if (foreclosure_probate_events == null) foreclosure_probate_events = new ForeclosureProbateEvents();
@@ -693,6 +851,8 @@ namespace com.sp.rmmc.foreclosures.models
                 event_types.Add(demand_expire_events);
                 if (demand_occupancy_events == null) demand_occupancy_events = new DemandOccupancyEvents();
                 event_types.Add(demand_occupancy_events);
+                if (demand_request_extension_events == null) demand_request_extension_events = new DemandRequestForExtensionEvents();
+                event_types.Add(demand_request_extension_events);
                 if (xdemand_mortgage_status_events == null) xdemand_mortgage_status_events = new XdemandMortgageStatusEvents();
                 event_types.Add(xdemand_mortgage_status_events);
                 if (xdemand_occupancy_letter_events == null) xdemand_occupancy_letter_events = new XdemandOccupancyLetterEvents();
@@ -701,6 +861,8 @@ namespace com.sp.rmmc.foreclosures.models
                 event_types.Add(foreclosure_appraisal_bpo_events);
                 if (foreclosure_mortgage_status_events == null) foreclosure_mortgage_status_events = new ForeclosureMortgageStatusEvents();
                 event_types.Add(foreclosure_mortgage_status_events);
+                if (foreclosure_papers_to_attorney_events == null) foreclosure_papers_to_attorney_events = new ForeclosurePapersToAttorneyEvents();
+                event_types.Add(foreclosure_papers_to_attorney_events);
                 if (foreclosure_rfs_gnma_foreclosure_status_events == null) foreclosure_rfs_gnma_foreclosure_status_events = new ForeclosureRfsGnmaForeclosureStatusEvents();
                 event_types.Add(foreclosure_rfs_gnma_foreclosure_status_events);
                 if (foreclosure_probate_events == null) foreclosure_probate_events = new ForeclosureProbateEvents();
@@ -762,7 +924,7 @@ namespace com.sp.rmmc.foreclosures.models
                     es.Add(e);
                 }
             }
-            if (this.type == FORECLOSURE_TYPE)
+            if (this.type == FORECLOSURE_TYPE || this.type == IN_PROCESS_DEEDINLIEU_TYPE)
             {
                 if (this.papers_to_attorney_date.isNull )
                 {
@@ -783,6 +945,7 @@ namespace com.sp.rmmc.foreclosures.models
             if (this.loan.prin_bal > 0M) return this.loan.prin_bal;
             if (this.principal_amt_from_history > 0M) return this.principal_amt_from_history;
             if (this.ytd_prin_paid_amt > 0M) return this.ytd_prin_paid_amt;
+            if (this.audit_prin_bal > 0M) return this.audit_prin_bal;
             else return this.principal_amt_from_history;
         }
 
@@ -799,9 +962,12 @@ namespace com.sp.rmmc.foreclosures.models
 
         public bool is_preforeclosure_complete()
         {
-            if (this.fc_foreclosure_referral_date.isNull ||
+            if (this.fc_foreclosure_referral_date.isNull == true ||
+                this.fc_foreclosure_referral_date.date < this.demand_letter_due_date.date ||
                 this.papers_to_attorney_date.isNull ||
+                this.papers_to_attorney_date.date < this.demand_letter_due_date.date ||
                 this.fc_payoff_date.isNull ||
+                this.fc_payoff_date.date < this.demand_letter_due_date.date ||
                 this.preforeclosure_events.is_copy_demand_letters == false ||
                 this.preforeclosure_events.is_copy_notes == false ||
                 this.preforeclosure_events.is_copy_deed_of_trust_notes == false)
@@ -811,12 +977,15 @@ namespace com.sp.rmmc.foreclosures.models
 
             if (loan.loan_type == "VA")
             {
-                if (this.appraisal_ordered_date.isNull || this.preforeclosure_events.is_notify_appraisal == false)
+                if (this.appraisal_ordered_date.isNull ||
+                    this.appraisal_ordered_date.date < this.demand_letter_due_date.date ||
+                    this.preforeclosure_events.is_notify_appraisal == false)
                     return false;
             }
             else if (loan.loan_type == "CONV")
             {
-                if (this.appraisal_ordered_date.isNull)
+                if (this.appraisal_ordered_date.isNull ||
+                    this.appraisal_ordered_date.date < this.demand_letter_due_date.date )
                     return false;
             }
             return true;
