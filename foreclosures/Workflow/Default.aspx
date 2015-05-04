@@ -324,6 +324,13 @@
                 <% if( this.sublist == "Probates" ) {%>
                     <th>Probate Start Date</th>
                     <th>Probate End Date</th>
+                    <th>Eviction Initiated</th>
+                <% } %>
+                <% if( this.sublist == "VA Appraisals" ) {%>
+                    <th>Appraisal Ordered Date</th>
+                    <th>Appraisal Received Date</th>
+                    <th>NOV Ordered Date</th>
+                    <th>NOV Received Date</th>
                 <% } %>
                 <th>Officer(s)</th>
                 <th>Checklist</th>
@@ -354,6 +361,13 @@
                 <% if( this.sublist == "Probates" ) {%>
                     <td><%= bf.foreclosure_probate_events != null ? bf.foreclosure_probate_events.probate_start_date.ToString() : "" %></td>
                     <td><%= bf.foreclosure_probate_events != null ? bf.foreclosure_probate_events.probate_end_date.ToString() : "" %></td>
+                    <td><%= bf.foreclosure_probate_events != null ? bf.foreclosure_probate_events.fs_eviction_initiated : "" %></td>
+                <% } %>
+                <% if( this.sublist == "VA Appraisals" ) {%>
+                    <td><%= bf.foreclosure_va_appraisal_events != null ? bf.foreclosure_va_appraisal_events.appraisal_ordered_date.ToString() : ""%></td>
+                    <td><%= bf.foreclosure_va_appraisal_events != null ? bf.foreclosure_va_appraisal_events.appraisal_received_date.ToString() : ""%></td>
+                    <td><%= bf.foreclosure_va_appraisal_events != null ? bf.foreclosure_va_appraisal_events.nov_ordered_date.ToString() : ""%></td>
+                    <td><%= bf.foreclosure_va_appraisal_events != null ? bf.foreclosure_va_appraisal_events.nov_received_date.ToString() : ""%></td>
                 <% } %>
                 <td><%= bf.foreclosure_officers%></td>
                 <td><a href="PreforeclosureEvents.aspx?loan_id=<%=bf.loan_id.ToString() %>&version=<%=version %>">Checklist</a></td>
@@ -392,8 +406,16 @@
                 <th>Reason</th>
             </tr>
             <% 
+               int month = 0;
                foreach (com.sp.rmmc.foreclosures.models.BaseForeclosure bf in bfs)
                {
+                   if (bf.foreclosure_stopped_memo_date.date.Month != month)
+                   {
+                       month = bf.foreclosure_stopped_memo_date.date.Month;
+            %>
+            <tr class="info"><td colspan="14"><%= bf.foreclosure_stopped_memo_date.isNull ? "No Stopped Code" :  bf.foreclosure_stopped_memo_date.date.ToString("MMMM yyyy") %></td></tr>
+            <%
+                   }
             %>
             <tr class="<%= bf.getEventStatusColor() %>">
                 <td><%= bf.loan_id.ToString()%></td>
@@ -455,10 +477,12 @@
                 <% if (this.sublist == "REO Properties")
                    {%>
                     <th>REO Property Memo Date</th>
+                    <th>Pay Off Date</th>
                 <% } %>
                 <% if (this.sublist == "Third Party Sales")
                    {%>
                     <th>Thrid Party Sale Date</th>
+                    <th>Pay Off Date</th>
                 <% } %>
                 <th>Officer(s)</th>
                 <th>Principal Paid</th>
@@ -478,7 +502,7 @@
                    {
                        month = bf.sale_date.date.Month;
             %>
-            <tr class="info"><td colspan="14"><%= bf.sale_date.date.ToString("MMMM yyyy") %></td></tr>
+            <tr class="info"><td colspan="16"><%= bf.sale_date.date.ToString("MMMM yyyy") %></td></tr>
             <%
                    }
             %>
@@ -504,10 +528,12 @@
                 <% if (this.sublist == "REO Properties")
                    {%>
                     <td><%= bf.sale_conveyance != null ? bf.sale_conveyance.reo_date.ToString() : ""%></td>
+                    <td><%= bf.sale_hud_mip_events != null ? bf.sale_hud_mip_events.last_pay_off_dt.ToString() : ""%></td>
                 <% } %>
                 <% if (this.sublist == "Third Party Sales")
                    {%>
                     <td><%= bf.memo_fc_third_party_sale_date.ToString() %></td>
+                    <td><%= bf.sale_hud_mip_events != null ? bf.sale_hud_mip_events.last_pay_off_dt.ToString() : ""%></td>
                 <% } %>
                 <td><%= bf.foreclosure_officers%></td>
                 <td><%= bf.non_zero_balance().ToString("C")%></td>

@@ -115,6 +115,12 @@ public partial class lossmitigation_Default : System.Web.UI.Page
             if (bf.foreclosure_probate_events == null ||
                 bf.foreclosure_probate_events.probate_start_date.isNull) return false;
         }
+        if (sublist == "VA Appraisals")
+        {
+            if (workflow != "Foreclosures") return true;
+            if (bf.loan.loan_type != "VA" || bf.foreclosure_va_appraisal_events == null ||
+                bf.foreclosure_va_appraisal_events.appraisal_ordered_date.isNull) return false;
+        }
         if (sublist == "REO Properties")
         {
             if (workflow != "Foreclosed") return true;

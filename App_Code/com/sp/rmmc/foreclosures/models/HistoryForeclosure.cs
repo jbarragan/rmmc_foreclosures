@@ -46,7 +46,8 @@ namespace com.sp.rmmc.foreclosures.models
             " from history_loan_details  " +
             " where demand_letter_due_date is not null " +
             " and (foreclosure_stopped_memo_date is null " +
-            "     or demand_letter_due_date < foreclosure_stopped_memo_date ) " +
+            "     or demand_letter_due_date < foreclosure_stopped_memo_date " +
+            "     or fcl_type = 'A' ) " +
             " and history_id = " + this.history_id + " " +
             ") ";
             }

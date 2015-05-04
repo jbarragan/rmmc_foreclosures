@@ -56,6 +56,21 @@ namespace com.sp.rmmc.foreclosures.models
             return this.get_list(query);
         }
 
+        public List<History> last_of_month_all()
+        {
+            string query = select_base_query + "  order by id desc";
+            List < History > all = this.get_list(query);
+            List<History> first_of_month_list = new List<History>();
+            History fmh = null;
+            if( all.Count > 0 ) first_of_month_list.Add(fmh = all[0]);
+            foreach( History h in all){
+                if( h.history_date.date.Month == fmh.history_date.date.Month &&
+                    h.history_date.date.Year == fmh.history_date.date.Year ) continue;
+                first_of_month_list.Add(fmh = h);
+            }
+            return first_of_month_list;
+        }
+
         private List<History> get_list(String query)
         {
             List<History> histories = new List<History>();

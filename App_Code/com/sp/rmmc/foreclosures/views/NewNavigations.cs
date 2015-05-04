@@ -123,6 +123,7 @@ namespace com.sp.rmmc.foreclosures.views
             nav.ad_departments.Add("mis");
             nav.ad_groups.Add("servicing_fc"); nav.ad_groups.Add("foreclosure_metrics");
             nav = new Nav(); nav.link = "../Utilities/PreservationCodes.aspx"; nav.text = "Utilities"; navs.Add(nav);
+            nav = new Nav(); nav.link = "../Management/Gl1806Summary.aspx"; nav.text = "Management"; navs.Add(nav);
             nav = new Nav(); nav.link = "../Default.aspx"; nav.text = "Dashboard"; navs.Add(nav);
             return navs;
         }
@@ -147,6 +148,7 @@ namespace com.sp.rmmc.foreclosures.views
             nav.ad_departments.Add("mis");
             nav.ad_groups.Add("servicing_fc"); nav.ad_groups.Add("foreclosure_metrics");
             nav = new Nav(); nav.link = "Utilities/PreservationCodes.aspx"; nav.text = "Utilities"; navs.Add(nav);
+            nav = new Nav(); nav.link = "Management/Gl1806Summary.aspx"; nav.text = "Management"; navs.Add(nav);
             nav = new Nav(); nav.link = "Default.aspx"; nav.text = "Dashboard"; navs.Add(nav);
             return navs;
         }
@@ -180,6 +182,7 @@ namespace com.sp.rmmc.foreclosures.views
             nav.ad_departments.Add("mis");
             nav.ad_groups.Add("servicing_fc"); nav.ad_groups.Add("foreclosure_metrics");
             nav = new Nav(); nav.link = "Utilities/PreservationCodes.aspx"; nav.text = "Utilities"; navs.Add(nav);
+            nav = new Nav(); nav.link = "Management/Gl1806Summary.aspx"; nav.text = "Management"; navs.Add(nav);
             nav = new Nav(); nav.link = "Default.aspx"; nav.text = "Dashboard"; navs.Add(nav);
             return navs;
         }
@@ -245,6 +248,8 @@ namespace com.sp.rmmc.foreclosures.views
             Nav nav = new Nav(); nav.link = "Claims.aspx"; nav.text = "Claims"; navs.Add(nav);
             nav = new Nav(); nav.link = "Foreclosures.aspx"; nav.text = "Foreclosures By Sale Date Completed"; navs.Add(nav);
             nav = new Nav(); nav.link = "FannieMaeCalls.aspx"; nav.text = "Fannie Mae Calls"; navs.Add(nav);
+            nav = new Nav(); nav.link = "ActivityHistory.aspx"; nav.text = "Activity"; navs.Add(nav);
+            
             string active_class = "";
             foreach (Nav n in navs)
             {
@@ -276,6 +281,20 @@ namespace com.sp.rmmc.foreclosures.views
             return s + nav_end;
         }
 
+        public static string management_list_nav_select(string active, string version)
+        {
+            string s = nav_start;
+            List<Nav> navs = new List<Nav>();
+            Nav nav = new Nav(); nav.link = "Gl1806.aspx?version=" + version; nav.text = "GL1806"; navs.Add(nav);
+            string active_class = "";
+            foreach (Nav n in navs)
+            {
+                if (active == n.text) active_class = @" class=""active"""; else active_class = "";
+                s += @"<li" + active_class + @"><a href=""" + n.link + @""">" + n.text + "</a></li>";
+            }
+            return s + nav_end;
+        }
+
         public static string workflow_sublist_nav_select(string workflow, string active, string version)
         {
             string s = nav_start;
@@ -284,6 +303,7 @@ namespace com.sp.rmmc.foreclosures.views
             {
                 Nav nav = new Nav(); nav.link = "Default.aspx?workflow=Foreclosures&version=" + version + "&sublist=ALL"; nav.text = "All"; navs.Add(nav);
                 nav = new Nav(); nav.link = "Default.aspx?workflow=Foreclosures&version=" + version + "&sublist=Probates"; nav.text = "Probates"; navs.Add(nav);
+                nav = new Nav(); nav.link = "Default.aspx?workflow=Foreclosures&version=" + version + "&sublist=VA Appraisals"; nav.text = "VA Appraisals"; navs.Add(nav);
             }
             if (workflow == "Foreclosed")
             {

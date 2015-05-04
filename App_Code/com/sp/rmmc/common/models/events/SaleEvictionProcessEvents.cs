@@ -14,6 +14,8 @@ namespace com.sp.rmmc.common.models.events
         public string fs_eviction_initiated = "";
         public DateTimeObject eviction_stop_date = new DateTimeObject();
 
+        DateTimeObject eviction_initiated_date = new DateTimeObject();
+
         private static String[] class_fields = 
             {
              "(select top 1 ms_loan_info.loan_id from ms_loan_information ms_loan_info where ms_loan_info.loan_id = loan_id_column order by ms_loan_info.loan_id  ) as sale_eviction_process_events_loan_id",
@@ -30,12 +32,13 @@ namespace com.sp.rmmc.common.models.events
         {
             if (this.fs_eviction_initiated == null || this.fs_eviction_initiated == "") return;
             DateTimeObject eviction_initiated_date = string2date(this.fs_eviction_initiated);
+            
             if (eviction_initiated_date.isNull == false && eviction_stop_date.isNull == false &&
                 eviction_initiated_date.date <= eviction_stop_date.date) return;
 
             Event e = new Event();
             e.loan = this.loan;
-            if (eviction_initiated_date.isNull == true ||  eviction_initiated_date.date < DateTime.Today.AddDays(-30))
+            if (eviction_initiated_date.isNull == true ||  eviction_initiated_date.date < this.loan.event_todays_date.AddDays(-30))
             {
                 e.type = Event.ALERT;
                 e.name = "Eviction Process Alert";
@@ -47,17 +50,6 @@ namespace com.sp.rmmc.common.models.events
             }
             e.description = "Eviction Process Pending for Eviction Initiated " + this.fs_eviction_initiated;
             this.events.Add(e);
-        }
-
-        private DateTimeObject string2date(string s)
-        {
-            DateTimeObject d = new DateTimeObject();
-            try
-            {
-                d.set_date(DateTime.Parse(s));
-            }
-            catch (Exception e) { }
-            return d;
         }
 
         public override void read(DbDataReader reader, int pos, MsLoan loan)

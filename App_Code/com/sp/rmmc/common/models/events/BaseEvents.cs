@@ -42,5 +42,16 @@ namespace com.sp.rmmc.common.models.events
 
         public virtual void read(DbDataReader reader, int pos, MsLoan loan) {}
         public virtual void addInsertParameters(SqlCommand cmd) { }
+
+        protected DateTimeObject string2date(string s)
+        {
+            DateTimeObject d = new DateTimeObject();
+            try
+            {
+                d.set_date(DateTime.Parse(s));
+            }
+            catch (Exception e) { }
+            return d;
+        }
     }
 }

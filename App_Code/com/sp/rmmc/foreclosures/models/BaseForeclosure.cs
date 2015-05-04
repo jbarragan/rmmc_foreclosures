@@ -63,6 +63,7 @@ namespace com.sp.rmmc.foreclosures.models
         public ForeclosureMortgageStatusEvents foreclosure_mortgage_status_events = null;
         public ForeclosurePapersToAttorneyEvents foreclosure_papers_to_attorney_events = null;
         public ForeclosureAppraisalBPOEvents foreclosure_appraisal_bpo_events = null;
+        public ForeclosureVAAppraisalEvents foreclosure_va_appraisal_events = null;
         public ForeclosureProbateEvents foreclosure_probate_events = null;
         public ForeclosureRfsGnmaForeclosureStatusEvents foreclosure_rfs_gnma_foreclosure_status_events = null;
         public SaleMortgageStatusEvents sale_mortgage_status_events = null;
@@ -74,6 +75,7 @@ namespace com.sp.rmmc.foreclosures.models
         public XdemandOccupancyLetterEvents xdemand_occupancy_letter_events = null;
         public FannieMaeCallsEvents fannie_mae_calls_events = null;
         public SaleEvictionProcessEvents sale_eviction_process_events = null;
+        public SaleHudMIPEvents sale_hud_mip_events = null;
 
         public ReviewChecklist review_checklist = null;
 
@@ -125,7 +127,7 @@ namespace com.sp.rmmc.foreclosures.models
             this.type = XFORECLOSURE_TYPE;
             string columns = this.default_columns + getEventsColumns();
             string query = "select " + columns + " from " + "( " + foreclosures_query + ")base where 1=1 " + foreclosures_conditions();
-            query = query + " order by foreclosure_date asc, ms_loan_type, demand_letter_due_date asc";
+            query = query + " order by foreclosure_stopped_memo_date desc, foreclosure_date asc, ms_loan_type, demand_letter_due_date asc";
             List<BaseForeclosure> all = get_loan_list(query);
             foreach (BaseForeclosure f in all) { f.type = XFORECLOSURE_TYPE; foreclosures.Add(f); }
             foreclosureFilters(foreclosures, xforeclosures);
@@ -150,8 +152,21 @@ namespace com.sp.rmmc.foreclosures.models
             string query = "select " + columns + " from " + "( " + foreclosed_query + ")base where 1=1 " + foreclosed_conditions();
             query = query + " order by sale_date desc, ms_loan_type, demand_letter_due_date asc";
             List<BaseForeclosure> all = get_loan_list(query);
-            foreach (BaseForeclosure f in all) { f.type = FORECLOSED_TYPE; foreclosed.Add(f); }
-            commonFilters(foreclosed, removed_foreclosed);
+            foreach (BaseForeclosure f in all) {
+                f.type = FORECLOSED_TYPE; 
+                foreclosed.Add(f); 
+            }
+        }
+
+        public void getLastMonthForeclosed(List<BaseForeclosure> foreclosed, List<BaseForeclosure> removed_foreclosed, DateTime date)
+        {
+            getForeclosed(foreclosed, removed_foreclosed);
+            List<BaseForeclosure> all = new List<BaseForeclosure>();
+            all.AddRange(foreclosed);
+            foreach (BaseForeclosure b in all)
+            {
+                if (b.sale_date.date.Month != date.Month || b.sale_date.date.Year != date.Year) foreclosed.Remove(b);
+            }
         }
 
         public void getForeclosedThirdPartySale(List<BaseForeclosure> foreclosed, List<BaseForeclosure> removed_foreclosed)
@@ -355,7 +370,7 @@ namespace com.sp.rmmc.foreclosures.models
             if (this.review_checklist != null) review_checklist.addInsertParameters(cmd);
         }
 
-        private void commonFilters(List<BaseForeclosure> accepted, List<BaseForeclosure> removed)
+        private void assignCommonFilterReason(List<BaseForeclosure> accepted, List<BaseForeclosure> removed)
         {
             List<BaseForeclosure> all_accepted = new List<BaseForeclosure>();
             foreach (BaseForeclosure f in accepted) all_accepted.Add(f);
@@ -363,34 +378,47 @@ namespace com.sp.rmmc.foreclosures.models
             remove_bankruptcy(all_accepted, removed);
             get_lm_date(all_accepted);
             remove_lm(all_accepted, removed);
+        }
+
+        private void commonFilters(List<BaseForeclosure> accepted, List<BaseForeclosure> removed)
+        {
+            List<BaseForeclosure> all_accepted = new List<BaseForeclosure>();
+            all_accepted.AddRange(accepted);
+            assignCommonFilterReason(accepted, removed);
             foreach (BaseForeclosure f in all_accepted)
             {
-                if (f.filter_reason != "") accepted.Remove(f);
+                if (f.filter_reason != "")
+                {
+                    accepted.Remove(f);
+                    removed.Add(f);
+                }
             }
         }
 
         private void foreclosureFilters(List<BaseForeclosure> accepted, List<BaseForeclosure> removed)
         {
-            commonFilters(accepted, removed);
+            assignCommonFilterReason(accepted, removed);
             List<BaseForeclosure> all_accepted = new List<BaseForeclosure>();
             all_accepted.AddRange(accepted);
             foreach (BaseForeclosure bf in accepted)
             {
                 if (bf.fcl_type != "A")
                 {
-                    removed.Add(bf);
                     bf.filter_reason = "Foreclosure Cancelled";
                 }
                 else if (bf.foreclosure_stopped_memo_date.isNull == false && bf.foreclosure_stopped_memo_date.date > bf.demand_letter_due_date.date)
                 {
-                    removed.Add(bf);
                     bf.filter_reason = "Foreclosure Stopped";
                 }
             }
 
             foreach (BaseForeclosure f in all_accepted)
             {
-                if (f.filter_reason != "") accepted.Remove(f);
+                if (f.filter_reason != "")
+                {
+                    accepted.Remove(f);
+                    removed.Add(f);
+                }
             }
         }
 
@@ -441,7 +469,6 @@ namespace com.sp.rmmc.foreclosures.models
                    )
                 {   
                     f.filter_reason = "Bankruptcy";
-                    removed.Add(f);
                 }
             }
         }
@@ -470,7 +497,6 @@ namespace com.sp.rmmc.foreclosures.models
                     f.loan.due_date_next_payment.date >= f.demand_letter_due_date.date )
                 {   
                     f.filter_reason = "Received Payment";
-                    removed.Add(f);
                 }
             }
         }
@@ -530,7 +556,6 @@ namespace com.sp.rmmc.foreclosures.models
                 if ( f.lm_date.isNull == false )
                 {
                     f.filter_reason = "Loss Mitigation";
-                    removed.Add(f);
                 }
             }
         }
@@ -660,6 +685,7 @@ namespace com.sp.rmmc.foreclosures.models
                 es.AddRange(inspection.events);
                 es.AddRange(reason_code.events);
                 es.AddRange(foreclosure_appraisal_bpo_events.events);
+                es.AddRange(foreclosure_va_appraisal_events.events);
                 es.AddRange(fannie_mae_calls_events.events);
             }
             if (this.type == FORECLOSURE_TYPE)
@@ -671,11 +697,12 @@ namespace com.sp.rmmc.foreclosures.models
                 es.AddRange(foreclosure_papers_to_attorney_events.events);
                 es.AddRange(foreclosure_rfs_gnma_foreclosure_status_events.events);
                 es.AddRange(foreclosure_appraisal_bpo_events.events);
+                es.AddRange(foreclosure_va_appraisal_events.events);
                 es.AddRange(foreclosure_probate_events.events);
                 es.AddRange(fannie_mae_calls_events.events);
             }
             else if (this.type == FORECLOSED_TYPE && this.isThirdPartySale() == false)
-            {
+            {   
                 es.AddRange(sale_inspection.events);
                 es.AddRange(sale_conveyance.events);
                 es.AddRange(sale_hud_advice.events);
@@ -691,6 +718,11 @@ namespace com.sp.rmmc.foreclosures.models
                 es.AddRange(sale_mortgage_status_events.events);
                 es.AddRange(sale_original_documents_ordered_events.events);
                 es.AddRange(sale_eviction_process_events.events);
+                es.AddRange(sale_hud_mip_events.events);
+            }
+            else if (this.type == FORECLOSED_TYPE && this.isThirdPartySale() == true)
+            {
+                es.AddRange(sale_hud_mip_events.events);
             }
             else if (this.type == ALL_TYPE)
             {
@@ -705,6 +737,7 @@ namespace com.sp.rmmc.foreclosures.models
                 es.AddRange(foreclosure_papers_to_attorney_events.events);
                 es.AddRange(foreclosure_rfs_gnma_foreclosure_status_events.events);
                 es.AddRange(foreclosure_appraisal_bpo_events.events);
+                es.AddRange(foreclosure_va_appraisal_events.events);
                 es.AddRange(foreclosure_probate_events.events);
                 es.AddRange(sale_inspection.events);
                 es.AddRange(sale_conveyance.events);
@@ -722,6 +755,7 @@ namespace com.sp.rmmc.foreclosures.models
                 es.AddRange(sale_original_documents_ordered_events.events);
                 es.AddRange(fannie_mae_calls_events.events);
                 es.AddRange(sale_eviction_process_events.events);
+                es.AddRange(sale_hud_mip_events.events);
             }
             return es;
         }
@@ -784,6 +818,8 @@ namespace com.sp.rmmc.foreclosures.models
                 event_types.Add(reason_code);
                 if (foreclosure_appraisal_bpo_events == null) foreclosure_appraisal_bpo_events = new ForeclosureAppraisalBPOEvents();
                 event_types.Add(foreclosure_appraisal_bpo_events);
+                if (foreclosure_va_appraisal_events == null) foreclosure_va_appraisal_events = new ForeclosureVAAppraisalEvents();
+                event_types.Add(foreclosure_va_appraisal_events);
                 if (fannie_mae_calls_events == null) fannie_mae_calls_events = new FannieMaeCallsEvents();
                 event_types.Add(fannie_mae_calls_events);
             }
@@ -797,6 +833,8 @@ namespace com.sp.rmmc.foreclosures.models
                 event_types.Add(reason_code);
                 if (foreclosure_appraisal_bpo_events == null) foreclosure_appraisal_bpo_events = new ForeclosureAppraisalBPOEvents();
                 event_types.Add(foreclosure_appraisal_bpo_events);
+                if (foreclosure_va_appraisal_events == null) foreclosure_va_appraisal_events = new ForeclosureVAAppraisalEvents();
+                event_types.Add(foreclosure_va_appraisal_events);
                 if (foreclosure_mortgage_status_events == null) foreclosure_mortgage_status_events = new ForeclosureMortgageStatusEvents();
                 event_types.Add(foreclosure_mortgage_status_events);
                 if (foreclosure_papers_to_attorney_events == null) foreclosure_papers_to_attorney_events = new ForeclosurePapersToAttorneyEvents();
@@ -840,6 +878,9 @@ namespace com.sp.rmmc.foreclosures.models
                 event_types.Add(sale_original_documents_ordered_events);
                 if (sale_eviction_process_events == null) sale_eviction_process_events = new SaleEvictionProcessEvents();
                 event_types.Add(sale_eviction_process_events);
+                if (sale_hud_mip_events == null) sale_hud_mip_events = new SaleHudMIPEvents();
+                event_types.Add(sale_hud_mip_events);
+                
             }
             if (this.type == ALL_TYPE)
             {
@@ -859,6 +900,8 @@ namespace com.sp.rmmc.foreclosures.models
                 event_types.Add(xdemand_occupancy_letter_events);
                 if (foreclosure_appraisal_bpo_events == null) foreclosure_appraisal_bpo_events = new ForeclosureAppraisalBPOEvents();
                 event_types.Add(foreclosure_appraisal_bpo_events);
+                if (foreclosure_va_appraisal_events == null) foreclosure_va_appraisal_events = new ForeclosureVAAppraisalEvents();
+                event_types.Add(foreclosure_va_appraisal_events);
                 if (foreclosure_mortgage_status_events == null) foreclosure_mortgage_status_events = new ForeclosureMortgageStatusEvents();
                 event_types.Add(foreclosure_mortgage_status_events);
                 if (foreclosure_papers_to_attorney_events == null) foreclosure_papers_to_attorney_events = new ForeclosurePapersToAttorneyEvents();
@@ -899,6 +942,8 @@ namespace com.sp.rmmc.foreclosures.models
                 event_types.Add(fannie_mae_calls_events);
                 if (sale_eviction_process_events == null) sale_eviction_process_events = new SaleEvictionProcessEvents();
                 event_types.Add(sale_eviction_process_events);
+                if (sale_hud_mip_events == null) sale_hud_mip_events = new SaleHudMIPEvents();
+                event_types.Add(sale_hud_mip_events);
                 this.review_checklist = new ReviewChecklist();
             }
 
@@ -978,14 +1023,14 @@ namespace com.sp.rmmc.foreclosures.models
             if (loan.loan_type == "VA")
             {
                 if (this.appraisal_ordered_date.isNull ||
-                    this.appraisal_ordered_date.date < this.demand_letter_due_date.date ||
+                    this.appraisal_ordered_date.date.AddMonths(6) < this.loan.event_todays_date ||
                     this.preforeclosure_events.is_notify_appraisal == false)
                     return false;
             }
             else if (loan.loan_type == "CONV")
             {
                 if (this.appraisal_ordered_date.isNull ||
-                    this.appraisal_ordered_date.date < this.demand_letter_due_date.date )
+                    this.appraisal_ordered_date.date.AddMonths(6) < this.loan.event_todays_date)
                     return false;
             }
             return true;

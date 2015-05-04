@@ -83,6 +83,7 @@
                            e.name == "Demanded after 6-months of delinquent" ||
                            e.name == "Demand File Expired Alert" ||
                            e.name == "Demand File Expiring Warning" ||
+                           e.name == "Demand Mortgage Status not 42 Warning" ||
                            e.name == "Demand Request for Extension of Time Alert" ||
                            e.name == "No Acquisition Payment Date Warning" ||
                            e.name == "No Acquisition Payment Date Alert" ||

@@ -171,7 +171,10 @@ com.sp.rmmc.common.models.MsLoan.columns("base.loan_id") + " ";
             List<LMReception> all_lm_receptions = LMReception.getLMReceptions(accepted);
             Dictionary<decimal, LMReception> loan_lm_receptions = new Dictionary<decimal, LMReception>();
             foreach (LMReception lm_reception in all_lm_receptions)
+            {
+                if (loan_lm_receptions.ContainsKey(lm_reception.loan_id)) continue;
                 loan_lm_receptions.Add(lm_reception.loan_id, lm_reception);
+            }
             foreach (BaseForeclosure f in accepted)
             {
                 if (loan_lm_receptions.ContainsKey(f.loan_id))

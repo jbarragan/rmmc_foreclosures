@@ -31,6 +31,8 @@ namespace com.sp.rmmc.common.models.events
 
         private void load_events()
         {
+            if (this.loan_id == 143429M)
+                this.loan_id = 143429M;
             if (this.last_ordered_date.isNull)
             {
                 Event e = new Event();
@@ -42,7 +44,7 @@ namespace com.sp.rmmc.common.models.events
             }
             else if (this.last_received_notify_date.isNull == false && 
                      this.last_received_notify_date.date > this.last_ordered_date.date &&
-                     this.last_received_notify_date.date < DateTime.Now.AddDays(-25))
+                     this.last_received_notify_date.date <= this.loan.event_todays_date.AddDays(-30))
             {
                 Event e = new Event();
                 e.loan = this.loan;
@@ -53,7 +55,7 @@ namespace com.sp.rmmc.common.models.events
             }
             else if (this.last_received_notify_date.isNull == false &&
                      this.last_received_notify_date.date > this.last_ordered_date.date &&
-                     this.last_received_notify_date.date < DateTime.Now.AddDays(-20) && 
+                     this.last_received_notify_date.date <= this.loan.event_todays_date.AddDays(-30) && 
                       ( this.last_received_description != "PI-Initial Vacant Inspection" &&
                         this.last_received_description != "PI-Ongoing Int./Ext. Vacant Inspection" &&
                         this.last_received_description != "PI-No Inspection Ordered"
@@ -67,9 +69,20 @@ namespace com.sp.rmmc.common.models.events
                 e.description = "Inspection Expired, last received on " + this.last_received_notify_date.ToString() + "; last ordered on " + this.last_ordered_date.ToShortDateString();
                 this.events.Add(e);
             }
+            else if (this.last_received_notify_date.isNull == false &&
+                     this.last_received_notify_date.date > this.last_ordered_date.date &&
+                     this.last_received_notify_date.date <= this.loan.event_todays_date.AddDays(-24))
+            {
+                Event e = new Event();
+                e.loan = this.loan;
+                e.type = Event.WARNING;
+                e.name = "Inspection Expired";
+                e.description = "Inspection Expired, last received on " + this.last_received_notify_date.ToString() + "; last ordered on " + this.last_ordered_date.ToShortDateString();
+                this.events.Add(e);
+            }
             else if (this.last_received_notify_date.isNull || this.last_received_notify_date.date < this.last_ordered_date.date.AddDays(-1))
             {
-                if (this.last_ordered_date.date.AddDays(19) < DateTime.Today && this.last_ordered_date.date.AddDays(26) > DateTime.Today)
+                if (this.last_ordered_date.date.AddDays(19) < this.loan.event_todays_date && this.last_ordered_date.date.AddDays(26) > this.loan.event_todays_date)
                 {
                     Event e = new Event();
                     e.loan = this.loan;
@@ -78,7 +91,7 @@ namespace com.sp.rmmc.common.models.events
                     e.description = "No Inspection Received in the last 19 days, last ordered on " + this.last_ordered_date.ToShortDateString();
                     this.events.Add(e);
                 }
-                else if (this.last_ordered_date.date.AddDays(26) <= DateTime.Today)
+                else if (this.last_ordered_date.date.AddDays(26) <= this.loan.event_todays_date)
                 {
                     Event e = new Event();
                     e.loan = this.loan;

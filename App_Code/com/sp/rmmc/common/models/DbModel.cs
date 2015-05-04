@@ -37,6 +37,14 @@ namespace com.sp.rmmc.common.models
                 return reader.GetDecimal(pos);
         }
 
+        public static decimal readDBDoubleDecimal(DbDataReader reader, int pos)
+        {
+            if (reader.GetValue(pos) is DBNull)
+                return 0M;
+            else
+                return Convert.ToDecimal(reader.GetDouble(pos));
+        }
+
         public static int readDBInt(DbDataReader reader, int pos)
         {
             if (reader.GetValue(pos) is DBNull)

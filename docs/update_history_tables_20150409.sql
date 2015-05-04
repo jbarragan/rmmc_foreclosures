@@ -1,0 +1,4 @@
+alter table history_loan_details add
+	foreclosure_probate_events_fs_eviction_initiated varchar(255),
+	foreclosure_probate_events_eviction_stop_date datetime
+	

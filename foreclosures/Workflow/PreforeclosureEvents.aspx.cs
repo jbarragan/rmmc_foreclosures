@@ -37,7 +37,7 @@ public partial class lossmitigation_Collections_Default : System.Web.UI.Page
         this.chkCopyDeedOfTrust.Checked = foreclosure.preforeclosure_events.is_copy_deed_of_trust_notes;
         this.chkCopyBankruptcy.Checked = foreclosure.preforeclosure_events.is_copy_bankruptcy;
         this.chkCopyTitlePolicy.Checked = foreclosure.preforeclosure_events.is_copy_title_policy;
-        this.chkAppraisalOrdered.Checked = (foreclosure.appraisal_ordered_date.isNull == false && foreclosure.demand_letter_due_date.date < foreclosure.appraisal_ordered_date.date); ;
+        this.chkAppraisalOrdered.Checked = (foreclosure.appraisal_ordered_date.isNull == false && DateTime.Today < foreclosure.appraisal_ordered_date.date.AddMonths(6));
         this.chkNotifyAppraisal.Checked = foreclosure.preforeclosure_events.is_notify_appraisal;
     }
 
