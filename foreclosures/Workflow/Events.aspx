@@ -74,6 +74,8 @@
                 <td><%= e.name %> 
                     <% if (e.name == "Different Reason Codes" ||
                            e.name == "Demand Occupancy Alert" ||
+                           e.name == "Basic Claim Date Alert" ||
+                           e.name == "Basic Claim Date Warning" ||
                            e.name == "No Claim Part B Alert" ||
                            e.name == "No Claim Part B Warning" ||
                            e.name == "Eviction Process Alert" ||
@@ -87,6 +89,8 @@
                            e.name == "Demand Request for Extension of Time Alert" ||
                            e.name == "No Acquisition Payment Date Warning" ||
                            e.name == "No Acquisition Payment Date Alert" ||
+                           e.name == "No Basic Claim Date Alert" ||
+                           e.name == "No Basic Claim Date Warning" ||
                            e.name == "Acquisition Payment Date Alert" ||
                            e.name == "No Inspection Received Alert" ||
                            e.name == "No Inspection Received Warning" ||
@@ -99,8 +103,9 @@
                            e.name == "No Transfer of Custody Date Warning" ||
                            e.name == "No Transfer of Custody Date Alert" ||
                            e.name == "Transfer of Custody Date Alert" ||
+                           e.name == "Transfer of Custody Date Warning" ||
                            e.name == "Inspection Expired" ||
-                           e.name == "Papers Not Receive    d From Attorney Alert" ||
+                           e.name == "Papers Not Received From Attorney Alert" ||
                            e.name == "No Conveyance Date Alert" ||
                            e.name == "No Conveyance Date Warning" ||
                            e.name == "FANNIE MAE loan last call Warning"||

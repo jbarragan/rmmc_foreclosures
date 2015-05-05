@@ -31,16 +31,18 @@ namespace com.sp.rmmc.common.models.events
         private void load_events()
         {
             if (this.loan.loan_type != "VA") return;
+            if (this.basic_claim_date.isNull == false)
+                this.loan_id = this.loan_id;
             if (this.reo_date.isNull == false && this.reo_date.date > this.sale_date.date) return;
             if (this.sale_date.isNull) return;
             if (this.sale_date.date <= this.basic_claim_date.date && this.basic_claim_date.isNull == false) return;
-            if (sale_date.date > DateTime.Today.AddDays(-20)) return;
+            if (sale_date.date > this.loan.event_todays_date.AddDays(-20)) return;
 
             if (this.basic_claim_date.isNull)
             {
                 Event e = new Event();
                 e.loan = this.loan;
-                if (sale_date.date > DateTime.Today.AddDays(-30))
+                if (sale_date.date > this.loan.event_todays_date.AddDays(-30))
                 {
                     e.type = Event.WARNING;
                     e.name = "No Basic Claim Date Warning";
