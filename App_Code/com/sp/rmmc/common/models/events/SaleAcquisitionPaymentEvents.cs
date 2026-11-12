@@ -31,13 +31,13 @@ namespace com.sp.rmmc.common.models.events
             if (this.loan.loan_type != "VA") return;
             if (this.transfer_of_custody_date.isNull) return;
             if (this.transfer_of_custody_date.date <= this.acquisition_payment_date.date && this.acquisition_payment_date.isNull == false) return;
-            if (transfer_of_custody_date.date > DateTime.Today) return;
+            if (transfer_of_custody_date.date > this.loan.event_todays_date) return;
 
             if (this.acquisition_payment_date.isNull)
             {
                 Event e = new Event();
                 e.loan = this.loan;
-                if (transfer_of_custody_date.date > DateTime.Today.AddDays(-3))
+                if (transfer_of_custody_date.date > this.loan.event_todays_date.AddDays(-3))
                 {
                     e.type = Event.WARNING;
                     e.name = "No Acquisition Payment Date Warning";

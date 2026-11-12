@@ -36,7 +36,7 @@ namespace com.sp.rmmc.common.models.events
             {
                 Event e = new Event();
                 e.loan = this.loan;
-                if (sale_date.date < DateTime.Today.AddDays(1)) e.type = Event.ALERT;                    
+                if (sale_date.date < this.loan.event_todays_date.AddDays(1)) e.type = Event.ALERT;                    
                 else e.type = Event.WARNING;
                 e.name = "No Result of Sale Alert";
                 e.description = "No Result of Sale for Sale Date " + this.sale_date.ToShortDateString();

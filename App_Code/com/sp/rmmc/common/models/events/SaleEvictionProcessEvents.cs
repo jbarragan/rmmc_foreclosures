@@ -14,7 +14,7 @@ namespace com.sp.rmmc.common.models.events
         public string fs_eviction_initiated = "";
         public DateTimeObject eviction_stop_date = new DateTimeObject();
 
-        DateTimeObject eviction_initiated_date = new DateTimeObject();
+        public DateTimeObject eviction_initiated_date = new DateTimeObject();
 
         private static String[] class_fields = 
             {
@@ -30,8 +30,10 @@ namespace com.sp.rmmc.common.models.events
 
         private void load_events()
         {
+            if (loan_id == 149583M)
+                this.loan_id = 149583M;
             if (this.fs_eviction_initiated == null || this.fs_eviction_initiated == "") return;
-            DateTimeObject eviction_initiated_date = string2date(this.fs_eviction_initiated);
+            eviction_initiated_date = string2date(this.fs_eviction_initiated);
             
             if (eviction_initiated_date.isNull == false && eviction_stop_date.isNull == false &&
                 eviction_initiated_date.date <= eviction_stop_date.date) return;

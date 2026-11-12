@@ -42,13 +42,13 @@ namespace com.sp.rmmc.common.models.events
         public bool does_require_fannie_mae_call()
         {
             if (last_bc_promised_to_pay_date.isNull == false &&
-                last_bc_promised_to_pay_date.date >= DateTime.Today) return false;
-            TimeSpan ts = DateTime.Today.AddDays(1) - this.last_bc_call_memo_date.date;
+                last_bc_promised_to_pay_date.date >= this.loan.event_todays_date) return false;
+            TimeSpan ts = this.loan.event_todays_date.AddDays(1) - this.last_bc_call_memo_date.date;
             if (ts.Days >= 3) return true;
             if (ts.Days == 0) return false;
             for (int i = 3 - ts.Days; i >= 1; i--)
             {
-                DateTime date_to_call = DateTime.Today.AddDays(i);
+                DateTime date_to_call = this.loan.event_todays_date.AddDays(i);
                 if (date_to_call.DayOfWeek != DayOfWeek.Saturday && date_to_call.DayOfWeek != DayOfWeek.Sunday) return false;
             }
             return true;

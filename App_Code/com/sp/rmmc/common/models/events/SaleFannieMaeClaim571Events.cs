@@ -35,13 +35,13 @@ namespace com.sp.rmmc.common.models.events
             if (this.loan.loan_type != "CNV") return;
             if (this.sale_date.isNull) return;
             if (this.sale_date.date <= this.fannie_mae_claim_571_date.date && this.fannie_mae_claim_571_date.isNull == false) return;
-            if (sale_date.date > DateTime.Today.AddDays(-1 * warning_days)) return;
+            if (sale_date.date > this.loan.event_todays_date.AddDays(-1 * warning_days)) return;
 
             if (this.fannie_mae_claim_571_date.isNull)
             {
                 Event e = new Event();
                 e.loan = this.loan;
-                if (sale_date.date > DateTime.Today.AddDays(-1 * alert_days))
+                if (sale_date.date > this.loan.event_todays_date.AddDays(-1 * alert_days))
                 {
                     e.type = Event.WARNING;
                     e.name = "No " + date_name + " Warning";

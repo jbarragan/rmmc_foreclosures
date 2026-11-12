@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="EditPreservationCode.aspx.cs" Inherits="lossmitigation_Collections_Default" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="EditPreservationCode.aspx.cs" Inherits="MainClass" %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -17,16 +17,19 @@
         <h1>Utilities</h1>
         <p>Edit Preservation Code: <%=preservation_code.code %></p>
     </div>
-    <%= com.sp.rmmc.foreclosures.views.NewNavigations.sub_main_nav %>
-    <%= com.sp.rmmc.foreclosures.views.NewNavigations.utilities_nav%>
+    <%= com.sp.rmmc.common.views.CommonNav.main_nav_select("Foreclosures", new ADUser(HttpContext.Current.User.Identity.Name.ToString()))%>
+    <%= com.sp.rmmc.foreclosures.views.NewNavigations.foreclosure_sub_main_nav_select("Utilities", new ADUser(HttpContext.Current.User.Identity.Name.ToString()))%>
+    <%= com.sp.rmmc.foreclosures.views.NewNavigations.utilities_nav_select("Preservation Codes")%>
     <!-- Example row of columns -->
     <div class="row">
         <div class="span12">
+            <p class="text-error"><asp:Label ID="lbl_error" runat="server" Text="" ></asp:Label></p>
+            <p class="text-success"><asp:Label ID="lbl_success" runat="server" Text="" ></asp:Label></p>
         <h2>Edit Preservation Code</h2>
         <table class="table table-striped" border="0">
             <tr>
                 <td>Code</td>
-                <td><asp:TextBox runat="server" ID="txtCode" MaxLength="50" Width="100px"></asp:TextBox></td>
+                <td><asp:TextBox runat="server" ID="txtCode" MaxLength="50" Width="100px" Enabled="false"></asp:TextBox></td>
             </tr>
             <tr>
                 <td>Type</td>
@@ -47,7 +50,7 @@
             </tr>
             <tr>
                 <td>Allowance</td>
-                <td><asp:TextBox runat="server" ID="txtAllowance" MaxLength="10" Width="100px"></asp:TextBox></td>
+                <td><asp:TextBox runat="server" ID="txtAllowance" MaxLength="10" Width="100px" Enabled="false"></asp:TextBox></td>
             </tr>
             <tr>
                 <td>Enabled</td>
@@ -66,6 +69,25 @@
                 <p class="text-success"><asp:Label ID="lblSuccess" runat="server" Text="" ></asp:Label></p>
                 </td>
              </tr>
+        </table>
+        <table class="table table-striped" runat="server" id="tbl_pcas">
+            <tr>
+                <th width="300px">Allowance</th>
+                <th width="300px">Effective Date</th>
+                <th width="200px">Actions</th>
+            </tr>
+        </table>
+        
+        <table class="table table-striped">
+            <tr>
+                <th colspan="3">New Allowance</th>
+            </tr>
+            <tr>
+                <td width="300px"><asp:TextBox runat="server" id="txt_new_allowance" text=""/></td>
+                <td width="300px"><asp:TextBox runat="server" id="txt_new_effective_date" text=""/></td>
+                <td width="200px"><asp:Button id="btn_save_new_pca" runat="server" class="btn btn-success" 
+                        Text="Save New" onclick="btnSaveNew_Click"/></td>
+            </tr>
         </table>
         </div>
      </div>

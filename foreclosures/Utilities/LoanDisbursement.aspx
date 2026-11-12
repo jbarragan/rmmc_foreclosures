@@ -17,8 +17,9 @@
         <h1>Utilities</h1>
         <p><%= ( disbursement.loan_id > 0 ? "Edit" : "New") + " Disbursement for Loan #" + loan.loan_id.ToString() + " - " + loan.loan_name %></p>
     </div>
-    <%= com.sp.rmmc.foreclosures.views.NewNavigations.sub_main_nav %>
-    <%= com.sp.rmmc.foreclosures.views.NewNavigations.utilities_nav%>
+    <%= com.sp.rmmc.common.views.CommonNav.main_nav_select("Foreclosures", new ADUser(HttpContext.Current.User.Identity.Name.ToString()))%>
+    <%= com.sp.rmmc.foreclosures.views.NewNavigations.foreclosure_sub_main_nav_select("Utilities", new ADUser(HttpContext.Current.User.Identity.Name.ToString()))%>
+    <%= com.sp.rmmc.foreclosures.views.NewNavigations.utilities_nav_select("Disbursements")%>
     <!-- Example row of columns -->
     <div class="row">
         <div class="span12">

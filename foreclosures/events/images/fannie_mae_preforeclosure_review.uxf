@@ -1,0 +1,473 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<diagram program="umlet" version="13.3">
+  <zoom_level>7</zoom_level>
+  <element>
+    <id>UMLState</id>
+    <coordinates>
+      <x>0</x>
+      <y>140</y>
+      <w>259</w>
+      <h>63</h>
+    </coordinates>
+    <panel_attributes>30-day Review Memo Date
+
+Memo created_dt for 
+memo type 'FC-FORECLOSURE REVIEW'
+and subject 'FC-30 day review'
+type=receiver</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLState</id>
+    <coordinates>
+      <x>0</x>
+      <y>266</y>
+      <w>259</w>
+      <h>63</h>
+    </coordinates>
+    <panel_attributes>15-day Review Memo Date
+
+Memo created_dt for 
+memo type 'FC-FORECLOSURE REVIEW'
+and subject 'FC-15 day review'
+type=receiver</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLSpecialState</id>
+    <coordinates>
+      <x>343</x>
+      <y>147</y>
+      <w>42</w>
+      <h>42</h>
+    </coordinates>
+    <panel_attributes>
+type=decision</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>252</x>
+      <y>154</y>
+      <w>105</w>
+      <h>28</h>
+    </coordinates>
+    <panel_attributes>Does it exist?
+lt=&lt;-</panel_attributes>
+    <additional_attributes>130.0;20.0;10.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLState</id>
+    <coordinates>
+      <x>77</x>
+      <y>28</y>
+      <w>182</w>
+      <h>56</h>
+    </coordinates>
+    <panel_attributes>Foreclosure Date
+
+fcl_item_recvd_expd 
+for item_id = 1200
+type=receiver</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>252</x>
+      <y>280</y>
+      <w>105</w>
+      <h>28</h>
+    </coordinates>
+    <panel_attributes>Does it exist?
+lt=&lt;-</panel_attributes>
+    <additional_attributes>130.0;20.0;10.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLSpecialState</id>
+    <coordinates>
+      <x>343</x>
+      <y>273</y>
+      <w>42</w>
+      <h>42</h>
+    </coordinates>
+    <panel_attributes>
+type=decision</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLState</id>
+    <coordinates>
+      <x>329</x>
+      <y>217</y>
+      <w>70</w>
+      <h>28</h>
+    </coordinates>
+    <panel_attributes>No Alert</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>357</x>
+      <y>238</y>
+      <w>35</w>
+      <h>49</h>
+    </coordinates>
+    <panel_attributes>Yes
+lt=&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;50.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>357</x>
+      <y>182</y>
+      <w>35</w>
+      <h>49</h>
+    </coordinates>
+    <panel_attributes>Yes
+lt=-&gt;</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;50.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLSyncBarVertical</id>
+    <coordinates>
+      <x>462</x>
+      <y>14</y>
+      <w>14</w>
+      <h>182</h>
+    </coordinates>
+    <panel_attributes>template=txt
+title=titletext
+bg=red</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>378</x>
+      <y>280</y>
+      <w>105</w>
+      <h>28</h>
+    </coordinates>
+    <panel_attributes>No
+lt=&lt;-</panel_attributes>
+    <additional_attributes>130.0;20.0;10.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>378</x>
+      <y>154</y>
+      <w>105</w>
+      <h>28</h>
+    </coordinates>
+    <panel_attributes>No
+lt=&lt;-</panel_attributes>
+    <additional_attributes>130.0;20.0;10.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>252</x>
+      <y>42</y>
+      <w>231</w>
+      <h>28</h>
+    </coordinates>
+    <panel_attributes>
+lt=&lt;-</panel_attributes>
+    <additional_attributes>310.0;20.0;10.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLSpecialState</id>
+    <coordinates>
+      <x>602</x>
+      <y>35</y>
+      <w>42</w>
+      <h>42</h>
+    </coordinates>
+    <panel_attributes>
+type=decision</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>462</x>
+      <y>42</y>
+      <w>154</w>
+      <h>35</h>
+    </coordinates>
+    <panel_attributes>Foreclosure Date 
+after 40 days from now
+lt=&lt;-</panel_attributes>
+    <additional_attributes>200.0;20.0;10.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLState</id>
+    <coordinates>
+      <x>588</x>
+      <y>105</y>
+      <w>70</w>
+      <h>28</h>
+    </coordinates>
+    <panel_attributes>No Alert</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>616</x>
+      <y>70</y>
+      <w>35</w>
+      <h>49</h>
+    </coordinates>
+    <panel_attributes>Yes
+lt=-&gt;</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;50.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>637</x>
+      <y>42</y>
+      <w>154</w>
+      <h>35</h>
+    </coordinates>
+    <panel_attributes>Foreclosure Date 
+after 35 days from now
+lt=&lt;-</panel_attributes>
+    <additional_attributes>200.0;20.0;10.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>812</x>
+      <y>42</y>
+      <w>56</w>
+      <h>28</h>
+    </coordinates>
+    <panel_attributes>Yes
+lt=-&gt;</panel_attributes>
+    <additional_attributes>10.0;20.0;60.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLState</id>
+    <coordinates>
+      <x>854</x>
+      <y>35</y>
+      <w>140</w>
+      <h>42</h>
+    </coordinates>
+    <panel_attributes>bg=yellow
+Warning
+Fannie Mae PreForeclosure
+Review required</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLSpecialState</id>
+    <coordinates>
+      <x>777</x>
+      <y>35</y>
+      <w>42</w>
+      <h>42</h>
+    </coordinates>
+    <panel_attributes>
+type=decision</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>791</x>
+      <y>70</y>
+      <w>35</w>
+      <h>77</h>
+    </coordinates>
+    <panel_attributes>No
+lt=&lt;-</panel_attributes>
+    <additional_attributes>10.0;90.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLState</id>
+    <coordinates>
+      <x>728</x>
+      <y>133</y>
+      <w>140</w>
+      <h>42</h>
+    </coordinates>
+    <panel_attributes>bg=red
+Alert
+Fannie Mae PreForeclosure
+Review required</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>462</x>
+      <y>280</y>
+      <w>154</w>
+      <h>35</h>
+    </coordinates>
+    <panel_attributes>Foreclosure Date 
+after 9 days from now
+lt=&lt;-</panel_attributes>
+    <additional_attributes>200.0;20.0;10.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLSpecialState</id>
+    <coordinates>
+      <x>602</x>
+      <y>273</y>
+      <w>42</w>
+      <h>42</h>
+    </coordinates>
+    <panel_attributes>
+type=decision</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>616</x>
+      <y>308</y>
+      <w>35</w>
+      <h>49</h>
+    </coordinates>
+    <panel_attributes>Yes
+lt=-&gt;</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;50.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLState</id>
+    <coordinates>
+      <x>588</x>
+      <y>343</y>
+      <w>70</w>
+      <h>28</h>
+    </coordinates>
+    <panel_attributes>No Alert</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>637</x>
+      <y>280</y>
+      <w>154</w>
+      <h>35</h>
+    </coordinates>
+    <panel_attributes>Foreclosure Date 
+after 5 days from now
+lt=&lt;-</panel_attributes>
+    <additional_attributes>200.0;20.0;10.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLSpecialState</id>
+    <coordinates>
+      <x>777</x>
+      <y>273</y>
+      <w>42</w>
+      <h>42</h>
+    </coordinates>
+    <panel_attributes>
+type=decision</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>812</x>
+      <y>280</y>
+      <w>56</w>
+      <h>28</h>
+    </coordinates>
+    <panel_attributes>Yes
+lt=-&gt;</panel_attributes>
+    <additional_attributes>10.0;20.0;60.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLState</id>
+    <coordinates>
+      <x>854</x>
+      <y>273</y>
+      <w>140</w>
+      <h>42</h>
+    </coordinates>
+    <panel_attributes>bg=yellow
+Warning
+Fannie Mae PreForeclosure
+Review required</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>791</x>
+      <y>308</y>
+      <w>35</w>
+      <h>77</h>
+    </coordinates>
+    <panel_attributes>No
+lt=&lt;-</panel_attributes>
+    <additional_attributes>10.0;90.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLState</id>
+    <coordinates>
+      <x>728</x>
+      <y>371</y>
+      <w>140</w>
+      <h>42</h>
+    </coordinates>
+    <panel_attributes>bg=red
+Alert
+Fannie Mae PreForeclosure
+Review required</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLSyncBarVertical</id>
+    <coordinates>
+      <x>462</x>
+      <y>252</y>
+      <w>14</w>
+      <h>203</h>
+    </coordinates>
+    <panel_attributes>template=txt
+title=titletext
+bg=red</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLState</id>
+    <coordinates>
+      <x>77</x>
+      <y>378</y>
+      <w>182</w>
+      <h>56</h>
+    </coordinates>
+    <panel_attributes>Foreclosure Date
+
+fcl_item_recvd_expd 
+for item_id = 1200
+type=receiver</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>252</x>
+      <y>392</y>
+      <w>231</w>
+      <h>28</h>
+    </coordinates>
+    <panel_attributes>
+lt=&lt;-</panel_attributes>
+    <additional_attributes>310.0;20.0;10.0;20.0</additional_attributes>
+  </element>
+</diagram>

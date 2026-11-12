@@ -1,0 +1,434 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<diagram program="umlet" version="13.3">
+  <zoom_level>8</zoom_level>
+  <element>
+    <id>UMLState</id>
+    <coordinates>
+      <x>8</x>
+      <y>16</y>
+      <w>248</w>
+      <h>72</h>
+    </coordinates>
+    <panel_attributes>Mortgage Status
+type=receiver</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLSpecialState</id>
+    <coordinates>
+      <x>344</x>
+      <y>24</y>
+      <w>48</w>
+      <h>48</h>
+    </coordinates>
+    <panel_attributes>bg=yellow
+type=decision</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLSyncBarVertical</id>
+    <coordinates>
+      <x>464</x>
+      <y>8</y>
+      <w>16</w>
+      <h>536</h>
+    </coordinates>
+    <panel_attributes>template=txt
+title=titletext
+bg=red</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>248</x>
+      <y>32</y>
+      <w>112</w>
+      <h>32</h>
+    </coordinates>
+    <panel_attributes>Does it exist?
+lt=&lt;-</panel_attributes>
+    <additional_attributes>120.0;20.0;10.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLSpecialState</id>
+    <coordinates>
+      <x>768</x>
+      <y>24</y>
+      <w>48</w>
+      <h>48</h>
+    </coordinates>
+    <panel_attributes>bg=yellow
+type=decision</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>784</x>
+      <y>64</y>
+      <w>40</w>
+      <h>128</h>
+    </coordinates>
+    <panel_attributes>No
+lt=&lt;-</panel_attributes>
+    <additional_attributes>10.0;140.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>360</x>
+      <y>64</y>
+      <w>40</w>
+      <h>64</h>
+    </coordinates>
+    <panel_attributes>No
+lt=&lt;-</panel_attributes>
+    <additional_attributes>10.0;60.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>384</x>
+      <y>32</y>
+      <w>104</w>
+      <h>32</h>
+    </coordinates>
+    <panel_attributes>Yes
+lt=&lt;-</panel_attributes>
+    <additional_attributes>110.0;20.0;10.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>640</x>
+      <y>32</y>
+      <w>144</w>
+      <h>40</h>
+    </coordinates>
+    <panel_attributes>Yes, Is Mortgage 
+Status equal to 42?
+lt=&lt;-</panel_attributes>
+    <additional_attributes>160.0;20.0;10.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>808</x>
+      <y>32</y>
+      <w>80</w>
+      <h>32</h>
+    </coordinates>
+    <panel_attributes>Yes
+lt=&lt;-</panel_attributes>
+    <additional_attributes>80.0;20.0;10.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLState</id>
+    <coordinates>
+      <x>872</x>
+      <y>32</y>
+      <w>96</w>
+      <h>32</h>
+    </coordinates>
+    <panel_attributes>No Alert
+bg=green</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLState</id>
+    <coordinates>
+      <x>712</x>
+      <y>176</y>
+      <w>280</w>
+      <h>32</h>
+    </coordinates>
+    <panel_attributes>Raise Warning
+Mortgage Status not 42 Warning
+bg=yellow</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLState</id>
+    <coordinates>
+      <x>0</x>
+      <y>176</y>
+      <w>256</w>
+      <h>64</h>
+    </coordinates>
+    <panel_attributes>Loan Type
+type=receiver</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>248</x>
+      <y>192</y>
+      <w>112</w>
+      <h>40</h>
+    </coordinates>
+    <panel_attributes>Is Loan 
+Type FHA?
+lt=&lt;-</panel_attributes>
+    <additional_attributes>120.0;20.0;10.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLSpecialState</id>
+    <coordinates>
+      <x>344</x>
+      <y>184</y>
+      <w>48</w>
+      <h>48</h>
+    </coordinates>
+    <panel_attributes>bg=yellow
+type=decision</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>360</x>
+      <y>136</y>
+      <w>40</w>
+      <h>64</h>
+    </coordinates>
+    <panel_attributes>.
+No
+lt=&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;60.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLState</id>
+    <coordinates>
+      <x>320</x>
+      <y>112</y>
+      <w>96</w>
+      <h>32</h>
+    </coordinates>
+    <panel_attributes>No Alert
+bg=green</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>384</x>
+      <y>192</y>
+      <w>96</w>
+      <h>32</h>
+    </coordinates>
+    <panel_attributes>Yes
+lt=&lt;-</panel_attributes>
+    <additional_attributes>100.0;20.0;10.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLSpecialState</id>
+    <coordinates>
+      <x>600</x>
+      <y>24</y>
+      <w>48</w>
+      <h>48</h>
+    </coordinates>
+    <panel_attributes>bg=yellow
+type=decision</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>464</x>
+      <y>32</y>
+      <w>152</w>
+      <h>48</h>
+    </coordinates>
+    <panel_attributes>Is it a Demand? 
+(Foreclosure Type 
+Not "A" Aactive)
+lt=&lt;-</panel_attributes>
+    <additional_attributes>170.0;20.0;10.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLState</id>
+    <coordinates>
+      <x>0</x>
+      <y>280</y>
+      <w>256</w>
+      <h>64</h>
+    </coordinates>
+    <panel_attributes>Foreclosure Type
+type=receiver</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>248</x>
+      <y>304</y>
+      <w>240</w>
+      <h>24</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-</panel_attributes>
+    <additional_attributes>280.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLSpecialState</id>
+    <coordinates>
+      <x>600</x>
+      <y>168</y>
+      <w>48</w>
+      <h>48</h>
+    </coordinates>
+    <panel_attributes>bg=yellow
+type=decision</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>248</x>
+      <y>408</y>
+      <w>240</w>
+      <h>24</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-</panel_attributes>
+    <additional_attributes>280.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLState</id>
+    <coordinates>
+      <x>0</x>
+      <y>384</y>
+      <w>256</w>
+      <h>64</h>
+    </coordinates>
+    <panel_attributes>Posting Date
+type=receiver</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>248</x>
+      <y>512</y>
+      <w>240</w>
+      <h>24</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-</panel_attributes>
+    <additional_attributes>280.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLState</id>
+    <coordinates>
+      <x>0</x>
+      <y>488</y>
+      <w>256</w>
+      <h>64</h>
+    </coordinates>
+    <panel_attributes>Papers Send to Attorney
+type=receiver</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>616</x>
+      <y>64</y>
+      <w>176</w>
+      <h>120</h>
+    </coordinates>
+    <panel_attributes>No Posting Date
+with Papers Send to Attorney
+and Mortage Status Different 
+than "42"?
+lt=&lt;-</panel_attributes>
+    <additional_attributes>10.0;130.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>640</x>
+      <y>176</y>
+      <w>88</w>
+      <h>32</h>
+    </coordinates>
+    <panel_attributes>Yes
+lt=&lt;-</panel_attributes>
+    <additional_attributes>90.0;20.0;10.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>616</x>
+      <y>208</y>
+      <w>144</w>
+      <h>120</h>
+    </coordinates>
+    <panel_attributes>With Posting Date and 
+Mortgage Status 
+not "68"?
+lt=&lt;-</panel_attributes>
+    <additional_attributes>10.0;130.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLSpecialState</id>
+    <coordinates>
+      <x>600</x>
+      <y>312</y>
+      <w>48</w>
+      <h>48</h>
+    </coordinates>
+    <panel_attributes>bg=yellow
+type=decision</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>616</x>
+      <y>352</y>
+      <w>40</w>
+      <h>72</h>
+    </coordinates>
+    <panel_attributes>No
+lt=&lt;-</panel_attributes>
+    <additional_attributes>10.0;70.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLState</id>
+    <coordinates>
+      <x>584</x>
+      <y>408</y>
+      <w>96</w>
+      <h>32</h>
+    </coordinates>
+    <panel_attributes>No Alert
+bg=green</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>640</x>
+      <y>320</y>
+      <w>88</w>
+      <h>32</h>
+    </coordinates>
+    <panel_attributes>Yes
+lt=&lt;-</panel_attributes>
+    <additional_attributes>90.0;20.0;10.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLState</id>
+    <coordinates>
+      <x>712</x>
+      <y>320</y>
+      <w>280</w>
+      <h>32</h>
+    </coordinates>
+    <panel_attributes>Raise Warning Mortgage Status
+not 68 with Posting Date Warning
+bg=yellow</panel_attributes>
+    <additional_attributes/>
+  </element>
+</diagram>

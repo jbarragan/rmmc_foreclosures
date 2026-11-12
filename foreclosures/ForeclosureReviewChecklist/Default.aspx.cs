@@ -9,21 +9,14 @@ using com.sp.rmmc.common.models;
 
 public partial class lossmitigation_Collections_Default : System.Web.UI.Page
 {
-    protected DemandLetter demand_letter = new DemandLetter();
+    protected DemandLetterObject demand_letter = new DemandLetterObject();
 
     protected void Page_Load(object sender, EventArgs e)
-{
-        try
-        {
-            string loan_id_str = Request.QueryString["loan_id"];
-            decimal loan_id = Convert.ToDecimal(loan_id_str);
-            demand_letter = DemandLetter.get(loan_id);
-            display_complete_incomplete();
-        }
-        catch (Exception)
-        {
-            Response.Redirect("../");
-        }
+    {       
+        string loan_id_str = Request.QueryString["loan_id"];
+        decimal loan_id = Convert.ToDecimal(loan_id_str);
+        demand_letter = demand_letter.get(loan_id);
+        display_complete_incomplete();
     }
 
     protected void display_complete_incomplete()

@@ -17,8 +17,9 @@
         <h1>Utilities</h1>
         <p>Disbursements for Loan <%= loan_id.ToString() + " - " + loan.loan_name%></p>
     </div>
-    <%= com.sp.rmmc.foreclosures.views.NewNavigations.sub_main_nav %>
-    <%= com.sp.rmmc.foreclosures.views.NewNavigations.utilities_nav%>
+    <%= com.sp.rmmc.common.views.CommonNav.main_nav_select("Foreclosures", new ADUser(HttpContext.Current.User.Identity.Name.ToString()))%>
+    <%= com.sp.rmmc.foreclosures.views.NewNavigations.foreclosure_sub_main_nav_select("Utilities", new ADUser(HttpContext.Current.User.Identity.Name.ToString()))%>
+    <%= com.sp.rmmc.foreclosures.views.NewNavigations.utilities_nav_select("Disbursements")%>
     <!-- Example row of columns -->
     <div class="row">
         <div class="span12">
@@ -84,11 +85,13 @@
         <table class="table table-striped">
             <tr>
                 <th>Description</th>
+                <th>Variance</th>
                 <th>Ordered Date</th>
                 <th>Completed Date</th>
                 <th>Paid Date</th>
                 <th>Actual Amount</th>
                 <th>Claimable Amount</th>
+                <th>Code Max Allowance</th>
             </tr>
             <% foreach (com.sp.rmmc.foreclosures.models.LoanPreservationDisbursement disbursement in with_correct_amount_disbursements)
                {   

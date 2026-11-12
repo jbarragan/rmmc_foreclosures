@@ -1,0 +1,3 @@
+alter table history_loan_details add
+	sale_reo_notice_events_action_code varchar(255),
+	sale_reo_notice_events_action_date datetime

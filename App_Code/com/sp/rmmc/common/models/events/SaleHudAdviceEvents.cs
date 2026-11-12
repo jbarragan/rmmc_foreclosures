@@ -31,13 +31,13 @@ namespace com.sp.rmmc.common.models.events
             if (this.loan.loan_type != "FHA") return;
             if (this.conveyance_date.isNull) return;
             if (this.conveyance_date.date <= this.hud_advice_date.date && this.hud_advice_date.isNull == false) return;
-            if (conveyance_date.date > DateTime.Today.AddDays(-1)) return;
+            if (conveyance_date.date > this.loan.event_todays_date.AddDays(-1)) return;
 
             if (this.hud_advice_date.isNull)
             {
                 Event e = new Event();
                 e.loan = this.loan;
-                if (conveyance_date.date > DateTime.Today.AddDays(-3))
+                if (conveyance_date.date > this.loan.event_todays_date.AddDays(-3))
                 {
                     e.type = Event.WARNING;
                     e.name = "No Hud Advice Date Warning";

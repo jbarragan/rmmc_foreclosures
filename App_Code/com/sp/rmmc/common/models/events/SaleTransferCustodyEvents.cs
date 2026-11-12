@@ -34,13 +34,13 @@ namespace com.sp.rmmc.common.models.events
             if (this.reo_date.isNull == false && this.reo_date.date > this.sale_date.date) return;
             if (this.sale_date.isNull) return;
             if (this.sale_date.date <= this.transfer_of_custody_date.date && this.transfer_of_custody_date.isNull == false) return;
-            if (sale_date.date > DateTime.Today.AddDays(-7)) return;
+            if (sale_date.date > this.loan.event_todays_date.AddDays(-7)) return;
 
             if (this.transfer_of_custody_date.isNull)
             {
                 Event e = new Event();
                 e.loan = this.loan;
-                if (sale_date.date > DateTime.Today.AddDays(-15))
+                if (sale_date.date > this.loan.event_todays_date.AddDays(-15))
                 {
                     e.type = Event.WARNING;
                     e.name = "No Transfer of Custody Date Warning";

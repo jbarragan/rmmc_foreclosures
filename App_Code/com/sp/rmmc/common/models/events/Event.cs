@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Web;
 
 using com.sp.rmmc.common.models;
+using com.sp.rmmc.common.tools;
+
 namespace com.sp.rmmc.common.models.events
 {
-    public class Event
+    public class Event : ICSVExport
     {
         public MsLoan loan = new MsLoan();
         public static int WARNING = 0;
@@ -30,6 +32,17 @@ namespace com.sp.rmmc.common.models.events
             if (this.type == Event.WARNING) return "Warning";
             if (this.type == Event.ALERT) return "Alert";
             return "";
+        }
+
+        public String to_csv()
+        {
+            return this.loan.loan_id.ToString() + ",\"" +
+                   this.loan.loan_name + "\",\"" +
+                   this.loan.loan_type + "\",\"" +
+                   ((this.type == WARNING) ? "Warning" : "Alert") + "\",\"" +
+                   this.parent_type + "\",\"" +
+                   this.name + "\",\"" +
+                   this.description + "\","; 
         }
     }
 }

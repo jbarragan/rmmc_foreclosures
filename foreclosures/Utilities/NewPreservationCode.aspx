@@ -17,8 +17,9 @@
         <h1>Utilities</h1>
         <p>New Preservation Code</p>
     </div>
-    <%= com.sp.rmmc.foreclosures.views.NewNavigations.sub_main_nav %>
-    <%= com.sp.rmmc.foreclosures.views.NewNavigations.utilities_nav%>
+    <%= com.sp.rmmc.common.views.CommonNav.main_nav_select("Foreclosures", new ADUser(HttpContext.Current.User.Identity.Name.ToString()))%>
+    <%= com.sp.rmmc.foreclosures.views.NewNavigations.foreclosure_sub_main_nav_select("Utilities", new ADUser(HttpContext.Current.User.Identity.Name.ToString()))%>
+    <%= com.sp.rmmc.foreclosures.views.NewNavigations.utilities_nav_select("Preservation Codes")%>
     <!-- Example row of columns -->
     <div class="row">
         <div class="span12">
@@ -48,6 +49,10 @@
             <tr>
                 <td>Allowance</td>
                 <td><asp:TextBox runat="server" ID="txtAllowance" MaxLength="10" Width="100px"></asp:TextBox></td>
+            </tr>
+            <tr>
+                <td>Effective Date</td>
+                <td><asp:TextBox runat="server" ID="txtEffectiveDate" MaxLength="10" Width="100px"></asp:TextBox></td>
             </tr>
             <tr>
                 <td>Enabled</td>

@@ -1,0 +1,2 @@
+alter table history_loan_details add
+	memo_fc_foreclosure_review_date datetime

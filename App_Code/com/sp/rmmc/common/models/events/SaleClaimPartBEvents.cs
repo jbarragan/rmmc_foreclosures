@@ -35,13 +35,13 @@ namespace com.sp.rmmc.common.models.events
             if (this.reo_date.isNull == false && this.reo_date.date > this.title_approval_date.date) return;
             if (this.title_approval_date.isNull) return;
             if (this.title_approval_date.date <= this.claim_part_b_date.date && this.claim_part_b_date.isNull == false) return;
-            if (title_approval_date.date > DateTime.Today.AddDays(-7)) return;
+            if (title_approval_date.date > this.loan.event_todays_date.AddDays(-7)) return;
 
             if (this.claim_part_b_date.isNull)
             {
                 Event e = new Event();
                 e.loan = this.loan;
-                if (title_approval_date.date > DateTime.Today.AddDays(-15))
+                if (title_approval_date.date > this.loan.event_todays_date.AddDays(-15))
                 {
                     e.type = Event.WARNING;
                     e.name = "No Claim Part B Warning";

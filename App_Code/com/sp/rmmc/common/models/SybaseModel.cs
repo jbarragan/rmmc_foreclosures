@@ -18,7 +18,8 @@ namespace com.sp.rmmc.common.models
     public class SybaseModel : DbModel
     {
         //public static string connectionString = @"Data Source=fics_server_any5;Provider=SAOLEDB.12";
-        public string connectionString = @"Data Source=fics;Provider=SAOLEDB.12";
+        //public string connectionString = @"Data Source=fics;Provider=SAOLEDB.12";
+        public string connectionString = @"Data Source=ficssql;Provider=SQLOLEDB;Initial Catalog=fics;User ID=Dbguy;Password=myfwXyx%7tU#;";
         public OleDbConnection connection = null;
         public OleDbConnection accessConnection = null;
         public string error = "";

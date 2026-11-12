@@ -27,6 +27,16 @@ namespace com.sp.rmmc.foreclosures.models
             [CHECK #] as check_number, AMOUNT
             FROM tbl_gl1806 ";
 
+        private string select_amount_sum_and_last_query =
+            @"select [loan #] as loan_id, 
+            (select top 1 name from tbl_gl1806 ti where ti.[loan #] = base.[loan #]) as name, 
+            (select top 1 [date] from tbl_gl1806 ti where ti.[loan #] = base.[loan #] order by [date] desc) as transaction_date, 
+            (select top 1 description from tbl_gl1806 ti where ti.[loan #] = base.[loan #] order by [date] desc) as description, 
+            (select top 1 invoice from tbl_gl1806 ti where ti.[loan #] = base.[loan #] order by [date] desc) as Invoice, 
+            (select top 1 [check #] from tbl_gl1806 ti where ti.[loan #] = base.[loan #] order by [date] desc) as check_number, 
+            sum(amount) as amount
+            from tbl_gl1806 base ";
+
         public Gl1806Details()
         {
             
@@ -37,6 +47,23 @@ namespace com.sp.rmmc.foreclosures.models
             string query = select_base_query;
             query += " where [Loan #] = " + loan_id.ToString();
             query += " order by [DATE] desc ";
+            return this.get_list(query);
+        }
+
+        public List<Gl1806Details> getSpecificLoanDetails(List<decimal> loan_ids)
+        {
+            if( loan_ids.Count <= 0 ) return new List<Gl1806Details>();
+            string query = select_amount_sum_and_last_query;
+            query += " where [loan #] in (";
+            bool first_loan_id = true;
+            foreach(decimal loan_id in loan_ids){
+                if(first_loan_id == false) query += ", ";
+                else first_loan_id = false;
+                query += loan_id.ToString();
+            }
+            query += ") ";
+            query += "group by [loan #] ";
+            query += "order by [loan #] ";
             return this.get_list(query);
         }
 
