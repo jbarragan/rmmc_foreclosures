@@ -132,7 +132,8 @@ ReviewChecklist.columns("base.loan_id") +
             string query = " and ( demand_letter_due_date >= getdate() ) \n" +
                             " and ( fcl_type <> 'A' or fcl_type is null ) \n" +
                             " and ( bankruptcy_filed_date is null or bankruptcy_discharge_date is not null or bankruptcy_case_dismissed_date is not null or bankruptcy_closed_date is not null ) \n" +
-                            " and ( last_reg_paid_dt < dateadd(dd, -33, demand_letter_due_date) or last_reg_paid_dt is null or last_payments_balance <= 0)  ";
+                            " and ( last_reg_paid_dt < dateadd(dd, -33, demand_letter_due_date) or last_reg_paid_dt is null or last_payments_balance <= 0)  \n" +
+                            " and ( ms_loan_prin_bal > 0 ) ";
             return query;
         }
 
@@ -143,7 +144,8 @@ ReviewChecklist.columns("base.loan_id") +
                             " and ( demand_letter_due_date >= getdate() ) \n" +
                             " and ( fcl_type <> 'A' or fcl_type is null ) \n" +
                             " and ( bankruptcy_filed_date is null or bankruptcy_discharge_date is not null or bankruptcy_case_dismissed_date is not null or bankruptcy_closed_date is not null ) \n" +
-                            " and ( last_reg_paid_dt < dateadd(dd, -33, demand_letter_due_date) or last_reg_paid_dt is null or last_payments_balance <= 0)  ";
+                            " and ( last_reg_paid_dt < dateadd(dd, -33, demand_letter_due_date) or last_reg_paid_dt is null or last_payments_balance <= 0)  \n" +
+                            " and ( ms_loan_prin_bal > 0 ) ";
             return query;
         }
 
@@ -154,7 +156,8 @@ ReviewChecklist.columns("base.loan_id") +
                             " and ( demand_letter_due_date >= getdate() ) \n" +
                             " and ( fcl_type <> 'A' or fcl_type is null ) \n" +
                             " and ( bankruptcy_filed_date is null or bankruptcy_discharge_date is not null or bankruptcy_case_dismissed_date is not null or bankruptcy_closed_date is not null ) \n" +
-                            " and ( last_reg_paid_dt < dateadd(dd, -33, demand_letter_due_date) or last_reg_paid_dt is null or last_payments_balance <= 0)  ";
+                            " and ( last_reg_paid_dt < dateadd(dd, -33, demand_letter_due_date) or last_reg_paid_dt is null or last_payments_balance <= 0)  \n" +
+                            " and ( ms_loan_prin_bal > 0 ) ";
             return query;
         }
 
@@ -223,7 +226,8 @@ ReviewChecklist.columns("base.loan_id") +
                            " and ( memo_with_inspection_report_delinquent_date is null or last_notify_inspection_memo_date is null or memo_with_inspection_report_delinquent_date < last_notify_inspection_memo_date ) " +
                            " and (  ( last_notify_inspection_memo_description in ('PI-Initial Vacant Inspection', 'PI-Ongoing Int./Ext. Vacant Inspection', 'PI-No Inspection Ordered')  and  last_notify_inspection_memo_date < dateadd(dd, -25, getdate()) ) " +
                            "     or ( last_notify_inspection_memo_date is null ) " +
-                           "     or ( last_notify_inspection_memo_description not in ('PI-Initial Vacant Inspection', 'PI-Ongoing Int./Ext. Vacant Inspection', 'PI-No Inspection Ordered')  and  last_notify_inspection_memo_date < dateadd(dd, -20, getdate()) ) ) ";            
+                           "     or ( last_notify_inspection_memo_description not in ('PI-Initial Vacant Inspection', 'PI-Ongoing Int./Ext. Vacant Inspection', 'PI-No Inspection Ordered')  and  last_notify_inspection_memo_date < dateadd(dd, -20, getdate()) ) ) \n" +
+                            " and ( ms_loan_prin_bal > 0 ) ";
             return query;
         }
 

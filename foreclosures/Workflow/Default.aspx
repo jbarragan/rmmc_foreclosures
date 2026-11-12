@@ -11,12 +11,13 @@
     <form id="form1" runat="server">
     <div>
     <div class="container-print">
-    <div class="hero-unit">
+    <div class="hero-unit noprint">
         <img src="../../assets/img/logo.png" class="img-rounded" alt="RMMC Logo" />
         <h1><%= workflow %> <%= ( sublist != "ALL" ? " - " + this.sublist : "") %></h1>
         <h2><%= (this.history == null) ?  "Current" : "History: " + history.history_text %></h2>
         <p></p>
     </div>
+    <%= com.sp.rmmc.common.views.CommonNav.main_nav_select("Foreclosures", new ADUser(HttpContext.Current.User.Identity.Name.ToString()))%>
     <%= com.sp.rmmc.foreclosures.views.NewNavigations.foreclosure_sub_main_nav_select("Workflow", new ADUser(HttpContext.Current.User.Identity.Name.ToString()))%>
     <%= com.sp.rmmc.foreclosures.views.NewNavigations.workflow_list_nav_select(workflow, this.version)%>
     <%= com.sp.rmmc.foreclosures.views.NewNavigations.workflow_sublist_nav_select(workflow, sublist, this.version)%>
@@ -67,6 +68,7 @@
                 <th>Letters Sent</th>                
                 -->
                 <th>Review Checklist</th>
+                <th>GL1806 Balance</th>
             </tr>
             <% foreach (com.sp.rmmc.foreclosures.models.BaseForeclosure bf in bfs)
                {
@@ -98,7 +100,15 @@
                     <a href="../ForeclosureReviewChecklist/Default.aspx?loan_id=<%=bf.loan_id.ToString() %>">Checklist</a>
                     <span class="text-success"><%= (Array.IndexOf(array_completed_checklists_loan_ids, bf.loan_id) >= 0) ? "Completed" : ""%></span>
                 </td>
-                
+                <td>
+                    <% if( bf.gl1806_details != null )
+                       { 
+                    %>
+                        <a href="../Management/Gl1806Details.aspx?loan_id=<%=bf.loan_id.ToString() %>"><%= bf.gl1806_details.amount.ToString("C") %></a>
+                    <% }else{ %>
+                        NA
+                    <% } %>
+                </td>
              </tr>
             <%
                }
@@ -265,6 +275,7 @@
                 <th>Foreclosure Date</th>
                 <th>Officer(s)</th>
                 <th>Checklist</th>
+                <th>GL1806 Balance</th>
             </tr>
             <% 
                foreach (com.sp.rmmc.foreclosures.models.BaseForeclosure bf in bfs)
@@ -291,6 +302,15 @@
                 <td><span class="text-error"><%= bf.foreclosure_date.ToShortDateString()%></span></td>
                 <td><%= bf.foreclosure_officers%></td>
                 <td><a href="PreforeclosureEvents.aspx?loan_id=<%=bf.loan_id.ToString() %>&version=<%=version %>">Checklist</a></td>
+                <td>
+                    <% if( bf.gl1806_details != null )
+                       { 
+                    %>
+                        <a href="../Management/Gl1806Details.aspx?loan_id=<%=bf.loan_id.ToString() %>"><%= bf.gl1806_details.amount.ToString("C") %></a>
+                    <% }else{ %>
+                        NA
+                    <% } %>
+                </td>
              </tr>
             <%
                }
@@ -302,7 +322,7 @@
         }
     %>
     
-    <%if (this.workflow == "Foreclosures")
+    <%if (this.workflow == "Foreclosures" && this.sublist != "Home Insurance")
       {
     %>
     <div class="row">
@@ -334,6 +354,7 @@
                 <% } %>
                 <th>Officer(s)</th>
                 <th>Checklist</th>
+                <th>GL1806 Balance</th>
             </tr>
             <% 
                foreach (com.sp.rmmc.foreclosures.models.BaseForeclosure bf in bfs)
@@ -371,6 +392,15 @@
                 <% } %>
                 <td><%= bf.foreclosure_officers%></td>
                 <td><a href="PreforeclosureEvents.aspx?loan_id=<%=bf.loan_id.ToString() %>&version=<%=version %>">Checklist</a></td>
+                <td>
+                    <% if( bf.gl1806_details != null )
+                       { 
+                    %>
+                        <a href="../Management/Gl1806Details.aspx?loan_id=<%=bf.loan_id.ToString() %>"><%= bf.gl1806_details.amount.ToString("C") %></a>
+                    <% }else{ %>
+                        NA
+                    <% } %>
+                </td>
              </tr>
             <%
                }
@@ -382,6 +412,50 @@
         }
     %>
     
+
+    <%if (this.workflow == "Foreclosures" && this.sublist == "Home Insurance" )
+        {
+    %>
+    <div class="row">
+        <div class="span12">
+        <h2><%= this.workflow%> - <%= this.sublist %> (<%= bfs.Count%>)</h2>
+        <table class="table table-striped">
+            <tr>
+                <th>Loan#</th>
+                <th>Loan Type</th>
+                <th>Loan Name</th>
+                <th>Carrier</th>
+                <th>Policy Number</th>
+                <th>Disbursement Date</th>
+                <th>Expiration Date</th>
+                <th>Amount to be Paid</th>
+                <th>Policy Coverage</th>
+            </tr>
+            <% 
+               foreach (com.sp.rmmc.foreclosures.models.BaseForeclosure bf in bfs)
+               {   
+            %>
+            <tr>
+                <td><%= bf.loan_id.ToString()%></td>
+                <td><%= bf.loan.loan_type%></td>
+                <td><%= bf.loan.loan_name%></td>
+                <td><%= bf.foreclosure_home_insurance_events != null ? bf.foreclosure_home_insurance_events.carrier.ToString() : "NA"%></td>
+                <td><%= bf.foreclosure_home_insurance_events != null ? bf.foreclosure_home_insurance_events.policy_number.ToString() : "NA"%></td>
+                <td><%= bf.foreclosure_home_insurance_events != null ? bf.foreclosure_home_insurance_events.disbursement_date.ToString() : "NA"%></td>
+                <td><%= bf.foreclosure_home_insurance_events != null ? bf.foreclosure_home_insurance_events.expiration_date.ToString() : "NA"%></td>
+                <td><%= bf.foreclosure_home_insurance_events != null ? bf.foreclosure_home_insurance_events.disbursement_amount.ToString("C") : "NA"%></td>
+                <td><%= bf.foreclosure_home_insurance_events != null ? bf.foreclosure_home_insurance_events.policy_coverage.ToString("C") : "NA"%></td>
+             </tr>
+            <%
+               }
+            %>
+        </table>
+        </div>
+    </div>    
+    <%
+        }
+    %>
+
     <%if (this.workflow == "Removed Foreclosures")
       {
     %>
@@ -455,12 +529,13 @@
     %>
 
 
-    <%if (this.workflow == "Foreclosed")
+    <%if (this.workflow == "Foreclosed" && this.sublist != "Evictions" &&  this.sublist != "Home Insurance" )
       {
     %>
     <div class="row">
         <div class="span12">
         <h2><%= this.workflow%> (<%= bfs.Count%>)</h2>
+        <asp:LinkButton ID="LinkButton1" runat="server" Text="Export" onclick="lbExport_Click"></asp:LinkButton>
         <table class="table table-striped">
             <tr>
                 <th>Loan#</th>
@@ -486,26 +561,42 @@
                 <% } %>
                 <th>Officer(s)</th>
                 <th>Principal Paid</th>
-                <!-- 
-                <th>Reason Code</th>
-                <th>Occupancy Code</th>
-                -->
-                <!-- 
-                <th>Letters Sent</th>                
-                -->
+                <th>Losses</th>
+                <th>GL1806 Balance</th>
             </tr>
             <% 
                int month = 0;
+               int previous_month = 0;
+               DateTime previous_month_date = new DateTime();
+               int total_loans = 0;
+               decimal total_principal = 0M;
                foreach (com.sp.rmmc.foreclosures.models.BaseForeclosure bf in bfs)
                {
                    if (bf.sale_date.date.Month != month)
                    {
                        month = bf.sale_date.date.Month;
+                       if (previous_month != 0)
+                        {
+                           %>
+                
+                <tr class="success"><td colspan="17"><%= previous_month_date.ToString("MMMM yyyy")%> <%=total_loans %> Loans - Total Paid Principal <%=total_principal.ToString("C") %> </td></tr>
+                           <%
+                       }
+
+                       previous_month = month;
+                       total_loans = 1;
+                       total_principal = bf.non_zero_balance();
+                       previous_month_date = bf.sale_date.date;
             %>
-            <tr class="info"><td colspan="16"><%= bf.sale_date.date.ToString("MMMM yyyy") %></td></tr>
+            <tr class="info"><td colspan="17"><%= bf.sale_date.date.ToString("MMMM yyyy")%></td></tr>
             <%
                    }
-            %>
+                   else
+                   {
+                       total_loans = total_loans + 1;
+                       total_principal = total_principal + bf.non_zero_balance();
+                   }
+              %>
             <tr class="<%= bf.getEventStatusColor() %>">
                 <td><%= bf.loan_id.ToString()%></td>
                 <%  int events_count = 0; if ((events_count = bf.getEvents().Count) > 0)
@@ -537,10 +628,119 @@
                 <% } %>
                 <td><%= bf.foreclosure_officers%></td>
                 <td><%= bf.non_zero_balance().ToString("C")%></td>
-                <!--bf.default_reason_code -->
-                <!--bf.all_occupancy_codes_descriptions()-->
-                <!--bf.last_nl_demand_memo_date.ToString()-->
-                
+                <td><%= bf.sale_losses.ToString("C")%></td>
+                <td>
+                    <% if( bf.gl1806_details != null )
+                       { 
+                    %>
+                        <a href="../Management/Gl1806Details.aspx?loan_id=<%=bf.loan_id.ToString() %>"><%= bf.gl1806_details.amount.ToString("C") %></a>
+                    <% }else{ %>
+                        NA
+                    <% } %>
+                </td>
+             </tr>
+             <%
+           }
+           %>
+        </table>
+        </div>
+    </div>    
+    <%
+        }
+    %>
+    
+    <%if (this.workflow == "Foreclosed" && this.sublist == "Evictions" )
+        {
+    %>
+    <div class="row">
+        <div class="span12">
+        <h2><%= this.workflow%> - <%= this.sublist %> (<%= bfs.Count%>)</h2>
+        <table class="table table-striped">
+            <tr>
+                <th>Loan#</th>
+                <th>Exceptions</th>
+                <th>Loan Type</th>
+                <th>Loan Name</th>
+                <th>Eviction Initiated</th>
+                <th>Eviction Stopped</th>
+            </tr>
+            <% 
+               int month = 0;
+               foreach (com.sp.rmmc.foreclosures.models.BaseForeclosure bf in bfs)
+               {
+                   if (bf.sale_date.date.Month != month)
+                   {
+                       month = bf.sale_date.date.Month;
+            %>
+            <tr class="info"><td colspan="16"><%= bf.sale_date.date.ToString("MMMM yyyy") %></td></tr>
+            <%
+                   }
+            %>
+            <tr class="<%= bf.getEventStatusColor() %>">
+                <td><%= bf.loan_id.ToString()%></td>
+                <%  int events_count = 0; if ((events_count = bf.getEvents().Count) > 0)
+                    { %>
+                    <td><a href="Events.aspx?loan_id=<%=bf.loan_id %>&workflow=<%=workflow %>&version=<%=version %>"><%= events_count.ToString()%></a></td>
+                <%  }
+                    else
+                    { %>
+                    <td>0</td>
+                <%  } %>
+                <td><%= bf.loan.loan_type%></td>
+                <td><%= bf.loan.loan_name%></td>
+                <td><%= bf.sale_eviction_process_events != null ? bf.sale_eviction_process_events.eviction_initiated_date.ToString() : "NA" %></td>
+                <td><%= bf.sale_eviction_process_events != null ? bf.sale_eviction_process_events.eviction_stop_date.ToString() : "NA" %></td>
+             </tr>
+            <%
+               }
+            %>
+        </table>
+        </div>
+    </div>    
+    <%
+        }
+    %>
+
+    <%if (this.workflow == "Foreclosed" && this.sublist == "Home Insurance" )
+        {
+    %>
+    <div class="row">
+        <div class="span12">
+        <h2><%= this.workflow%> - <%= this.sublist %> (<%= bfs.Count%>)</h2>
+        <table class="table table-striped">
+            <tr>
+                <th>Loan#</th>
+                <th>Loan Type</th>
+                <th>Loan Name</th>
+                <th>Carrier</th>
+                <th>Policy Number</th>
+                <th>Disbursement Date</th>
+                <th>Expiration Date</th>
+                <th>Amount to be Paid</th>
+                <th>Policy Coverage</th>
+            </tr>
+            <% 
+               int month = 0;
+               foreach (com.sp.rmmc.foreclosures.models.BaseForeclosure bf in bfs)
+               {
+                   if (bf.sale_date.date.Month != month)
+                   {
+                       month = bf.sale_date.date.Month;
+            %>
+            <tr class="info"><td colspan="16"><%= bf.sale_date.date.ToString("MMMM yyyy") %></td></tr>
+            <%
+                   }
+            %>
+            <tr>
+                <td><%= bf.loan_id.ToString()%></td>
+                <td><%= bf.loan.loan_type%></td>
+                <td><%= bf.loan.loan_name%></td>
+                <td><%= bf.foreclosure_home_insurance_events != null ? bf.foreclosure_home_insurance_events.carrier.ToString() : "NA"%></td>
+                <td><%= bf.foreclosure_home_insurance_events != null ? bf.foreclosure_home_insurance_events.policy_number.ToString() : "NA"%></td>
+                <td><%= bf.foreclosure_home_insurance_events != null ? bf.foreclosure_home_insurance_events.disbursement_date.ToString() : "NA"%></td>
+                <td><%= bf.foreclosure_home_insurance_events != null ? bf.foreclosure_home_insurance_events.expiration_date.ToString() : "NA"%></td>
+                <td><%= bf.foreclosure_home_insurance_events != null ? bf.foreclosure_home_insurance_events.disbursement_amount.ToString("C") : "NA"%></td>
+                <td><%= bf.foreclosure_home_insurance_events != null ? bf.foreclosure_home_insurance_events.policy_coverage.ToString("C") : "NA"%></td>
              </tr>
             <%
                }

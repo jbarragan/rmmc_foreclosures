@@ -44,6 +44,9 @@ namespace com.sp.rmmc.foreclosures.models
                 {
                     DateTimeObject minimal_completed_date = new DateTimeObject();
                     minimal_completed_date.set_date(f.demand_letter_due_date.date.AddDays(-30));
+                    if( minimal_completed_date.date < new DateTime(1980,01,01) )
+                        minimal_completed_date.set_date(new DateTime(1980,01,01));
+
                     query += loan_in_lm_query2(f.loan_id, minimal_completed_date);
                 }
                 query += " (1 = 2))";
@@ -59,6 +62,24 @@ namespace com.sp.rmmc.foreclosures.models
             {
                 string query = base_query + " where 1 = 1 and (";
                 foreach (DemandLetter demand_letter in demand_letters)
+                {
+                    DateTimeObject minimal_completed_date = new DateTimeObject();
+                    minimal_completed_date.set_date(demand_letter.demand_letter_due_date.date.AddDays(-30));
+                    query += loan_in_lm_query(demand_letter.loan_id, minimal_completed_date);
+                }
+                query += " (1 = 2))";
+                return get_lm_receptions(query);
+            }
+            else
+                return new List<LMReception>();
+        }
+
+        public static List<LMReception> get_demand_letters_objects_lm_receptions(List<DemandLetterObject> demand_letters)
+        {
+            if (demand_letters.Count > 0)
+            {
+                string query = base_query + " where 1 = 1 and (";
+                foreach (DemandLetterObject demand_letter in demand_letters)
                 {
                     DateTimeObject minimal_completed_date = new DateTimeObject();
                     minimal_completed_date.set_date(demand_letter.demand_letter_due_date.date.AddDays(-30));

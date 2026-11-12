@@ -8,6 +8,7 @@ using System.Text.RegularExpressions;
 
 using com.sp.rmmc.foreclosures.models;
 using com.sp.rmmc.common.models.events;
+using com.sp.rmmc.common.tools;
 
 public partial class lossmitigation_Default : System.Web.UI.Page
 {
@@ -25,7 +26,16 @@ public partial class lossmitigation_Default : System.Web.UI.Page
     protected List<BaseForeclosure> removed_bfs = new List<BaseForeclosure>();
     protected History history = null;
 
+
+
+
     protected void Page_Load(object sender, EventArgs e)
+    {
+        if (Page.IsPostBack) return;
+        init();
+    }
+
+    protected void init()
     {
         //
         this.loan_officer = getArg("loan_officer", "ALL");
@@ -37,12 +47,11 @@ public partial class lossmitigation_Default : System.Web.UI.Page
         this.version = getArg("version", "current");
 
         int iverstion = stringToInt(version, 0);
-        if (Page.IsPostBack) return;
         BaseForeclosure query_foreclosure = new CurrentForeclosure();
         if (iverstion > 0)
         {
             history = (new History()).get(iverstion);
-            if (history != null) query_foreclosure = new HistoryForeclosure(iverstion);
+            if (history != null) query_foreclosure = new HistoryForeclosure(history);
         }
 
         if (this.decimal_loan_id != 0M)
@@ -297,5 +306,15 @@ public partial class lossmitigation_Default : System.Web.UI.Page
     {
         this.event_type = ddlEventType.SelectedValue.ToUpper();
         Response.Redirect(generate_url());
+    }
+
+    protected void lbExport_Click(object sender, EventArgs e)
+    {
+        this.init();
+        string et = this.event_type;
+        if (et == Event.WARNING.ToString()) et = "Warnings";
+        if (et == Event.ALERT.ToString()) et = "Alerts";
+        string filename = "Events-" + this.workflow + "-" + et;
+        CSVExport.writeHeadersAndCSV(filename, "Loan#,Loan Name,Loan Type,Event Type,Stage,Event Name,Event Description", this.events);
     }
 }

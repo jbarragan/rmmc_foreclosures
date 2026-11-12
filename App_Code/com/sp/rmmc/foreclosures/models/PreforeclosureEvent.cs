@@ -159,5 +159,28 @@ namespace com.sp.rmmc.foreclosures.models
             if (original != changed) return "getdate()";
             else return changed_date.toDBValue();
         }
+
+        public DateTimeObject lastest_preforeclosure_update()
+        {
+            DateTimeObject latest = new DateTimeObject();
+            if( is_copy_demand_letters && ( latest.isNull || copy_demand_letters_date.date > latest.date ) )
+                latest = copy_demand_letters_date;
+            
+            if( is_copy_notes && ( latest.isNull || copy_notes_date.date > latest.date ) )
+                latest = copy_notes_date;
+            
+            if( is_copy_deed_of_trust_notes  && ( latest.isNull || copy_deed_of_trust_date.date > latest.date ) )
+                latest = copy_deed_of_trust_date;
+            
+            if( is_copy_bankruptcy && ( latest.isNull || copy_bankruptcy_date.date > latest.date ) )
+                latest = copy_bankruptcy_date;
+            
+            if( is_copy_title_policy && ( latest.isNull || copy_title_policy_date.date > latest.date ) )
+                latest = copy_title_policy_date;
+            
+            if( is_notify_appraisal && ( latest.isNull || notify_appraisal_date.date > latest.date ) )
+                latest = notify_appraisal_date;
+            return latest;
+        }
     }
 }

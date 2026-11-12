@@ -28,9 +28,9 @@ namespace com.sp.rmmc.common.models.events
         {
             if (this.demand_letter_due_date.isNull) return;
             DateTime three_days_before_demand_due_date = this.demand_letter_due_date.date.AddDays(-3);
-            if (three_days_before_demand_due_date > DateTime.Today) 
+            if (three_days_before_demand_due_date > this.loan.event_todays_date) 
                 return;
-            if (this.demand_letter_due_date.date < DateTime.Today)
+            if (this.demand_letter_due_date.date < this.loan.event_todays_date)
             {
                 Event e = new Event();
                 e.loan = this.loan;

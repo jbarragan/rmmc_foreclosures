@@ -16,6 +16,7 @@
         <h1>Foreclosures</h1>
         <p>Foreclosure Review Checklist.</p>
     </div>
+    <%= com.sp.rmmc.common.views.CommonNav.main_nav_select("Foreclosures", new ADUser(HttpContext.Current.User.Identity.Name.ToString()))%>
     <%= com.sp.rmmc.foreclosures.views.NewNavigations.sub_main_nav %>
     <!-- Example row of columns -->
     <div class="row">

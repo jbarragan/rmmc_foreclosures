@@ -18,7 +18,8 @@ namespace com.sp.rmmc.common.models
     public class ForeclosuresCommonModel
     {
         //public static string connectionString = @"Data Source=fics_server_any5;Provider=SAOLEDB.12";
-        public static string connectionString = @"Data Source=fics;Provider=SAOLEDB.12";
+        //public static string connectionString = @"Data Source=fics;Provider=SAOLEDB.12";
+        public static string connectionString = @"Data Source=ficssql;Provider=SQLOLEDB;Initial Catalog=fics;User ID=Dbguy;Password=myfwXyx%7tU#;";
         public static OleDbConnection connection = null;
         public static OleDbConnection accessConnection = null;
 
@@ -151,17 +152,17 @@ namespace com.sp.rmmc.common.models
         {
             error = "";
             OleDbConnection dbConnection = get_connecetion();
-            try
+            //try
             {
                 if( dbConnection.State != ConnectionState.Open ) dbConnection.Open();
                 OleDbCommand cmd = new OleDbCommand(query, dbConnection);
                 return cmd.ExecuteReader();
             }
-            catch (Exception e)
-            {
-                error = e.Message;
-                return null;
-            }
+            //catch (Exception e)
+            //{
+            //    error = e.Message;
+            //    return null;
+            //}
         }
 
         protected static string executeStatement(string query)
@@ -263,6 +264,7 @@ namespace com.sp.rmmc.common.models
         protected static bool isMsSQLConnectionOpen()
         {
             if (ms_sql_connection == null) return false;
+            if (ms_sql_connection.State == ConnectionState.Closed) return false;
             return true;
         }
 

@@ -44,18 +44,18 @@ namespace com.sp.rmmc.common.models.events
                 Event e = new Event();
                 e.loan = this.loan;
                 e.type = Event.ALERT;
-                e.name = event_text + " not ordered with Papers to Attorney Date Warning";
+                e.name = event_text + " not ordered with Papers to Attorney Date Alert";
                 e.description = event_text + " not ordered with Papers to Attorney Date: " + this.papers_to_attorney_date.ToShortDateString();
                 this.events.Add(e);
             }
 
             if (this.appraisal_ordered_date.isNull == false && 
                 this.appraisal_received_date.isNull && 
-                this.appraisal_ordered_date.date.AddDays(-3) > DateTime.Today )
+                this.appraisal_ordered_date.date.AddDays(-3) > this.loan.event_todays_date )
             {
                 Event e = new Event();
                 e.loan = this.loan;
-                if( this.appraisal_ordered_date.date.AddDays(-7) > DateTime.Today ){
+                if( this.appraisal_ordered_date.date.AddDays(-7) > this.loan.event_todays_date ){
                     e.type = Event.ALERT;
                     e.name = event_text + " not completed Alert";
                 }else{

@@ -17,8 +17,9 @@
         <h1>Utilities</h1>
         <p>Preservation Codes</p>
     </div>
-    <%= com.sp.rmmc.foreclosures.views.NewNavigations.sub_main_nav %>
-    <%= com.sp.rmmc.foreclosures.views.NewNavigations.utilities_nav%>
+    <%= com.sp.rmmc.common.views.CommonNav.main_nav_select("Foreclosures", new ADUser(HttpContext.Current.User.Identity.Name.ToString()))%>
+    <%= com.sp.rmmc.foreclosures.views.NewNavigations.foreclosure_sub_main_nav_select("Utilities", new ADUser(HttpContext.Current.User.Identity.Name.ToString()))%>
+    <%= com.sp.rmmc.foreclosures.views.NewNavigations.utilities_nav_select("Preservation Codes")%>
     <!-- Example row of columns -->
     <div class="row">
         <div class="span12">
@@ -28,6 +29,7 @@
          <asp:Button ID="btnLoanDisbursements" runat="server" Text="View" CssClass="btn" onclick="btnLoanDisbursements_Click" />
        </h4>
         <h4><a href="NewPreservationCode.aspx">Create New Preservation Code</a></h4>
+        <asp:LinkButton ID="lbExport" runat="server" Text="Export" onclick="lbExport_Click"></asp:LinkButton>
         <table>
         <%
             foreach (TypeList currentTypeList in this.preservation_loan_types)
@@ -61,6 +63,7 @@
                         <th>Description</th>
                         <th>Service</th>
                         <th>Allowance</th>
+                        <th>Effective Date</th>
                         <th>Enabled</th>
                     </tr>
                     <% foreach (com.sp.rmmc.foreclosures.models.PreservationCode preservation_code in currentServiceList)
@@ -72,6 +75,7 @@
                         <td><%= preservation_code.description %></td>
                         <td><%= preservation_code.general_service %></td>
                         <td><%= preservation_code.allowance.ToString("C") %></td>
+                        <td><%= preservation_code.effective_date.ToString() %></td>
                         <td><%= preservation_code.enabled.ToString() %></td>
                         </tr>
                     <%

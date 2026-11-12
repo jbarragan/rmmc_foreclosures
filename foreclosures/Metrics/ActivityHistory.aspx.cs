@@ -91,7 +91,7 @@ public partial class lossmitigation_Collections_Default : System.Web.UI.Page
         foreach( History h in hs )
         {
             ActivityByMonth a = new ActivityByMonth(h.history_date.date, h.id.ToString());
-            BaseForeclosure query_foreclosure = new HistoryForeclosure(h.id);
+            BaseForeclosure query_foreclosure = new HistoryForeclosure(h);
             query_foreclosure.getDemands(a.demands, new List<BaseForeclosure>());
             query_foreclosure.getPreForeclosures(a.preforeclosures, new List<BaseForeclosure>());
             query_foreclosure.getForeclosures(a.foreclosures, new List<BaseForeclosure>());

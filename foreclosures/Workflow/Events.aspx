@@ -17,6 +17,7 @@
         <h2><%= (this.history == null) ?  "Current" : "History: " + history.history_text %></h2>
         <p></p>
     </div>
+    <%= com.sp.rmmc.common.views.CommonNav.main_nav_select("Foreclosures", new ADUser(HttpContext.Current.User.Identity.Name.ToString()))%>
     <%= com.sp.rmmc.foreclosures.views.NewNavigations.foreclosure_sub_main_nav_select("Workflow", new ADUser(HttpContext.Current.User.Identity.Name.ToString()))%>
     <%= com.sp.rmmc.foreclosures.views.NewNavigations.workflow_list_nav_select("", version)%>
     <!-- Example row of columns -->    
@@ -55,6 +56,7 @@
     <div class="row">
         <div class="span12">
         <h2>Events (<%= events.Count %>)</h2>
+        <asp:LinkButton ID="LinkButton1" runat="server" Text="Export" onclick="lbExport_Click"></asp:LinkButton>
         <table class="table table-striped">
             <tr>
                 <th>Loan#</th>
@@ -87,11 +89,17 @@
                            e.name == "Demand File Expiring Warning" ||
                            e.name == "Demand Mortgage Status not 42 Warning" ||
                            e.name == "Demand Request for Extension of Time Alert" ||
+                           e.name == "Hud Advice Date Alert" ||
+                           e.name == "Hud Advice Date Warning" ||
+                           e.name == "Hud MIP Cancellation" ||
+                           e.name == "Mortgage Status with Conveyance Date Warning" ||
                            e.name == "No Acquisition Payment Date Warning" ||
                            e.name == "No Acquisition Payment Date Alert" ||
                            e.name == "No Basic Claim Date Alert" ||
                            e.name == "No Basic Claim Date Warning" ||
                            e.name == "Acquisition Payment Date Alert" ||
+                           e.name == "No Hud Advice Date Alert" ||
+                           e.name == "No Hud Advice Date Warning" ||
                            e.name == "No Inspection Received Alert" ||
                            e.name == "No Inspection Received Warning" ||
                            e.name == "No Inspection Ordered" ||
@@ -110,7 +118,10 @@
                            e.name == "No Conveyance Date Warning" ||
                            e.name == "FANNIE MAE loan last call Warning"||
                            e.name == "Removed Demand Mortgage Status not 20 Warning" ||
-                           e.name == "Removed Demand Current Occupancy Letter Warning" )
+                           e.name == "Removed Demand Current Occupancy Letter Warning" ||
+                           e.name == "VALERI Scheduled Reporting Event" ||
+                           e.name == "Fannie Mae PreForeclosure Review required"
+                           )
                        {%>
                        &nbsp;<a href="../events/<%=e.name %>.aspx">Description</a>
                     <% } %>

@@ -24,6 +24,9 @@ namespace com.sp.rmmc.foreclosures.models
         public string borrower_phone = "";
 
         public static int COLUMNS = 11;
+        public static string MS_LOAN_PRIN_BAL = "(select top 1 prin_bal from ms_loan_balances where ms_loan_balances.loan_id = base.loan_id order by ms_loan_balances.prin_bal) ";
+        public static string MS_LOAN_INV_CD = "(select top 1 ms_investor_loan.inv_cd from ms_investor_loan where ms_investor_loan.loan_id = base.loan_id  order by ms_investor_loan.inv_cd )";
+        public static string MS_LOAN_DUE_DATE_NEXT_PAYMENT = "(select top 1 ms_loan_info.due_date_next_payment from ms_loan_information ms_loan_info where ms_loan_info.loan_id = base.loan_id order by ms_loan_info.due_date_next_payment )";
 
         private static string base_query = @"
 select ms_loan_information.loan_id,
@@ -36,7 +39,7 @@ select ms_loan_information.loan_id,
     ms_property_information.property_city,
     ms_property_information.property_state,
     ms_property_information.property_zip,
-    (select top 1 ms_borrower_information.borrower_phone from ms_borrower_information where ms_borrower_information.loan_id = ms_loan_information.loan_id  and length(ms_borrower_information.borrower_phone) >= 10 order by ms_borrower_information.borrower_id asc ) as borrower_phone
+    (select top 1 ms_borrower_information.borrower_phone from ms_borrower_information where ms_borrower_information.loan_id = ms_loan_information.loan_id  and len(ms_borrower_information.borrower_phone) >= 10 order by ms_borrower_information.borrower_id asc ) as borrower_phone
 from ms_loan_information, ms_loan_balances, ms_property_information
 where ms_loan_information.loan_id = ms_loan_balances.loan_id
 and   ms_loan_information.loan_id = ms_property_information.loan_id
@@ -92,7 +95,7 @@ and   ms_loan_information.loan_id = ms_property_information.loan_id
             " (select top 1 ms_prop.property_city from ms_property_information ms_prop where ms_prop.loan_id = " + loan_id_column + " order by ms_prop.property_city ) as property_city, " +
             " (select top 1 ms_prop.property_state from ms_property_information ms_prop where ms_prop.loan_id = " + loan_id_column + " order by ms_prop.property_state ) as property_state, " +
             " (select top 1 ms_prop.property_zip from ms_property_information ms_prop where ms_prop.loan_id = " + loan_id_column + " order by ms_prop.property_zip ) as property_zip, " +
-            " (select top 1 'h:' || isnull(ms_borrower_information.borrower_phone, '') || '  b:' ||   isnull(ms_borrower_information.borrower_bus_phone, '') || ' c:' || isnull(ms_borrower_information.borrower_cell_phone, '') from ms_borrower_information where ms_borrower_information.loan_id = " + loan_id_column + " and (length(ms_borrower_information.borrower_phone) >= 10 or length(ms_borrower_information.borrower_bus_phone) >= 10 or length(ms_borrower_information.borrower_cell_phone) >= 10 ) order by ms_borrower_information.borrower_id asc ) as borrower_phone ";
+            " (select top 1 'h:' + isnull(ms_borrower_information.borrower_phone, '') + '  b:' +   isnull(ms_borrower_information.borrower_bus_phone, '') + ' c:' + isnull(ms_borrower_information.borrower_cell_phone, '') from ms_borrower_information where ms_borrower_information.loan_id = " + loan_id_column + " and (len(ms_borrower_information.borrower_phone) >= 10 or len(ms_borrower_information.borrower_bus_phone) >= 10 or len(ms_borrower_information.borrower_cell_phone) >= 10 ) order by ms_borrower_information.borrower_id asc ) as borrower_phone ";
             return s;
         }
     }

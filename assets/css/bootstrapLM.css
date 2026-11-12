@@ -202,6 +202,9 @@ textarea {
   h3 {
     page-break-after: avoid;
   }
+    .noprint {
+        display: none !important;
+    }
 }
 body {
   margin: 0;

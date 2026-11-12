@@ -17,6 +17,7 @@
         <h2><%= (this.history == null) ?  "Current" : "History: " + history.history_text %></h2>
         <p></p>
     </div>
+    <%= com.sp.rmmc.common.views.CommonNav.main_nav_select("Foreclosures", new ADUser(HttpContext.Current.User.Identity.Name.ToString()))%>
     <%= com.sp.rmmc.foreclosures.views.NewNavigations.foreclosure_sub_main_nav_select("Metrics", new ADUser(HttpContext.Current.User.Identity.Name.ToString()))%>
     <%= com.sp.rmmc.foreclosures.views.NewNavigations.metrics_list_nav_select("Fannie Mae Calls")%>
     <!-- Example row of columns -->    

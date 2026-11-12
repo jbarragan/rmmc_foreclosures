@@ -30,7 +30,7 @@ namespace com.sp.rmmc.common.models.events
         {   
             if (this.sale_date.isNull) return;
             if (this.last_memo_original_docs_date.isNull == false) return;
-            if (this.sale_date.date.AddDays(5) > DateTime.Today) return;
+            if (this.sale_date.date.AddDays(5) > this.loan.event_todays_date) return;
 
             Event e = new Event();
             e.loan = this.loan;

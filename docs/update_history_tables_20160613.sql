@@ -1,0 +1,6 @@
+
+alter table history_loan_details add
+	preforeclosure_fnma_review_events_loan_id decimal(18,0),
+	preforeclosure_fnma_review_events_foreclosure_date  datetime,
+	preforeclosure_fnma_review_events_memo_15_day_review_dt  datetime,
+	preforeclosure_fnma_review_events_memo_30_day_review_dt  datetime;

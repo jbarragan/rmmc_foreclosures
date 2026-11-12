@@ -12,6 +12,8 @@ namespace com.sp.rmmc.foreclosures.models
         private string connection_string = System.Configuration.ConfigurationManager.ConnectionStrings["foreclosure"].ConnectionString;
     
         public int history_id = 0;
+        public History history = null;
+
         protected override string default_columns
         {
             get
@@ -113,9 +115,11 @@ namespace com.sp.rmmc.foreclosures.models
             }
         }
 
-        public HistoryForeclosure(int history_id)
+        public HistoryForeclosure(History history)
         {
-            this.history_id = history_id;
+            this.history = history;
+            this.history_id = history.id;
+            this.loan.event_todays_date = this.history.history_date.date;
         }
 
         protected override List<BaseForeclosure> get_loan_list(String query)
@@ -129,6 +133,7 @@ namespace com.sp.rmmc.foreclosures.models
                 BaseForeclosure f = new BaseForeclosure();
                 f.type = this.type;
                 f.read_loan(reader);
+                f.loan.event_todays_date = this.history.history_date.date;
                 list.Add(f);
             }
             reader.Close();

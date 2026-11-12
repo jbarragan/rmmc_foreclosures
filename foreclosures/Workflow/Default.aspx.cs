@@ -6,6 +6,7 @@ using System.Web.UI.WebControls;
 using System.Text.RegularExpressions;
 
 using com.sp.rmmc.foreclosures.models;
+using com.sp.rmmc.common.tools;
 
 public partial class lossmitigation_Default : System.Web.UI.Page
 {
@@ -31,31 +32,41 @@ public partial class lossmitigation_Default : System.Web.UI.Page
         this.event_type = getArg("event_type", "ALL");
         this.sublist = getArg("sublist", "ALL");
         this.version = getArg("version", "current");
-        int iverstion = stringToInt(version, 0);
+        int iversion = stringToInt(version, 0);
 
         BaseForeclosure query_foreclosure = new CurrentForeclosure();
-        if (iverstion > 0)
+        if (iversion > 0)
         {
-            history = (new History()).get(iverstion);
-            if( history != null ) query_foreclosure = new HistoryForeclosure(iverstion);
+            history = (new History()).get(iversion);
+            if( history != null ) query_foreclosure = new HistoryForeclosure(history);
         }
 
         if (workflow == "Demands")
+        {
             query_foreclosure.getDemands(accepted_bfs, removed_bfs);
+            query_foreclosure.assignGl1806Details(accepted_bfs);
+        }
         if (workflow == "FHA Demands Daily Status")
             query_foreclosure.getCurrentXDemands(accepted_bfs, removed_bfs);
         if (workflow == "Removed Demands")
             query_foreclosure.getXDemands(accepted_bfs, removed_bfs);
         else if (workflow == "PreForeclosures")
+        {
             query_foreclosure.getPreForeclosures(accepted_bfs, removed_bfs);
+            query_foreclosure.assignGl1806Details(accepted_bfs);
+        }
         else if (workflow == "Foreclosures")
+        {
             query_foreclosure.getForeclosures(accepted_bfs, removed_bfs);
+            query_foreclosure.assignGl1806Details(accepted_bfs);
+        }
         if (workflow == "Removed Foreclosures")
             query_foreclosure.getXForeclosure(accepted_bfs, removed_bfs);
         else if (workflow == "Foreclosed")
         {
             if (sublist == "Third Party Sales") query_foreclosure.getForeclosedThirdPartySale(accepted_bfs, removed_bfs);
             else query_foreclosure.getForeclosed(accepted_bfs, removed_bfs);
+            query_foreclosure.assignGl1806Details(accepted_bfs);
         }
         else if (workflow == "Deed In Lieu")
         {
@@ -126,6 +137,12 @@ public partial class lossmitigation_Default : System.Web.UI.Page
             if (workflow != "Foreclosed") return true;
             if (bf.sale_conveyance == null ||
                 bf.sale_conveyance.reo_date.isNull) return false;
+        }
+        if (sublist == "Evictions")
+        {
+            if (workflow != "Foreclosed") return true;
+            if (bf.sale_eviction_process_events == null ||
+                bf.sale_eviction_process_events.eviction_initiated_date.isNull ) return false;
         }
         if (sublist == "Final")
         {
@@ -259,6 +276,12 @@ public partial class lossmitigation_Default : System.Web.UI.Page
         {
             return default_value;
         }
+    }
+
+    protected void lbExport_Click(object sender, EventArgs e)
+    {
+        string filename = this.workflow;
+        CSVExport.writeHeadersAndCSV(filename, "Loan#,Loan Type,Loan Name,Due Date of next payment,UPB,Interest Rate,Occupancy,Papers to Attorney,Posting Date,Sale Date,Officer(s),Principal Paid,Losses", this.bfs);
     }
 
 }

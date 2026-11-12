@@ -32,7 +32,7 @@ public partial class lossmitigation_Default : System.Web.UI.Page
         if (iverstion > 0)
         {
             history = (new History()).get(iverstion);
-            if( history != null ) query_foreclosure = new HistoryForeclosure(iverstion);
+            if( history != null ) query_foreclosure = new HistoryForeclosure(history);
         }
 
         List<BaseForeclosure> accepted_demands_bfs = new List<BaseForeclosure>();

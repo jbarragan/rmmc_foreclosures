@@ -22,7 +22,7 @@ public partial class lossmitigation_Default : System.Web.UI.Page
     protected void Page_Load(object sender, EventArgs e)
     {
         this.version = getArg("version", "current");
-        this.loan_id = (decimal)stringToInt(getArg("loan_id", "0"), 0);
+        this.loan_id = stringToDecimal(getArg("loan_id", "0"), 0);
         int iverstion = stringToInt(version, 0);
         if (loan_id == 0) Response.Redirect("../");
         if (iverstion > 0)
@@ -38,6 +38,20 @@ public partial class lossmitigation_Default : System.Web.UI.Page
         string request_value = Request.QueryString[arg];
         if (request_value != "" && request_value != null) return request_value;
         return default_value;
+    }
+
+
+    protected decimal stringToDecimal(string value, decimal default_value)
+    {
+        if (value == "") return default_value;
+        try
+        {
+            return Convert.ToDecimal(Regex.Replace(value, "[^0-9]", ""));
+        }
+        catch (Exception)
+        {
+            return default_value;
+        }
     }
 
     protected int stringToInt(string value, int default_value)

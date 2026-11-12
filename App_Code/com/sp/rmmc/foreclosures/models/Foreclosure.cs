@@ -260,7 +260,11 @@ MsLoan.columns("base.loan_id") +
 
         public static string foreclosure_completed_by_sale_date_completed_conditions()
         {
-            string query = " and ( sale_date_completed > demand_letter_due_date )  " +
+            string query = " and ( " +
+                " (select top 1 ms_fcl.fcl_item_recvd_expd from ms_fcl_item_amts_1 ms_fcl where ms_fcl.item_id = 1600 and ms_fcl.loan_id = base.loan_id order by ms_fcl.fcl_item_recvd_expd ) " + //" sale_date_completed "
+                "> " +
+                " (select top 1 misc.misc_dt_value from ms_loan_misc_fields misc where misc_field_id = 10020 and misc.loan_id = base.loan_id order by misc.misc_dt_value ) " + // "demand_letter_due_date"
+                " )  " +
                            " and ( fcl_type = 'A' ) ";
             return query;
         }

@@ -34,7 +34,7 @@ namespace com.sp.rmmc.common.models.events
             if (this.last_ordered_date.isNull ){
                 Event e = new Event();
                 e.loan = this.loan;
-                if (sale_date.date < DateTime.Today.AddDays(1)) e.type = Event.ALERT;                    
+                if (sale_date.date < this.loan.event_todays_date.AddDays(1)) e.type = Event.ALERT;                    
                 else e.type = Event.WARNING;
                 e.name = "No Inspection Ordered";
                 e.description = "No Inspection Ordered";
@@ -42,7 +42,7 @@ namespace com.sp.rmmc.common.models.events
             }
             else if (this.last_ordered_date.date < this.sale_date.date)
             {
-                if (sale_date.date < DateTime.Today.AddDays(1))
+                if (sale_date.date < this.loan.event_todays_date.AddDays(1))
                 {
                     Event e = new Event();
                     e.loan = this.loan;

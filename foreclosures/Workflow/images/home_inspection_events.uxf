@@ -1,0 +1,314 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<diagram program="umlet" version="13.3">
+  <zoom_level>8</zoom_level>
+  <element>
+    <id>UMLState</id>
+    <coordinates>
+      <x>40</x>
+      <y>64</y>
+      <w>248</w>
+      <h>56</h>
+    </coordinates>
+    <panel_attributes>REO Sold Date
+type=receiver</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLSyncBarVertical</id>
+    <coordinates>
+      <x>408</x>
+      <y>40</y>
+      <w>16</w>
+      <h>256</h>
+    </coordinates>
+    <panel_attributes>template=txt
+title=titletext
+bg=red</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>280</x>
+      <y>80</y>
+      <w>152</w>
+      <h>24</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-</panel_attributes>
+    <additional_attributes>170.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLState</id>
+    <coordinates>
+      <x>40</x>
+      <y>144</y>
+      <w>248</w>
+      <h>56</h>
+    </coordinates>
+    <panel_attributes>Third Party Sale
+type=receiver</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>280</x>
+      <y>160</y>
+      <w>152</w>
+      <h>24</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-</panel_attributes>
+    <additional_attributes>170.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLState</id>
+    <coordinates>
+      <x>40</x>
+      <y>232</y>
+      <w>248</w>
+      <h>56</h>
+    </coordinates>
+    <panel_attributes>Cancel/Refuse Haz Insurance Date
+type=receiver</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>280</x>
+      <y>256</y>
+      <w>152</w>
+      <h>24</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-</panel_attributes>
+    <additional_attributes>170.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLSpecialState</id>
+    <coordinates>
+      <x>600</x>
+      <y>320</y>
+      <w>48</w>
+      <h>48</h>
+    </coordinates>
+    <panel_attributes>bg=yellow
+type=decision</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>408</x>
+      <y>328</y>
+      <w>208</w>
+      <h>32</h>
+    </coordinates>
+    <panel_attributes>If Any Exists
+lt=&lt;-</panel_attributes>
+    <additional_attributes>240.0;20.0;10.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLState</id>
+    <coordinates>
+      <x>712</x>
+      <y>328</y>
+      <w>96</w>
+      <h>32</h>
+    </coordinates>
+    <panel_attributes>No Alert
+bg=green</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>640</x>
+      <y>328</y>
+      <w>88</w>
+      <h>32</h>
+    </coordinates>
+    <panel_attributes>Yes
+lt=&lt;-</panel_attributes>
+    <additional_attributes>90.0;20.0;10.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>616</x>
+      <y>456</y>
+      <w>160</w>
+      <h>88</h>
+    </coordinates>
+    <panel_attributes>Yes, Is Insurance Expired?
+lt=&lt;-</panel_attributes>
+    <additional_attributes>10.0;90.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLState</id>
+    <coordinates>
+      <x>40</x>
+      <y>320</y>
+      <w>248</w>
+      <h>56</h>
+    </coordinates>
+    <panel_attributes>Haz Insurance Endorsement Date
+type=receiver</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>280</x>
+      <y>336</y>
+      <w>152</w>
+      <h>24</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-</panel_attributes>
+    <additional_attributes>170.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLSyncBarVertical</id>
+    <coordinates>
+      <x>408</x>
+      <y>8</y>
+      <w>16</w>
+      <h>384</h>
+    </coordinates>
+    <panel_attributes>template=txt
+title=titletext
+bg=red</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLState</id>
+    <coordinates>
+      <x>40</x>
+      <y>416</y>
+      <w>248</w>
+      <h>56</h>
+    </coordinates>
+    <panel_attributes>Insurance Expiration Date
+type=receiver</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLSpecialState</id>
+    <coordinates>
+      <x>600</x>
+      <y>528</y>
+      <w>48</w>
+      <h>48</h>
+    </coordinates>
+    <panel_attributes>bg=yellow
+type=decision</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>280</x>
+      <y>424</y>
+      <w>336</w>
+      <h>32</h>
+    </coordinates>
+    <panel_attributes>Is Insurance Expiring in 20 days?
+lt=&lt;-</panel_attributes>
+    <additional_attributes>400.0;20.0;10.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>640</x>
+      <y>536</y>
+      <w>88</w>
+      <h>32</h>
+    </coordinates>
+    <panel_attributes>Yes
+lt=&lt;-</panel_attributes>
+    <additional_attributes>90.0;20.0;10.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLState</id>
+    <coordinates>
+      <x>712</x>
+      <y>536</y>
+      <w>208</w>
+      <h>32</h>
+    </coordinates>
+    <panel_attributes>Home Insurance Expired Alert
+bg=red</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLState</id>
+    <coordinates>
+      <x>528</x>
+      <y>624</y>
+      <w>208</w>
+      <h>32</h>
+    </coordinates>
+    <panel_attributes>Home Insurance Expiring Warning
+bg=yellow</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>616</x>
+      <y>568</y>
+      <w>40</w>
+      <h>72</h>
+    </coordinates>
+    <panel_attributes>No
+lt=&lt;-</panel_attributes>
+    <additional_attributes>10.0;70.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLSpecialState</id>
+    <coordinates>
+      <x>600</x>
+      <y>416</y>
+      <w>48</w>
+      <h>48</h>
+    </coordinates>
+    <panel_attributes>bg=yellow
+type=decision</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>616</x>
+      <y>360</y>
+      <w>40</w>
+      <h>72</h>
+    </coordinates>
+    <panel_attributes>No
+lt=&lt;-</panel_attributes>
+    <additional_attributes>10.0;70.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>640</x>
+      <y>424</y>
+      <w>88</w>
+      <h>32</h>
+    </coordinates>
+    <panel_attributes>Yes
+lt=&lt;-</panel_attributes>
+    <additional_attributes>90.0;20.0;10.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLState</id>
+    <coordinates>
+      <x>712</x>
+      <y>424</y>
+      <w>96</w>
+      <h>32</h>
+    </coordinates>
+    <panel_attributes>No Alert
+bg=green</panel_attributes>
+    <additional_attributes/>
+  </element>
+</diagram>

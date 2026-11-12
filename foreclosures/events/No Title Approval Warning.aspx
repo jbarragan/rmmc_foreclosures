@@ -16,6 +16,7 @@
         <h1><%= this.fileName %></h1>
         <p></p>
     </div>
+    <%= com.sp.rmmc.common.views.CommonNav.main_nav_select("Foreclosures", new ADUser(HttpContext.Current.User.Identity.Name.ToString()))%>
     <%= com.sp.rmmc.foreclosures.views.NewNavigations.foreclosure_sub_main_nav_select("Workflow", new ADUser(HttpContext.Current.User.Identity.Name.ToString()))%>
     <!-- Example row of columns -->
     <div class="row">

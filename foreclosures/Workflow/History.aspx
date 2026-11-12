@@ -17,13 +17,14 @@
         <h2><%= (this.history == null) ?  "Current" : "History: " + history.history_text %></h2>
         <p></p>
     </div>
+    <%= com.sp.rmmc.common.views.CommonNav.main_nav_select("Foreclosures", new ADUser(HttpContext.Current.User.Identity.Name.ToString()))%>
     <%= com.sp.rmmc.foreclosures.views.NewNavigations.foreclosure_sub_main_nav_select("Workflow", new ADUser(HttpContext.Current.User.Identity.Name.ToString()))%>
     <%= com.sp.rmmc.foreclosures.views.NewNavigations.workflow_list_nav_select("History", version)%>
         
     <div class="row">
         <div class="span2"></div>
         <div class="span8">
-            <h2>Select History</h2>:&nbsp;&nbsp; 
+            <h2>Select History</h2>&nbsp;&nbsp; 
             <asp:DropDownList ID="ddlHistories" runat="server" AutoPostBack="true"
                 onselectedindexchanged="ddlHistories_SelectedIndexChanged"></asp:DropDownList>
         </div>

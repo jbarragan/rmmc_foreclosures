@@ -4,6 +4,7 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
+using com.sp.rmmc.common.tools;
 using com.sp.rmmc.foreclosures.models;
 
 public partial class lossmitigation_Collections_Default : System.Web.UI.Page
@@ -20,9 +21,9 @@ public partial class lossmitigation_Collections_Default : System.Web.UI.Page
 
     protected void Page_Load(object sender, EventArgs e)
     {
+        all_preservation_codes = PreservationCode.get_all_preservation_codes();
         if (!IsPostBack)
         {
-            all_preservation_codes = PreservationCode.get_all_preservation_codes();
             string currentType = "";
             string currentService = "";
             foreach (PreservationCode pc in all_preservation_codes)
@@ -51,5 +52,11 @@ public partial class lossmitigation_Collections_Default : System.Web.UI.Page
     protected void btnLoanDisbursements_Click(object sender, EventArgs e)
     {
         Response.Redirect("LoanDisbursements.aspx?loan_id=" + this.txtLoanId.Text);
+    }
+
+    protected void lbExport_Click(object sender, EventArgs e)
+    {
+        string filename = "PreservationCodes";
+        CSVExport.writeHeadersAndCSV(filename, "Code,Type,Description,Service,Allowance,Effective Date,Enabled", this.all_preservation_codes);
     }
 }

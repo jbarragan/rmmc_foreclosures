@@ -117,7 +117,23 @@ namespace com.sp.rmmc.foreclosures.models
             minimal_completed_date.set_date(demand_letter.demand_letter_due_date.date.AddDays(-30));
             string query = base_query + " where loan_id = " + demand_letter.loan_id + " and date >  " + minimal_completed_date.toDBValue();
             ComlpetedChecklist completed_checklist = new ComlpetedChecklist();
-            DbDataReader reader = getMsSQLReader(mssqlConnectionString, query); 
+            DbDataReader reader = getMsSQLReader(mssqlConnectionString, query);
+            if (reader.Read())
+            {
+                completed_checklist = read(reader);
+            }
+            reader.Close();
+            closeMsSQLConnection();
+            return completed_checklist;
+        }
+
+        public static ComlpetedChecklist get(DemandLetterObject demand_letter)
+        {
+            DateTimeObject minimal_completed_date = new DateTimeObject();
+            minimal_completed_date.set_date(demand_letter.demand_letter_due_date.date.AddDays(-30));
+            string query = base_query + " where loan_id = " + demand_letter.loan_id + " and date >  " + minimal_completed_date.toDBValue();
+            ComlpetedChecklist completed_checklist = new ComlpetedChecklist();
+            DbDataReader reader = getMsSQLReader(mssqlConnectionString, query);
             if (reader.Read())
             {
                 completed_checklist = read(reader);

@@ -47,7 +47,7 @@ MsLoan.columns("base.loan_id") +
 "from ms_fcl_item_amts_2 as base " +
 "where (base.fcl_item_desc like '%' AND " +
 " base.fcl_item_desc not like '%LOSS%') AND base.item_id in (11900, 10600, 10700, 10300, 11200) " +
-" and received_date is not null and received_date > dateadd(yy, -3, getdate())";
+" and base.fcl_item_recvd_expd is not null and base.fcl_item_recvd_expd > dateadd(yy, -3, getdate())";
 
         private static string base_query2 = "" +
 @" UNION " +
@@ -69,7 +69,7 @@ MsLoan.columns("base.loan_id") +
 MsLoan.columns("base.loan_id") +
 "from ms_fcl_ud_item_amts_1 as base " +
 "where (base.fcl_ud_item_desc like '%VA ACQUISITION%')  " +
-" and received_date is not null and received_date > dateadd(yy, -3, getdate())";
+" and fcl_ud_item_recvd_expd is not null and fcl_ud_item_recvd_expd > dateadd(yy, -3, getdate())";
 
         private static List<Claim> get_list(String query)
         {

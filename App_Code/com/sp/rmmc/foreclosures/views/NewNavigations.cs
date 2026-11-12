@@ -14,7 +14,7 @@ namespace com.sp.rmmc.foreclosures.views
         }
 
         public static string main_nav =
-    @"<div class=""navbar"">
+    @"<div class=""navbar noprint"">
        <div class=""navbar-inner"">
         <ul class=""nav"">
           <li>
@@ -37,7 +37,7 @@ namespace com.sp.rmmc.foreclosures.views
       </div>";
 
         public static string sub_main_nav =
-    @"<div class=""navbar"">
+    @"<div class=""navbar noprint"">
        <div class=""navbar-inner"">
         <ul class=""nav"">
           <li>
@@ -55,11 +55,14 @@ namespace com.sp.rmmc.foreclosures.views
           <li>
             <a href=""../Default.aspx"">Dashboard</a>
           </li>
+          <li>
+           <a href=""../../collections/Events/CollectionReports.aspx?section=Foreclosures"">Reports</a>
+          </li>
         </ul>
        </div>
       </div>";
 
-        private static string nav_start = @"<div class=""navbar""><div class=""navbar-inner""><ul class=""nav"">";
+        private static string nav_start = @"<div class=""navbar noprint""><div class=""navbar-inner""><ul class=""nav"">";
         private static string nav_end = @"</ul></div></div>";
         private class Nav
         {
@@ -74,7 +77,7 @@ namespace com.sp.rmmc.foreclosures.views
                 string s = "";
                 if (with_access(ad_user) == false) return s;
                 string active_class = "";
-                if (selected_text == text) active_class = @" class=""active""";
+                if (selected_text.ToUpper() == text.ToUpper() ) active_class = @" class=""active""";
                 s += @"<li" + active_class + @"><a href=""" + link + @""">" + text + "</a></li>";
                 return s;
             }
@@ -118,14 +121,26 @@ namespace com.sp.rmmc.foreclosures.views
         {
             List<Nav> navs = new List<Nav>();
             Nav nav = new Nav(); nav.link = "../Default.aspx"; nav.text = "Main Home"; navs.Add(nav);
-            nav = new Nav(); nav.link = "../Workflow/Default.aspx"; nav.text = "Workflow"; navs.Add(nav);
-            nav = new Nav(); nav.link = "../Metrics/Claims.aspx"; nav.text = "Metrics"; navs.Add(nav);
+            nav = secure_nav(); nav.link = "../Workflow/Default.aspx"; nav.text = "Workflow"; navs.Add(nav);
+            nav = secure_nav(); nav.link = "../Metrics/Claims.aspx"; nav.text = "Metrics"; navs.Add(nav);
             nav.ad_departments.Add("mis");
             nav.ad_groups.Add("servicing_fc"); nav.ad_groups.Add("foreclosure_metrics");
-            nav = new Nav(); nav.link = "../Utilities/PreservationCodes.aspx"; nav.text = "Utilities"; navs.Add(nav);
-            nav = new Nav(); nav.link = "../Management/Gl1806Summary.aspx"; nav.text = "Management"; navs.Add(nav);
-            nav = new Nav(); nav.link = "../Default.aspx"; nav.text = "Dashboard"; navs.Add(nav);
+            nav = secure_nav(); nav.link = "../Utilities/PreservationCodes.aspx"; nav.text = "Utilities"; navs.Add(nav);
+            nav = secure_nav(); nav.link = "../Management/Gl1806Summary.aspx"; nav.text = "Management"; navs.Add(nav);
+            nav = secure_nav(); nav.link = "../Default.aspx"; nav.text = "Dashboard"; navs.Add(nav);
+            nav = secure_nav(); nav.link = "../../collections/Events/CollectionReports.aspx?section=Foreclosures"; nav.text = "Reports"; navs.Add(nav);
+            nav = secure_nav(); nav.link = "../QuarterReports/Default.aspx"; nav.text = "Quarter Reports"; navs.Add(nav);
+
             return navs;
+        }
+
+        private static Nav secure_nav()
+        {
+            Nav nav = new Nav();
+            nav.ad_users.Add("");
+            nav.ad_groups.Add("gl1806");
+            nav.ad_departments.Add("mis");
+            return nav;
         }
 
         public static string foreclosure_sub_main_nav_select(string selected_text, ADUser ad_user)
@@ -143,13 +158,14 @@ namespace com.sp.rmmc.foreclosures.views
         {
             List<Nav> navs = new List<Nav>();
             Nav nav = new Nav(); nav.link = "Default.aspx"; nav.text = "Main Home"; navs.Add(nav);
-            nav = new Nav(); nav.link = "TaskList/Demand.aspx"; nav.text = "Task List"; navs.Add(nav);
-            nav = new Nav(); nav.link = "Metrics/Claims.aspx"; nav.text = "Metrics"; navs.Add(nav);
+            nav = secure_nav(); nav.link = "TaskList/Demand.aspx"; nav.text = "Task List"; navs.Add(nav);
+            nav = secure_nav(); nav.link = "Metrics/Claims.aspx"; nav.text = "Metrics"; navs.Add(nav);
             nav.ad_departments.Add("mis");
             nav.ad_groups.Add("servicing_fc"); nav.ad_groups.Add("foreclosure_metrics");
-            nav = new Nav(); nav.link = "Utilities/PreservationCodes.aspx"; nav.text = "Utilities"; navs.Add(nav);
-            nav = new Nav(); nav.link = "Management/Gl1806Summary.aspx"; nav.text = "Management"; navs.Add(nav);
-            nav = new Nav(); nav.link = "Default.aspx"; nav.text = "Dashboard"; navs.Add(nav);
+            nav = secure_nav(); nav.link = "Utilities/PreservationCodes.aspx"; nav.text = "Utilities"; navs.Add(nav);
+            nav = secure_nav(); nav.link = "Management/Gl1806Summary.aspx"; nav.text = "Management"; navs.Add(nav);
+            nav = secure_nav(); nav.link = "Default.aspx"; nav.text = "Dashboard"; navs.Add(nav);
+            nav = secure_nav(); nav.link = "../collections/Events/CollectionReports.aspx?section=Foreclosures"; nav.text = "Reports"; navs.Add(nav);
             return navs;
         }
 
@@ -177,13 +193,15 @@ namespace com.sp.rmmc.foreclosures.views
         {
             List<Nav> navs = new List<Nav>();
             Nav nav = new Nav(); nav.link = "Default.aspx"; nav.text = "Main Home"; navs.Add(nav);
-            nav = new Nav(); nav.link = "Workflow/Default.aspx"; nav.text = "Workflow"; navs.Add(nav);
+            nav = secure_nav(); nav.link = "Workflow/Default.aspx"; nav.text = "Workflow"; navs.Add(nav);
             nav = new Nav(); nav.link = "Metrics/Claims.aspx"; nav.text = "Metrics"; navs.Add(nav);
             nav.ad_departments.Add("mis");
             nav.ad_groups.Add("servicing_fc"); nav.ad_groups.Add("foreclosure_metrics");
-            nav = new Nav(); nav.link = "Utilities/PreservationCodes.aspx"; nav.text = "Utilities"; navs.Add(nav);
-            nav = new Nav(); nav.link = "Management/Gl1806Summary.aspx"; nav.text = "Management"; navs.Add(nav);
-            nav = new Nav(); nav.link = "Default.aspx"; nav.text = "Dashboard"; navs.Add(nav);
+            nav = secure_nav(); nav.link = "Utilities/PreservationCodes.aspx"; nav.text = "Utilities"; navs.Add(nav);
+            nav = secure_nav(); nav.link = "Management/Gl1806Summary.aspx"; nav.text = "Management"; navs.Add(nav);
+            nav = secure_nav(); nav.link = "Default.aspx"; nav.text = "Dashboard"; navs.Add(nav);
+            nav = secure_nav(); nav.link = "../collections/Events/CollectionReports.aspx?section=Foreclosures"; nav.text = "Reports"; navs.Add(nav);
+            nav = secure_nav(); nav.link = "QuarterReports/Default.aspx"; nav.text = "Quarter Reports"; navs.Add(nav);
             return navs;
         }
 
@@ -241,6 +259,22 @@ namespace com.sp.rmmc.foreclosures.views
             return s + nav_end;
         }
 
+        public static string utilities_nav_select(string active)
+        {
+            string s = nav_start;
+            List<Nav> navs = new List<Nav>();
+            Nav nav = new Nav(); nav.link = "PreservationCodes.aspx"; nav.text = "Preservation Codes"; navs.Add(nav);
+            nav = new Nav(); nav.link = "PreservationCodesList.aspx"; nav.text = "Preservation Codes List"; navs.Add(nav);
+            nav = new Nav(); nav.link = "Disbursements.aspx"; nav.text = "Disbursements"; navs.Add(nav);
+            string active_class = "";
+            foreach (Nav n in navs)
+            {
+                if (active == n.text) active_class = @" class=""active"""; else active_class = "";
+                s += @"<li" + active_class + @"><a href=""" + n.link + @""">" + n.text + "</a></li>";
+            }
+            return s + nav_end;
+        }
+
         public static string metrics_list_nav_select(string active)
         {
             string s = nav_start;
@@ -263,8 +297,9 @@ namespace com.sp.rmmc.foreclosures.views
         {
             string s = nav_start;
             List<Nav> navs = new List<Nav>();
-            Nav nav = new Nav(); nav.link = "Default.aspx?workflow=Demands&version=" + version; nav.text = "Demands"; navs.Add(nav);
-            nav = new Nav(); nav.link = "Default.aspx?workflow=FHA Demands Daily Status&version=" + version; nav.text = "FHA Demands Daily Status"; navs.Add(nav);
+            Nav nav = new Nav(); nav.link = "Process.aspx?version=" + version; nav.text = "Process"; navs.Add(nav);
+            nav = new Nav(); nav.link = "Default.aspx?workflow=Demands&version=" + version; nav.text = "Demands"; navs.Add(nav);
+            nav = new Nav(); nav.link = "Default.aspx?workflow=FHA Demands Daily Status&loan_type=FHA&version=" + version; nav.text = "FHA Demands Daily Status"; navs.Add(nav);
             nav = new Nav(); nav.link = "Default.aspx?workflow=Removed Demands&version=" + version; nav.text = "Removed Demands"; navs.Add(nav);
             nav = new Nav(); nav.link = "Default.aspx?workflow=PreForeclosures&version=" + version; nav.text = "PreForeclosures"; navs.Add(nav);
             nav = new Nav(); nav.link = "Default.aspx?workflow=Foreclosures&version=" + version; nav.text = "Foreclosures"; navs.Add(nav);
@@ -272,6 +307,23 @@ namespace com.sp.rmmc.foreclosures.views
             nav = new Nav(); nav.link = "Default.aspx?workflow=Foreclosed&version=" + version; nav.text = "Foreclosed"; navs.Add(nav);
             nav = new Nav(); nav.link = "Default.aspx?workflow=Deed In Lieu&sublist=In Process&version=" + version; nav.text = "Deed In Lieu"; navs.Add(nav);
             nav = new Nav(); nav.link = "History.aspx?version=" + version; nav.text = "History"; navs.Add(nav);
+            nav = new Nav(); nav.link = "LoanChronology.aspx?version=" + version; nav.text = "Chronology"; navs.Add(nav);
+            string active_class = "";
+            foreach (Nav n in navs)
+            {
+                if (active == n.text) active_class = @" class=""active"""; else active_class = "";
+                s += @"<li" + active_class + @"><a href=""" + n.link + @""">" + n.text + "</a></li>";
+            }
+            return s + nav_end;
+        }
+
+        public static string quarter_reports_list_nav_select(string active, string version)
+        {
+            string s = nav_start;
+            List<Nav> navs = new List<Nav>();
+            Nav nav = new Nav(); nav.link = "Default.aspx"; nav.text = "Loss Mitigation In Process"; navs.Add(nav);
+            nav = secure_nav(); nav.link = "../../collections/EndOfMonthReports/Default.aspx?workflow=FNMA&section=QuarterReports"; nav.text = "FNMA"; navs.Add(nav);
+            nav = secure_nav(); nav.link = "../../collections/EndOfMonthReports/Default.aspx?workflow=GNMA&section=QuarterReports"; nav.text = "GNMA"; navs.Add(nav);
             string active_class = "";
             foreach (Nav n in navs)
             {
@@ -304,12 +356,16 @@ namespace com.sp.rmmc.foreclosures.views
                 Nav nav = new Nav(); nav.link = "Default.aspx?workflow=Foreclosures&version=" + version + "&sublist=ALL"; nav.text = "All"; navs.Add(nav);
                 nav = new Nav(); nav.link = "Default.aspx?workflow=Foreclosures&version=" + version + "&sublist=Probates"; nav.text = "Probates"; navs.Add(nav);
                 nav = new Nav(); nav.link = "Default.aspx?workflow=Foreclosures&version=" + version + "&sublist=VA Appraisals"; nav.text = "VA Appraisals"; navs.Add(nav);
+                nav = new Nav(); nav.link = "Default.aspx?workflow=Foreclosures&version=" + version + "&sublist=Home Insurance"; nav.text = "Home Insurance"; navs.Add(nav);
+                nav = new Nav(); nav.link = "VaGuarantyAndBidCalculations.aspx?workflow=Foreclosures&version=" + version + "&sublist=VA Guaranty And Bid"; nav.text = "VA Guaranty And Bid"; navs.Add(nav);
             }
             if (workflow == "Foreclosed")
             {
                 Nav nav = new Nav(); nav.link = "Default.aspx?workflow=Foreclosed&version=" + version + "&sublist=ALL"; nav.text = "All"; navs.Add(nav);
                 nav = new Nav(); nav.link = "Default.aspx?workflow=Foreclosed&version=" + version + "&sublist=REO Properties"; nav.text = "REO Properties"; navs.Add(nav);
                 nav = new Nav(); nav.link = "Default.aspx?workflow=Foreclosed&version=" + version + "&sublist=Third Party Sales"; nav.text = "Third Party Sales"; navs.Add(nav);
+                nav = new Nav(); nav.link = "Default.aspx?workflow=Foreclosed&version=" + version + "&sublist=Evictions"; nav.text = "Evictions"; navs.Add(nav);
+                nav = new Nav(); nav.link = "Default.aspx?workflow=Foreclosed&version=" + version + "&sublist=Home Insurance"; nav.text = "Home Insurance"; navs.Add(nav);
             }
             if (workflow == "Deed In Lieu")
             {

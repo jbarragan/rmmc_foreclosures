@@ -30,59 +30,6 @@ public partial class lossmitigation_Default : System.Web.UI.Page
 
     protected void Page_Load(object sender, EventArgs e)
     {   
-        this.loan_officer = getArg("loan_officer", "ALL");
-        this.workflow = getArg("workflow", "ALL");
-        this.loan_type = getArg("loan_type", "ALL");
-        this.event_type = getArg("event_type", "ALL");
-        this.loan_id = stringDecimal(getArg("loan_id", "ALL"), "ALL");
-        this.decimal_loan_id = stringToDecimal(this.loan_id, 0M);
-        this.version = getArg("version", "current");
-
-        int iverstion = stringToInt(version, 0);
-        if (Page.IsPostBack) return;
-        BaseForeclosure query_foreclosure = new CurrentForeclosure();
-        if (iverstion > 0)
-        {
-            history = (new History()).get(iverstion);
-            if (history != null) query_foreclosure = new HistoryForeclosure(iverstion);
-        }
-        if (workflow == "Demands" || workflow == "ALL")
-        {
-            List<BaseForeclosure> abfs = new List<BaseForeclosure>();
-            List<BaseForeclosure> rbfs = new List<BaseForeclosure>();
-            query_foreclosure.getDemands(abfs, rbfs);
-            accepted_bfs.AddRange(abfs);// removed_bfs.AddRange(rbfs);
-        }
-        if (workflow == "FHA Demands Daily Status" || workflow == "ALL")
-        {
-            List<BaseForeclosure> abfs = new List<BaseForeclosure>();
-            List<BaseForeclosure> rbfs = new List<BaseForeclosure>();
-            query_foreclosure.getCurrentXDemands(abfs, rbfs);
-            accepted_bfs.AddRange(abfs);// removed_bfs.AddRange(rbfs);
-        }
-        if (workflow == "PreForeclosures" || workflow == "ALL")
-        {
-            List<BaseForeclosure> abfs = new List<BaseForeclosure>();
-            List<BaseForeclosure> rbfs = new List<BaseForeclosure>();
-            query_foreclosure.getPreForeclosures(abfs, rbfs);
-            accepted_bfs.AddRange(abfs);// removed_bfs.AddRange(rbfs);
-        }
-        if (workflow == "Foreclosures" || workflow == "ALL")
-        {
-            List<BaseForeclosure> abfs = new List<BaseForeclosure>();
-            List<BaseForeclosure> rbfs = new List<BaseForeclosure>();
-            query_foreclosure.getForeclosures(abfs, rbfs);
-            accepted_bfs.AddRange(abfs);// removed_bfs.AddRange(rbfs);
-        }
-        if (workflow == "Foreclosed" || workflow == "ALL")
-        {
-            List<BaseForeclosure> abfs = new List<BaseForeclosure>();
-            List<BaseForeclosure> rbfs = new List<BaseForeclosure>();
-            query_foreclosure.getForeclosed(abfs, rbfs);
-            accepted_bfs.AddRange(abfs);// removed_bfs.AddRange(rbfs);
-        }
-        all_bfs.AddRange(accepted_bfs);
-        filter();
     }
 
     protected void filter()

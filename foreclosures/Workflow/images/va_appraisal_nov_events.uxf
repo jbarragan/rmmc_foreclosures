@@ -1,0 +1,308 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<diagram program="umlet" version="13.3">
+  <zoom_level>8</zoom_level>
+  <element>
+    <id>UMLState</id>
+    <coordinates>
+      <x>56</x>
+      <y>104</y>
+      <w>248</w>
+      <h>56</h>
+    </coordinates>
+    <panel_attributes>Appraisal Ordered Date
+type=receiver</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLSyncBarVertical</id>
+    <coordinates>
+      <x>424</x>
+      <y>80</y>
+      <w>16</w>
+      <h>392</h>
+    </coordinates>
+    <panel_attributes>template=txt
+title=titletext
+bg=red</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>296</x>
+      <y>120</y>
+      <w>152</w>
+      <h>24</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-</panel_attributes>
+    <additional_attributes>170.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLState</id>
+    <coordinates>
+      <x>56</x>
+      <y>184</y>
+      <w>248</w>
+      <h>56</h>
+    </coordinates>
+    <panel_attributes>NOV Ordered Date
+type=receiver</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>296</x>
+      <y>200</y>
+      <w>152</w>
+      <h>24</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-</panel_attributes>
+    <additional_attributes>170.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLState</id>
+    <coordinates>
+      <x>56</x>
+      <y>272</y>
+      <w>248</w>
+      <h>56</h>
+    </coordinates>
+    <panel_attributes>NOV Expired Date
+type=receiver</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>296</x>
+      <y>296</y>
+      <w>152</w>
+      <h>24</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-</panel_attributes>
+    <additional_attributes>170.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLSpecialState</id>
+    <coordinates>
+      <x>544</x>
+      <y>416</y>
+      <w>48</w>
+      <h>48</h>
+    </coordinates>
+    <panel_attributes>bg=yellow
+type=decision</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>584</x>
+      <y>424</y>
+      <w>80</w>
+      <h>32</h>
+    </coordinates>
+    <panel_attributes>No
+lt=&lt;-</panel_attributes>
+    <additional_attributes>80.0;20.0;10.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLState</id>
+    <coordinates>
+      <x>648</x>
+      <y>424</y>
+      <w>96</w>
+      <h>32</h>
+    </coordinates>
+    <panel_attributes>No Alert
+bg=green</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>424</x>
+      <y>424</y>
+      <w>136</w>
+      <h>64</h>
+    </coordinates>
+    <panel_attributes>Has Appraisal 
+Ordered Date, 
+and is It older 
+than 15 days?
+lt=&lt;-</panel_attributes>
+    <additional_attributes>150.0;20.0;10.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLSpecialState</id>
+    <coordinates>
+      <x>544</x>
+      <y>328</y>
+      <w>48</w>
+      <h>48</h>
+    </coordinates>
+    <panel_attributes>bg=yellow
+type=decision</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>584</x>
+      <y>336</y>
+      <w>80</w>
+      <h>32</h>
+    </coordinates>
+    <panel_attributes>No
+lt=&lt;-</panel_attributes>
+    <additional_attributes>80.0;20.0;10.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLState</id>
+    <coordinates>
+      <x>648</x>
+      <y>336</y>
+      <w>96</w>
+      <h>32</h>
+    </coordinates>
+    <panel_attributes>No Alert
+bg=green</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>560</x>
+      <y>368</y>
+      <w>144</w>
+      <h>64</h>
+    </coordinates>
+    <panel_attributes>Yes, Is Loan Type VA?
+lt=&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;60.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>560</x>
+      <y>280</y>
+      <w>176</w>
+      <h>64</h>
+    </coordinates>
+    <panel_attributes>No, Has NOV Ordered Date?
+lt=&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;60.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLSpecialState</id>
+    <coordinates>
+      <x>544</x>
+      <y>240</y>
+      <w>48</w>
+      <h>48</h>
+    </coordinates>
+    <panel_attributes>bg=yellow
+type=decision</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>584</x>
+      <y>248</y>
+      <w>80</w>
+      <h>32</h>
+    </coordinates>
+    <panel_attributes>No
+lt=&lt;-</panel_attributes>
+    <additional_attributes>80.0;20.0;10.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>560</x>
+      <y>192</y>
+      <w>256</w>
+      <h>64</h>
+    </coordinates>
+    <panel_attributes>Yes, Has NOV Expired Date
+and is It before 10-day from current Date?
+lt=&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;60.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLSpecialState</id>
+    <coordinates>
+      <x>544</x>
+      <y>152</y>
+      <w>48</w>
+      <h>48</h>
+    </coordinates>
+    <panel_attributes>bg=yellow
+type=decision</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>584</x>
+      <y>160</y>
+      <w>80</w>
+      <h>32</h>
+    </coordinates>
+    <panel_attributes>No
+lt=&lt;-</panel_attributes>
+    <additional_attributes>80.0;20.0;10.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>560</x>
+      <y>88</y>
+      <w>104</w>
+      <h>80</h>
+    </coordinates>
+    <panel_attributes>Yes
+lt=&lt;-</panel_attributes>
+    <additional_attributes>110.0;20.0;10.0;20.0;10.0;80.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLState</id>
+    <coordinates>
+      <x>648</x>
+      <y>248</y>
+      <w>264</w>
+      <h>32</h>
+    </coordinates>
+    <panel_attributes>Raise Warning
+No VA Appraisal NOV
+bg=yellow</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLState</id>
+    <coordinates>
+      <x>648</x>
+      <y>160</y>
+      <w>96</w>
+      <h>32</h>
+    </coordinates>
+    <panel_attributes>No Alert
+bg=green</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLState</id>
+    <coordinates>
+      <x>648</x>
+      <y>80</y>
+      <w>264</w>
+      <h>40</h>
+    </coordinates>
+    <panel_attributes>Raise Warning
+VA Appraisal NOV Expiring
+bg=yellow</panel_attributes>
+    <additional_attributes/>
+  </element>
+</diagram>

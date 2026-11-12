@@ -36,13 +36,31 @@ public partial class lossmitigation_Collections_Default : System.Web.UI.Page
             Match m = Regex.Match(disbursement.fcl_misc_description, "^[A-Za-z][0-9][0-9]");
             if (m.Success)
             {
-                PreservationCode preservation_code = all_preservation_codes.Find(delegate(PreservationCode pc) { return pc.code == m.Value; });
+                PreservationCode preservation_code = all_preservation_codes.Find(delegate(PreservationCode pc) { return pc.code.ToUpper() == m.Value.ToUpper(); });
                 if (preservation_code != null)
                 {
+                    if (preservation_code.allowances.Count == 0) preservation_code.readAllowances();
                     disbursement.preservation_code = preservation_code;
-                    if (preservation_code.allowance == disbursement.fcl_misc_actual_amt)
+                    decimal effective_allowance = 0M;
+                    bool with_effective_allowance = false;
+                    foreach (PreservationCodeAllowance pca in preservation_code.allowances)
+                    {
+                        if (disbursement.fcl_misc_paid_date.date > pca.effective_date.date)
+                        {
+                            effective_allowance = pca.allowance;
+                            with_effective_allowance = true;
+                            preservation_code.allowance = effective_allowance;
+                            break;
+                        }
+                    }
+                    if (with_effective_allowance == false)
+                    {
+                        no_code_disbursements.Add(disbursement);
+                        continue;
+                    }
+                    if (effective_allowance == disbursement.fcl_misc_actual_amt)
                         with_correct_amount_disbursements.Add(disbursement);
-                    else if (preservation_code.allowance < disbursement.fcl_misc_actual_amt)
+                    else if (effective_allowance < disbursement.fcl_misc_actual_amt)
                         with_more_amount_disbursements.Add(disbursement);
                     else
                         with_less_amount_disbursements.Add(disbursement);

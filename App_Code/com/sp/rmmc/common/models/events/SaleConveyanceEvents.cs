@@ -34,13 +34,13 @@ namespace com.sp.rmmc.common.models.events
             if (this.possesion_date.isNull) return;
             if (this.reo_date.isNull == false && this.reo_date.date > this.possesion_date.date ) return;
             if (this.possesion_date.date <= this.conveyance_date.date && this.conveyance_date.isNull == false ) return;
-            if (possesion_date.date > DateTime.Today.AddDays(-10)) return;
+            if (possesion_date.date > this.loan.event_todays_date.AddDays(-10)) return;
 
             if (this.conveyance_date.isNull)
             {
                 Event e = new Event();
                 e.loan = this.loan;
-                if (possesion_date.date > DateTime.Today.AddDays(-30))
+                if (possesion_date.date > this.loan.event_todays_date.AddDays(-30))
                 {
                     e.type = Event.WARNING;
                     e.name = "No Conveyance Date Warning";

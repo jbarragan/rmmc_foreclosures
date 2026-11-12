@@ -7,6 +7,8 @@ using System.Text.RegularExpressions;
 
 using com.sp.rmmc.foreclosures.models;
 
+using com.sp.rmmc.common.models;
+
 public partial class lossmitigation_Collections_Default : System.Web.UI.Page
 {
     protected PreservationCode preservation_code = new PreservationCode();
@@ -16,6 +18,8 @@ public partial class lossmitigation_Collections_Default : System.Web.UI.Page
     protected void Page_Load(object sender, EventArgs e)
     {
         preservation_code = new PreservationCode();
+        if (this.IsPostBack == false)
+            this.txtEffectiveDate.Text = DateTime.Now.ToShortDateString();
     }
 
     protected void btnSave_Click(object sender, EventArgs e)
@@ -27,11 +31,22 @@ public partial class lossmitigation_Collections_Default : System.Web.UI.Page
             string msg = "";
             if (existing_preservation_code.code.Length > 0)
             {
-                msg = PreservationCode.update(existing_preservation_code.code, preservation_code);
+                msg = "Preservation Code Information cannot be created. Preservation Code already exists.";
             }
             else
             {
                 msg = PreservationCode.create(preservation_code);
+
+                if (msg.Length == 0)
+                {
+                    PreservationCodeAllowance pca = new PreservationCodeAllowance();
+                    pca.preservation_code_id = preservation_code.id;
+                    pca.allowance = preservation_code.allowance;
+                    DateTimeObject now = new DateTimeObject();
+                    now.set_date(DateTime.Now);
+                    pca.effective_date = preservation_code.effective_date;
+                    msg = pca.insert();
+                }
             }
              
             if (msg.Length > 0)
@@ -53,7 +68,7 @@ public partial class lossmitigation_Collections_Default : System.Web.UI.Page
     }
 
     protected void populate(){
-        preservation_code.code = txtCode.Text.Replace(" ","");
+        preservation_code.code = txtCode.Text.Replace(" ","").ToUpper();
         preservation_code.description = txtDescription.Text;
         decimal allowance = 0M;
         string str_allowance = Regex.Replace(this.txtAllowance.Text, "[^0-9.]", "");
@@ -62,10 +77,30 @@ public partial class lossmitigation_Collections_Default : System.Web.UI.Page
             allowance = Convert.ToDecimal(str_allowance);
         }
         catch (Exception){}
+        preservation_code.effective_date = this.convertStringToDateTimeObject( txtEffectiveDate.Text );
         preservation_code.allowance = allowance;
         preservation_code.enabled = chkEnabled.Checked;
         preservation_code.general_service = txtGeneralService.Text;
         preservation_code.type = cmbType.SelectedValue;
+    }
+
+
+    protected DateTimeObject convertStringToDateTimeObject(string s)
+    {
+        string ds = Regex.Replace(s, "[^0-9/-]", "");
+        DateTimeObject d = new DateTimeObject();
+        if (ds != "" && ds != null)
+        {
+            try
+            {
+                d.set_date(DateTime.Parse(ds));
+                return d;
+            }
+            catch (Exception)
+            {
+            }
+        }
+        return d;
     }
 
     protected bool is_valid()
@@ -88,6 +123,12 @@ public partial class lossmitigation_Collections_Default : System.Web.UI.Page
         {
             valid = false;
             invalid_reasons += "Allowance needs to be a number.<br/>";
+        }
+        DateTimeObject effective_date = this.convertStringToDateTimeObject(this.txtEffectiveDate.Text);
+        if(effective_date.isNull)
+        {
+            valid = false;
+            invalid_reasons += "Effective Date needs to be a date in format mm/dd/yyyy.<br/>";
         }
         return valid;
     }

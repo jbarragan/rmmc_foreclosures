@@ -17,6 +17,7 @@
         <h1>Metrics</h1>
         <p>Foreclosure</p>
     </div>
+    <%= com.sp.rmmc.common.views.CommonNav.main_nav_select("Foreclosures", new ADUser(HttpContext.Current.User.Identity.Name.ToString()))%>
     <%= com.sp.rmmc.foreclosures.views.NewNavigations.sub_main_nav %>
     <%= com.sp.rmmc.foreclosures.views.NewNavigations.metrics_nav %>
     <!-- Example row of columns -->
