@@ -45,6 +45,7 @@
     <div class="row">
         <div class="span12">
         <h2><%= this.workflow%> (<%= bfs.Count%>)</h2>
+        <asp:LinkButton ID="lbExportDemands" runat="server" Text="Export" onclick="lbExportDemands_Click"></asp:LinkButton>
         <table class="table table-striped">
             <tr>
                 <th>Loan#</th>
@@ -52,6 +53,7 @@
                 <th>Loan Type</th>
                 <th>Loan Name</th>
                 <th>Due Date of next payment</th>
+                <th>Promised to Pay</th>
                 <th>UPB</th>
                 <th>Interest Rate</th>
                 <th>Occupancy</th>
@@ -84,6 +86,7 @@
                 <td><%= bf.loan.loan_type%></td>
                 <td><%= bf.loan.loan_name%></td>
                 <td><%= bf.loan.due_date_next_payment.ToShortDateString()%></td>
+                <td><%= promisedToPayDate(bf) %></td>
                 <td><%= bf.loan.prin_bal.ToString("C")%></td>
                 <td><%= bf.loan.int_rate.ToString("0.000")%></td>
                 <td><%= bf.loan.occupancy_code %></td>

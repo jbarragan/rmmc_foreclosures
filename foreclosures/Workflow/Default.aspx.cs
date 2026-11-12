@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using System.Text;
 using System.Text.RegularExpressions;
 
 using com.sp.rmmc.foreclosures.models;
@@ -246,6 +247,55 @@ public partial class lossmitigation_Default : System.Web.UI.Page
     {
         this.event_type = ddlEventType.SelectedValue;
         Response.Redirect(generate_url());
+    }
+
+    // Latest 'BC-Promised to Pay' memo notify date, shown whether it is past or future.
+    protected string promisedToPayDate(BaseForeclosure bf)
+    {
+        if (bf.fannie_mae_calls_events == null) return "";
+        return bf.fannie_mae_calls_events.last_bc_promised_to_pay_date.ToShortDateString();
+    }
+
+    protected static string csvField(object value)
+    {
+        string s = (value == null) ? "" : value.ToString();
+        return "\"" + s.Replace("\"", "\"\"") + "\"";
+    }
+
+    protected void lbExportDemands_Click(object sender, EventArgs e)
+    {
+        StringBuilder csv = new StringBuilder();
+        csv.AppendLine("Loan#,Exceptions,Loan Type,Loan Name,Due Date of next payment,Promised to Pay,UPB,Interest Rate,Occupancy,Demand Letter Due Date,Months Demand after Delinquent,Officer(s),Last Inspection Received,Review Checklist");
+        foreach (BaseForeclosure bf in bfs)
+        {
+            string[] fields = {
+                csvField(bf.loan_id),
+                csvField(bf.getEvents().Count),
+                csvField(bf.loan.loan_type),
+                csvField(bf.loan.loan_name),
+                csvField(bf.loan.due_date_next_payment.ToShortDateString()),
+                csvField(promisedToPayDate(bf)),
+                csvField(bf.loan.prin_bal.ToString("0.00")),
+                csvField(bf.loan.int_rate.ToString("0.000")),
+                csvField(bf.loan.occupancy_code),
+                csvField(bf.demand_letter_due_date.ToShortDateString()),
+                csvField(bf.months_demand_date_after_delinquent()),
+                csvField(bf.foreclosure_officers),
+                csvField(bf.inspection.last_received_notify_date.ToShortDateString()),
+                csvField((Array.IndexOf(array_completed_checklists_loan_ids, bf.loan_id) >= 0) ? "Completed" : "")
+            };
+            csv.AppendLine(string.Join(",", fields));
+        }
+
+        string filename = "Demands-" + DateTime.Today.ToString("yyyyMMdd") + ".csv";
+        Response.Clear();
+        Response.ClearHeaders();
+        Response.ClearContent();
+        Response.AddHeader("content-disposition", "attachment; filename=" + filename);
+        Response.ContentType = "text/csv";
+        Response.AddHeader("Pragma", "public");
+        Response.Write(csv.ToString());
+        Response.End();
     }
 
     protected int stringToInt(string value, int default_value)
