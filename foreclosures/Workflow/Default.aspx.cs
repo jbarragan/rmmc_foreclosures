@@ -267,10 +267,15 @@ public partial class lossmitigation_Default : System.Web.UI.Page
     }
 
     // Latest 'BC-Promised to Pay' memo notify date, shown whether it is past or future.
+    // Same rule as the "Fannie Mae 3 Month Call Listing" (rmmc_collections):
+    // show the latest 'BC-Promised to Pay' notify date only when it is today or later.
+    // Old promises (for example, one made for a date in April) are not shown.
     protected string promisedToPayDate(BaseForeclosure bf)
     {
         if (bf.fannie_mae_calls_events == null) return "";
-        return bf.fannie_mae_calls_events.last_bc_promised_to_pay_date.ToShortDateString();
+        com.sp.rmmc.common.models.DateTimeObject ptp =bf.fannie_mae_calls_events.last_bc_promised_to_pay_date;
+        if (ptp.isNull || ptp.date.Date < DateTime.Today) return "";
+        return ptp.ToShortDateString();
     }
 
     protected static string csvField(object value)
